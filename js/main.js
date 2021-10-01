@@ -218,7 +218,9 @@ function makeComparisonList(filtered = []) {
             let option = document.createElement('li');
             option.textContent = curr;
             option.value = curr;
-
+            if (currencies.convertTo.includes(curr)) {
+                option.classList.add('comparisonSelectOption');
+            }
             option.addEventListener('click', function(e) {
                 if (currencies.convertTo.length < 5) {
                     option.classList.toggle('comparisonSelectOption');
@@ -227,21 +229,23 @@ function makeComparisonList(filtered = []) {
                     // error();
                 }
 
-                if (option.classList.contains('funnyClass')) {
+                if (option.classList.contains('comparisonSelectOption')) {
                     currencies.convertTo.push(curr);
+
                     // alert(option.textContent);
                 } else if (currencies.convertTo.indexOf(curr) != -1) {
                     let ix = currencies.convertTo.indexOf(curr);
                     currencies.convertTo.splice(ix, 1);
                 }
                 //e.target.style.background = 'lightblue';
-                updateShowComparisons();
+
                 render();
+                updateShowComparisons();
+
+
             });
             ul.appendChild(option)
-            if (currencies.convertTo.includes(curr)) {
-                option.classList.add('comparisonSelectOption');
-            }
+
         }
     }
     selector.appendChild(ul);
