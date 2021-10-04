@@ -175,13 +175,13 @@ function makeComparisonSection() {
     // selector.onchange(() => {
     //     alert('ya');
     // })
-    selector.innerHTML = '';
-
+    //selector.innerHTML = '';
+    let filtered = Object.keys(currencies.rates);
+    makeComparisonList(filtered);
     let selector2 = document.querySelector('.filter');
     let search = ''
     console.log(currencies);
-    let filtered = Object.keys(currencies.rates);
-    makeComparisonList(filtered);
+
     selector2.addEventListener('keyup', function(e) {
         let form = document.querySelector('.comparison');
 
@@ -227,6 +227,7 @@ function makeComparisonList(filtered) {
     let selector = document.querySelector('.comparison div');
     let ul = document.createElement('ul');
     selector.innerHTML = '';
+    //if (ul.innerHTML != '') selector.inner
     ul.classList.add('selectComparisons');
     if (filtered.length === 0) {
         filtered = [];
@@ -241,7 +242,7 @@ function makeComparisonList(filtered) {
                 option.classList.add('comparisonSelectOption');
             }
             option.addEventListener('click', function(e) {
-                if (currencies.convertTo.length <= 5) {
+                if (currencies.convertTo.length < 5) {
                     option.classList.toggle('comparisonSelectOption');
                 } else if (option.classList.contains('comparisonSelectOption')) {
                     option.classList.remove('comparisonSelectOption');
