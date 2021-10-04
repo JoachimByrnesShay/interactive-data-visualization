@@ -12,12 +12,13 @@ let currencies = {
 
 //let thing = 'https://www.localeplanet.com/api/auto/currencymap.json?name=Y';
 //let thing = 'https://github.com/bengourley/currency-symbol-map/blob/master/map.js'
-let thing = 'https://gist.github.com/portapipe/a28cd7a9f8aa3409af9171480efcc090'
+//let thing = 'https://gist.github.com/portapipe/a28cd7a9f8aa3409af9171480efcc090'
 
 function fetchCurrencyDescriptions(url) {
     let symbolsURL = url + 'symbols';
-    return fetch(symbolsURL).then(response => response.json())
+    return fetch(symbolsURL, { mode: 'cors', credentials: 'include' }).then(response => response.json())
         .then(data => {
+            console.log(data);
             for ([k, v] of Object.entries(data.symbols)) {
                 currencies.description[k] = v.description;
             };
@@ -36,7 +37,10 @@ function fetchCurrencySymbols(url) {
 
 function fetchCurrencyRates(url) {
     let ratesURL = url + `latest?base=${currencies.convertFrom}`;
-    return fetch(ratesURL).then((response) => response.json())
+    return fetch(ratesURL, {
+            mode: 'cors',
+            credentials: 'include'
+        }).then((response) => response.json())
         .then(data => {
             for (let curr in data.rates) {
                 currencies.rates[curr] = data.rates[curr]
@@ -58,7 +62,7 @@ function fetchAPI(url) {
     then(() => render());
 }
 
-fetchAPI(requestURL);
+
 
 
 function getSizeRatio() {
@@ -302,3 +306,7 @@ function activateModal(elem) {
     });
 
 }
+
+console.log('mainjs');
+
+fetchAPI(requestURL);
