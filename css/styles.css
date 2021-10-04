@@ -29,7 +29,7 @@ html {
 
 /* style entire body, aka .Page */
 
-.section-config {
+.Config {
   font-size: 1em;
   height: var(--section-config-height);
   display: flex;
@@ -38,8 +38,43 @@ html {
   color: black;
 }
 
-.section-config * {
+.Config div {
+  background: beige;
+  align-self: center;
+}
+
+.Config * {
   font-size: 1em;
+}
+
+.section-config-show-comparisons {
+  background: lightcoral;
+}
+
+.selectComparisons {
+  height: 5em;
+  border: 1px solid black;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.selectComparisons:hover {
+  cursor: default;
+}
+
+.selectComparisons li {
+  padding: 0;
+  margin: .2em;
+}
+
+/* .
+Comparisons li:active, .selectComparisons li:visited {
+  background: lightblue;
+}
+ */
+
+.comparisonSelectOption {
+  background: lightblue;
 }
 
 .Page {
@@ -59,35 +94,10 @@ html {
 /* .Header as flex-box to be future-proof for next iterations */
 
 .Header {
-  height: 5em;
+  height: 4em;
   background: var(--Header-backgroundColor);
   display: flex;
   justify-content: space-between;
-}
-
-.selectComparisons {
-  height: 5em;
-  border: 1px solid black;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
-}
-
-.selectComparisons:hover {
-  cursor: default;
-}
-
-.selectComparisons li {
-  padding: 0;
-  margin: .2em;
-}
-
-/* .selectComparisons li:active, .selectComparisons li:visited {
-  background: lightblue;
-}
- */
-
-.comparisonSelectOption {
-  background: lightblue;
 }
 
 .Header-title {
@@ -99,17 +109,30 @@ html {
   padding-left: .5em;
 }
 
-.ChartContent {
-  display: flex;
-  justify-content: space-around;
-  align-content: flex-end;
-  /* height of header + footer = 9em */
-  height: calc(100vh - 9em - var(--section-config-height));
-  border: .5em solid var(--ChartContent-borderColor);
+.ChartContent::before {
+  content: '';
   /* a plain fallback setting for browser versions with no linear-gradient */
   background: #ebf5f9;
   /* intended background for .CharContent */
-  background: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#2ec3eb 51%,#d5ebfb 100%);
+  background-image: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#2ec3eb 51%,#d5ebfb 100%);
+  position: absolute;
+  width: ;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  display: block;
+}
+
+.ChartContent {
+  display: flex;
+  position: relative;
+  justify-content: space-around;
+  align-content: flex-end;
+  /* height of header + footer = 9em */
+  height: calc(100vh - 6em - var(--section-config-height));
+  border: .5em solid var(--ChartContent-borderColor);
 }
 
 .ChartContent-container {
@@ -145,6 +168,21 @@ html {
   background: var(--ChartContent-barChart--odd-backgroundColor);
 }
 
+@keyframes clearGraphs {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.clearGraphs div {
+  animation: clearGraphs 2s normal forwards;
+  animation-iteration-count: 1;
+}
+
 /* rotate modal while shrinking it and throwing a small shadow */
 
 @keyframes disappearModal {
@@ -166,10 +204,6 @@ html {
 .ChartContent-barChart:not(:hover) .Modal {
   animation: disappearModal 800ms normal forwards;
   animation-iteration-count: 1;
-}
-
-.section-config-show-comparisons {
-  background: lightcoral;
 }
 
 /* custom modal instead of alert box, one modal absolute positioned per each ChartContent-container */
@@ -199,7 +233,7 @@ html {
 }
 
 .Footer {
-  height: 4em;
+  height: 2em;
   padding-left: .5em;
   background: var(--Footer-backgroundColor);
   display: flex;

@@ -16,14 +16,14 @@
         <header class='Header'>
             <h1 class='Header-title'>Currency Visualization</h1>
         </header>
-        <section class='section-config'>
-            <div class='section-config-base'>
+        <section class='Config'>
+            <div class='Config-baseSelection'>
                 <h2>Select your base currency</h2>
                 <!-- <select class='' onChange="changeBase();"></select> -->
-                <select class='config-curr' onChange='changeBase();'></select>
+                <select onChange='changeBase();'></select>
             </div>
             <div class='section-config-conversions'> <button onClick='clearCharts()'>clear</button>
-                <h2>Select up to 4 comparison currencies</h2>
+                <h2>Select up to 5 comparison currencies</h2>
                 <form class='comparison'>
                     <label for='filter'>filter
                         <input type='text' id='filter' class='filter' name='filter' />

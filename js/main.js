@@ -1,5 +1,7 @@
-console.log('loaded main.js')
-const requestURL = 'https://api.exchangerate.host/';
+//console.log('loaded main.js')
+//const requestURL = 'https://api.exchangerate.host/';
+//const requestURL = `https://v6.exchangerate-api.com/v6/170228b5e41c1bad86073eb5/latest/`;
+const requestURL = `https://openexchangerates.org/api/`;
 let currencies = {
     convertFrom: 'USD',
     convertTo: ['EUR', 'GBP', 'CNY', 'BGN', 'AED'],
@@ -15,18 +17,19 @@ let currencies = {
 //let thing = 'https://gist.github.com/portapipe/a28cd7a9f8aa3409af9171480efcc090'
 
 function fetchCurrencyDescriptions(url) {
-    let symbolsURL = url + 'symbols';
-    return fetch(symbolsURL, { mode: 'cors', credentials: 'include' }).then(response => response.json())
+    let symbolsURL = url + 'currencies.json';
+    //let symbolsURL = url + 'symbols';
+    return fetch(symbolsURL).then(response => response.json())
         .then(data => {
             console.log(data);
-            for ([k, v] of Object.entries(data.symbols)) {
-                currencies.description[k] = v.description;
+            for ([k, v] of Object.entries(data)) {
+                currencies.description[k] = v;
             };
         })
 }
 
 function changeBase() {
-    let select = document.querySelector('.section-config-base select');
+    let select = document.querySelector('.Config-baseSelection select');
     currencies.convertFrom = select.value;
     fetchAPI(requestURL);
 }
@@ -36,11 +39,12 @@ function fetchCurrencySymbols(url) {
 }
 
 function fetchCurrencyRates(url) {
-    let ratesURL = url + `latest?base=${currencies.convertFrom}`;
-    return fetch(ratesURL, {
-            mode: 'cors',
-            credentials: 'include'
-        }).then((response) => response.json())
+    //let ratesURL = url + `latest?base=${currencies.convertFrom}`;
+    let app_id = `0f6288f8f4b4421ba1a18cf74a5b9dcf`;
+    let ratesURL = `https://openexchangerates.org/api/latest.json?app_id=${app_id}&base=${currencies.convertFrom}`;
+    console.log(ratesURL)
+    //ratesURL = url + `?app_id=${app_id}&base=${currencies.convertFrom}`;
+    return fetch(ratesURL).then((response) => response.json())
         .then(data => {
             for (let curr in data.rates) {
                 currencies.rates[curr] = data.rates[curr]
@@ -50,16 +54,15 @@ function fetchCurrencyRates(url) {
 
 function fetchAPI(url) {
     fetchCurrencyDescriptions(url).
-    then(() => fetchCurrencySymbols(url)).
-    then(() => fetchCurrencyRates(url)).
-    then(() => {
-        for (let re in currencies.rates) {
-            //console.log(re);
-        }
-        //console.log(Object.keys(currencies.rates).length)
-        // console.log(currencies)
-    }).
-    then(() => render());
+    // then(() => fetchCurrencySymbols(url)).
+    then(() =>
+        fetchCurrencyRates(url).then(() => {
+            // for (let re in currencies.rates) {
+            //     //console.log(re);
+            // }
+            //console.log(Object.keys(currencies.rates).length)
+            // console.log(currencies)
+        })).then(() => render());
 }
 
 
@@ -130,7 +133,7 @@ function makeCharts() {
     console.log('make charts');
     let container = document.querySelector('.ChartContent');
     if (currencies.convertTo.length) {
-        for (let curr of [...currencies.convertTo, currencies.convertFrom]) {
+        for (let curr of [currencies.convertFrom, ...currencies.convertTo]) {
             let chartContainer = document.createElement('div');
             chartContainer.classList.add('ChartContent-container');
             let barChart = makeBarChart(curr);
@@ -141,7 +144,7 @@ function makeCharts() {
 }
 
 function makeCurrencyOptions() {
-    let selector = document.querySelector('.config-curr');
+    let selector = document.querySelector('.Config-baseSelection select');
     console.log(selector);
     for (curr in currencies.rates) {
         let option = document.createElement('option');
@@ -155,10 +158,17 @@ function makeCurrencyOptions() {
 
 function clearCharts() {
     currencies.convertTo = []
-    render();
+    let main = document.querySelector('.ChartContent');
+    main.classList.add('clearGraphs');
+    main.addEventListener('animationend', function(e) {
+        main.classList.remove('clearGraphs');
+        main.innerHTML = '';
+        render();
+    });
+    //render();
 }
 
-function makeComparisonSection(filtered = '') {
+function makeComparisonSection() {
 
     let selector = document.querySelector('.comparison div');
     //let selector = document.querySelector('.Header');
@@ -169,7 +179,9 @@ function makeComparisonSection(filtered = '') {
 
     let selector2 = document.querySelector('.filter');
     let search = ''
-
+    console.log(currencies);
+    let filtered = Object.keys(currencies.rates);
+    makeComparisonList(filtered);
     selector2.addEventListener('keyup', function(e) {
         let form = document.querySelector('.comparison');
 
@@ -180,9 +192,12 @@ function makeComparisonSection(filtered = '') {
         // console.log(e.key);
         // console.log(selector2.value);
         // console.log(search);
-        let filtered = Object.keys(currencies.rates).filter(function(elem) {
+        filtered = Object.keys(currencies.rates).filter(function(elem) {
             return elem.toLowerCase().startsWith(selector2.value.toLowerCase());
         })
+        if (selector2.value == '') {
+            filtered = Object.keys(currencies.rates);
+        }
         console.log(filtered);
         makeComparisonList(filtered);
         // }
@@ -207,14 +222,14 @@ function makeComparisonSection(filtered = '') {
 // }
 
 
-function makeComparisonList(filtered = []) {
+function makeComparisonList(filtered) {
     console.log(filtered);
     let selector = document.querySelector('.comparison div');
     let ul = document.createElement('ul');
     selector.innerHTML = '';
     ul.classList.add('selectComparisons');
     if (filtered.length === 0) {
-        filtered = Object.keys(currencies.rates);
+        filtered = [];
     }
     console.log(filtered);
     for (let curr of filtered) {
@@ -226,7 +241,7 @@ function makeComparisonList(filtered = []) {
                 option.classList.add('comparisonSelectOption');
             }
             option.addEventListener('click', function(e) {
-                if (currencies.convertTo.length < 5) {
+                if (currencies.convertTo.length <= 5) {
                     option.classList.toggle('comparisonSelectOption');
                 } else if (option.classList.contains('comparisonSelectOption')) {
                     option.classList.remove('comparisonSelectOption');
@@ -256,6 +271,8 @@ function makeComparisonList(filtered = []) {
 }
 
 function updateShowComparisons() {
+    let div1 = document.querySelector('.section-config-show-base');
+    div1.textContent = currencies.convertFrom;
     let div = document.querySelector('.section-config-show-comparisons');
     div.innerHTML = '';
 
@@ -273,6 +290,8 @@ function makeEventListener(thisOption) {
 function clear() {
     let main = document.querySelector('.ChartContent')
     main.innerHTML = '';
+    // main.classList.add('');
+
 }
 
 function render() {
