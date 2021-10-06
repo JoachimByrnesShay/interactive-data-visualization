@@ -18,27 +18,39 @@
         </header>
         <section class='Config'>
             <div class='Config-baseSelection'>
-                <h2>Select your base currency</h2>
+                <h2>Select base</h2>
                 <!-- <select class='' onChange="changeBase();"></select> -->
-                <select onChange='changeBase();'></select>
-            </div>
-            <div class='section-config-conversions'> <button onClick='clearCharts()'>clear</button>
-                <h2>Select up to 5 comparison currencies</h2>
-                <form class='comparison'>
-                    <label for='filter'>filter
-                        <input type='text' id='filter' class='filter' name='filter' />
-                    </label>
-                    <div>
+                <label for='filter2'>filter
+                    <input type='text' id='filter2' class='Base-filter' name='filter2' />
+                </label>
+                <div class='baseSelection-scroll'>
+                    <div class='arrow left'>&#8592;&#8678;
                     </div>
-                </form>
-                <!-- <select multiple class='comparison' onChange=""></select> -->
+                    <ul class='base-select' onChange='AppConfiguration.changeBase();'>
+                    </ul>
+                    <div class='arrow right'>&#8680;&#10145;</div>
+                </div>
+            </div>
+            <div class='section-config-conversions'>
+                <h2>Select <= 5 to compare</h2> <form class='comparison' onSubmit='return false;'>
+                        <label for='filter'>filter
+                            <input type='text' id='filter' class='Comparison-filter' name='filter' />
+                        </label>
+                        <div>
+                        </div>
+                        </form>
             </div>
             <div class='section-config-selections'>
                 <h3>Your base:</h3>
                 <h4 class='section-config-show-base'></h4>
                 <h3>Your comparisons:</h3>
                 <div class='section-config-show-comparisons'></div>
-                <!-- <button onClick="render();" class='make-charts'>make charts</button> -->
+            </div>
+            <div class=''>
+                <h2>Reset Comparisons</h2>
+                <button onClick="BarChart.clearCharts();">
+                    clearCharts
+                </button>
             </div>
         </section>
         <main class='ChartContent'>
@@ -48,8 +60,7 @@
         </footer>
     </div>
     <!-- modal activation controlled in js called via above onClick events -->
-    <script src="js/main.js">
-    </script>
+    <script src='js/main.js'></script>
 </body>
 
 </html>

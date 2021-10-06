@@ -21,7 +21,7 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*, *:before, *:after, li {
   margin: 0;
   padding: 0;
   box-sizing: inherit;
@@ -29,42 +29,71 @@ html {
 
 /* style entire body, aka .Page */
 
-.Config {
-  font-size: 1em;
-  height: var(--section-config-height);
-  display: flex;
-  justify-content: space-around;
-  background: white;
-  color: black;
-}
-
-.Config div {
-  background: beige;
-  align-self: center;
-}
-
-.Config * {
-  font-size: 1em;
-}
-
 .section-config-show-comparisons {
   background: lightcoral;
 }
 
+.base-select {/* height: 5em;
+ *//* //height: 3em;
+ */
+  width: 110px;
+  border: 2px solid black;
+  border-radius: .5em;
+  overflow-x: hidden;
+  display: flex;
+  padding: 4px;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+}
+
+.baseSelection-scroll {
+  background: lightblue;
+  display: flex;
+}
+
+.Config .arrow {
+  width: 4em;
+  background-color: green;
+  height: 100%;
+}
+
+.arrow.left {
+}
+
+.base-select-li {/* //display: inline-block;
+ */
+  display: inline-block;
+  background: red;
+  text-align: center;
+  min-width: 40px;
+  /* padding: .5em .5em .5em .5em;
+ */
+  margin-left: 6px;
+  margin-right: 6px;
+  border: 1px solid blue;
+  border-radius: 3px;
+}
+
+.base-select .focus-li {
+  align-self: center;
+}
+
 .selectComparisons {
   height: 5em;
-  border: 1px solid black;
+  border: 2px solid black;
   overflow-y: scroll;
   scroll-behavior: smooth;
+  width: 22em;
 }
 
 .selectComparisons:hover {
   cursor: default;
 }
 
-.selectComparisons li {
+.comparisonOption {
   padding: 0;
-  margin: .2em;
+  margin: .3em;
+  border: 1px solid transparent;
 }
 
 /* .
@@ -73,8 +102,43 @@ Comparisons li:active, .selectComparisons li:visited {
 }
  */
 
-.comparisonSelectOption {
+.comparisonOptionSelected {
   background: lightblue;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+.section-config-show-comparisons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: green;
+}
+
+.section-config-show-comparisons p:hover {
+  cursor: help;
+}
+
+.Config {
+  font-size: 1em;
+  height: var(--section-config-height);
+  display: flex;
+  justify-content: space-around;
+  background-image: linear-gradient(to left, #ebf1f6 0%,#abd3ee 20%,#2ec3eb 71%,#d5ebfb 100%);
+  color: black;
+}
+
+.Config div {
+  background: beige;
+  /* align-self: center;
+ */
+  align-self: baseline;
+}
+
+.Config * {
+  font-size: 1em;
+}
+
+.Config .filter {
 }
 
 .Page {
@@ -116,7 +180,6 @@ Comparisons li:active, .selectComparisons li:visited {
   /* intended background for .CharContent */
   background-image: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#2ec3eb 51%,#d5ebfb 100%);
   position: absolute;
-  width: ;
   top: 0;
   left: 0;
   bottom: 0;
@@ -214,10 +277,10 @@ Comparisons li:active, .selectComparisons li:visited {
   background-color: var(--Modal-backgroundColor);
   border-radius: .6em;
   position: absolute;
-  left: -50%;
-  top: 12em;
-  width: 220px;
-  height: 140px;
+  left: -55%;
+  top: 15em;
+  width: 230px;
+  height: 110px;
   margin: 0;
   box-shadow: 2px 3px 1px var(--Page-boxShadowColor);
   z-index: 50;
