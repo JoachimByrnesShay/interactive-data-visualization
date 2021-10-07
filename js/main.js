@@ -1,46 +1,86 @@
-//console.log('loaded main.js')
-//const requestURL = 'https://api.exchangerate.host/';
-//const requestURL = `https://v6.exchangerate-api.com/v6/170228b5e41c1bad86073eb5/latest/`;
-const requestURL = `https://openexchangerates.org/api/`;
-const currencies = {
-    convertFrom: 'USD',
+//const baseURL = `https://openexchangerates.org/api/`;
+
+// openexchangerates.org/api 
+
+let baseURL;
+let baseSubURLDescriptions;
+let baseSubURLRates;
+let getDescriptions;
+const currencyData = {
+    convertFrom: 'SCR',
     convertTo: ['EUR', 'GBP', 'CNY', 'BGN', 'AED'],
     rates: {},
     description: {},
-    symbols: {}
 }
 
-//let baseSymbols = ['EUR', 'USD', 'GBP', 'CNY', 'BGN', 'AED']
+// this if else branch logic is for development purposes and will be removed upon deployment. 
+baseURL = `https://openexchangerates.org/api/`;
+baseURL = 'https://api.exchangerate.host/';
+if (baseURL == 'https://openexchangerates.org/api/') {
+    baseSubURLDescriptions = 'currencies.json';
+    baseSubURLRates = (APP_ID) => `latest.json?app_id=${APP_ID}&base='${currencyData.convertFrom}'`;
+    getDescriptions = function(data) {
 
-//let thing = 'https://www.localeplanet.com/api/auto/currencymap.json?name=Y';
-//let thing = 'https://github.com/bengourley/currency-symbol-map/blob/master/map.js'
-//let thing = 'https://gist.github.com/portapipe/a28cd7a9f8aa3409af9171480efcc090'
+
+        for ([k, v] of Object.entries(data)) {
+            currencyData.description[k] = v;
+            // console.log(v);
+        }
+    };
+    console.log(currencyData);
+
+} else if (baseURL == 'https://api.exchangerate.host/') {
+    baseSubURLDescriptions = 'symbols'
+    baseSubURLRates = (APP_ID) => `latest/?base=${currencyData.convertFrom}`;
+    getDescriptions = function(data) {
+
+        for ([k, v] of Object.entries(data.symbols)) {
+            currencyData.description[k] = v.description;
+        }
+    };
+    console.log(currencyData);
+
+}
+
+// api.exchangerate.host
+
+
+
+
 
 // CurrencyFetch object provides organization of methods for fetching and storing text descriptions of currency codes, fetching and storing rates of currencies,
 // and the APIData method which calls both of these and then calls App.render() function
 const CurrencyFetch = {
+    APP_ID: `0f6288f8f4b4421ba1a18cf74a5b9dcf `,
     descriptions(url) {
-        let symbolsURL = url + 'currencies.json';
-        //let symbolsURL = url + 'symbols';
+        let symbolsURL = url + baseSubURLDescriptions; // for openexchangerates.org
+        // for exhangerate.host let symbolsURL = url + 'symbols';
         return fetch(symbolsURL).then(response => response.json())
             .then(data => {
 
-                for ([k, v] of Object.entries(data)) {
-                    currencies.description[k] = v;
-                };
+                //for api.exchangerate.host
+                // for ([k, v] of Object.entries(data.symbols)) {
+                //     currencyData.description[k] = v.description;
+                // };
+
+                getDescriptions(data);
+
+                // nfor openexhangerates 
+                // for ([code, description] of Object.entries(data)) {
+                //     currencyData.description[code] = description
+                // }
             })
     },
-
     rates(url) {
-        //let ratesURL = url + `latest?base=${currencies.convertFrom}`;
-        let app_id = `0f6288f8f4b4421ba1a18cf74a5b9dcf`;
-        let ratesURL = `https://openexchangerates.org/api/latest.json?app_id=${app_id}&base=${currencies.convertFrom}`;
+        let ratesURL = url + baseSubURLRates(this.APP_ID); // for openexchangerates.org
 
-        //ratesURL = url + `?app_id=${app_id}&base=${currencies.convertFrom}`;
+        // for exchangerate.host  let ratesURL = url + `
+        // latest / ? base = $ { currencyData.convertFrom }
+        // `
         return fetch(ratesURL).then((response) => response.json())
             .then(data => {
-                for (let curr in data.rates) {
-                    currencies.rates[curr] = data.rates[curr]
+                for (let currency in data.rates) {
+                    currencyData.rates[currency] = data.rates[currency]
                 }
             });
     },
@@ -54,31 +94,100 @@ const CurrencyFetch = {
 
 // BarChart object provides organization of methods for creating, clearing, and resizing (responsive) barcharts, and associated utility methods
 const BarChart = {
+    MAIN_CONTENT_CLASS_NAME: 'ChartContent',
+    CHART_CONTAINER_CLASS_NAME: 'ChartContent-container',
+    CHART_CLASS_NAME: 'ChartContent-barChart',
+    CLEAR_ALL_GRAPHS_CLASS_NAME: 'clearGraphs',
+    makeAllBarCharts() {
 
-    getMainContent() {
-        let content = document.querySelector('.ChartContent');
+        let container = document.querySelector('.' + this.MAIN_CONTENT_CLASS_NAME);
+        if (currencyData.convertTo.length) {
+            for (let currency of [currencyData.convertFrom, ...currencyData.convertTo]) {
+                let chartContainer = document.createElement('div');
+                chartContainer.classList.add(this.CHART_CONTAINER_CLASS_NAME);
+                this.visuallyIndicateChartIsBase(currency, chartContainer);
+
+                let barChart = this.makeBarChart(currency);
+                chartContainer.appendChild(barChart);
+                container.appendChild(chartContainer);
+            }
+        }
+    },
+    visuallyIndicateChartIsBase(currency, chartContainer) {
+        if (currency == currencyData.convertFrom) {
+            console.log('hi buddy');
+            let span = document.createElement('div');
+            span.classList.add('indicateBase');
+
+            chartContainer.classList.add('containerBase');
+            span.textContent = 'BASE CURRENCY';
+            chartContainer.appendChild(span);
+        }
+
+    },
+    makeBarChart(currencyCode) {
+
+        let barChart = document.createElement('div');
+        barChart.classList.add(this.CHART_CLASS_NAME);
+
+        let title = document.createElement('p');
+        title.textContent = currencyCode;
+        let modal = Modal.makeModal(currencyCode);
+        barChart.append(title, modal);
+        this.Utility.setInitialSize(barChart, currencyCode);
+        barChart.onclick = () => Modal.activateModal(barChart);
+        return barChart;
+    }
+
+}
+
+BarChart.Utility = {
+
+    getSizeRatio() {
+        console.log('getHeightRatio');
+        let max = 0;
+        let arr = [...currencyData.convertTo, currencyData.convertFrom]
+        for (let key of arr) {
+
+            if (currencyData.rates[key] > max) max = currencyData.rates[key]
+        }
+        return 100 / max;
+    },
+    setInitialSize(barChart, currencyCode) {
+        let ratio = BarChart.Utility.getSizeRatio();
+        let chartSize = `${currencyData.rates[currencyCode] * ratio}%`;
+        console.log(chartSize);
+        if (document.body.clientWidth > 950) {
+            barChart.style.height = chartSize;
+        } else barChart.style.width = chartSize;
+        barChart.setAttribute('data-size', chartSize);
+
+    },
+    getMainContent(main = '.ChartContent') {
+        let content = document.querySelector(main);
         return content;
     },
 
-    clearConvertToValues() {
-        currencies.convertTo = []
+    clearConvertToDataValues() {
+        currencyData.convertTo = []
     },
     clearCharts() {
-
-        let main = BarChart.getMainContent();
-        BarChart.clearConvertToValues();
+        let main = this.getMainContent();
+        this.clearConvertToDataValues();
         //AppConfiguration.makeCurrencyOptions();
         AppConfiguration.makeComparisonSection();
-        main.classList.add('clearGraphs');
+        //this.CLEAR_ALL_GRAPHS_CLASS_NAME
+
+        main.classList.add(BarChart.CLEAR_ALL_GRAPHS_CLASS_NAME);
         main.addEventListener('animationend', function(e) {
-            main.classList.remove('clearGraphs');
+            main.classList.remove(BarChart.CLEAR_ALL_GRAPHS_CLASS_NAME);
             App.clearContents(main);
             App.render();
         });
         //render();
     },
     resizeAll() {
-        let charts = document.querySelectorAll('.ChartContent-barChart');
+        let charts = document.querySelectorAll('.' + BarChart.CHART_CLASS_NAME);
         for (barChart of charts) {
             let size = barChart.dataset.size;
 
@@ -93,51 +202,7 @@ const BarChart = {
             }
 
         }
-    },
-    makeCharts() {
-        console.log('make charts');
-        let container = document.querySelector('.ChartContent');
-        if (currencies.convertTo.length) {
-            for (let curr of [currencies.convertFrom, ...currencies.convertTo]) {
-                let chartContainer = document.createElement('div');
-                chartContainer.classList.add('ChartContent-container');
-                let barChart = this.makeBarChart(curr);
-                chartContainer.appendChild(barChart);
-                container.appendChild(chartContainer);
-            }
-        }
-    },
-    getSizeRatio() {
-        console.log('getHeightRatio');
-        let max = 0;
-        let arr = [...currencies.convertTo, currencies.convertFrom]
-        for (let key of arr) {
-
-            if (currencies.rates[key] > max) max = currencies.rates[key]
-        }
-        return 100 / max;
-    },
-    makeBarChart(curr) {
-        let ratio = this.getSizeRatio();
-        let barChart = document.createElement('div');
-        barChart.classList.add('ChartContent-barChart');
-        let chartSize = `${currencies.rates[curr] * ratio}%`;
-
-        if (document.body.clientWidth > 950) {
-            barChart.style.height = chartSize;
-        } else barChart.style.width = chartSize;
-        barChart.setAttribute('data-size', chartSize);
-
-        let title = document.createElement('p');
-        title.textContent = curr;
-        let modal = Modal.makeModal(curr);
-        barChart.append(title, modal);
-        barChart.onclick = () => Modal.activateModal(barChart);
-        return barChart;
-    },
-
-
-
+    }
 }
 
 // Modal object provides organization of methods for creating modal elements and displaying modals and controlling animation (set and removed by classes)
@@ -147,8 +212,8 @@ const Modal = {
         modal.classList.add('Modal');
         let descriptionPara = document.createElement('p');
         let comparePara = document.createElement('p');
-        descriptionPara.textContent = currencies.description[curr];
-        comparePara.textContent = `1 ${currencies.convertFrom} == ${currencies.rates[curr]} ${curr}`;
+        descriptionPara.textContent = currencyData.description[curr];
+        comparePara.textContent = `1${currencyData.convertFrom}==${currencyData.rates[curr]}${curr}`;
         modal.append(descriptionPara, comparePara);
         return modal;
     },
@@ -179,9 +244,9 @@ const AppConfiguration = {
     changeBase() {
         let select = document.querySelector('.Config-baseSelection .base-select');
         console.log('ths is it', select.value);
-        currencies.convertFrom = select.value;
-        if (currencies.convertTo.includes(select.value)) {
-            currencies.convertTo.splice(currencies.convertTo.indexOf(select.value), 1);
+        currencyData.convertFrom = select.value;
+        if (currencyData.convertTo.includes(select.value)) {
+            currencyData.convertTo.splice(currencyData.convertTo.indexOf(select.value), 1);
         }
 
 
@@ -191,14 +256,14 @@ const AppConfiguration = {
     //     let selector = document.querySelector('.Config-baseSelection .base-select');
 
 
-    //     selector.value = currencies.convertFrom;
+    //     selector.value = currencyData.convertFrom;
     //     let filterSelector = document.querySelector('.Base-filter');
     //     let filtered;
     //     if (filterSelector.value) {
-    //         filtered = (currencies.rates).filter(function(elem) {
+    //         filtered = (currencyData.rates).filter(function(elem) {
     //             return elem.toLowerCase().startsWith(filterSelector.value.toLowerCase());
     //         })
-    //     } else filtered = currencies.rates;
+    //     } else filtered = currencyData.rates;
     //     for (curr in filtered) {
 
     //         let option = document.createElement('li');
@@ -211,7 +276,7 @@ const AppConfiguration = {
         let selector = document.querySelector('.Config-baseSelection .base-select');
 
 
-        selector.value = currencies.convertFrom;
+        selector.value = currencyData.convertFrom;
         let left = document.querySelector('.arrow.left');
         let right = document.querySelector('.arrow.right');
         console.log(right);
@@ -258,18 +323,18 @@ const AppConfiguration = {
         let filterSelector = document.querySelector('.Base-filter');
         //filterSelector.addEventListener('scrollby', () => alert('hi'));
         let filtered;
-        filtered = Object.keys(currencies.rates);
+        filtered = Object.keys(currencyData.rates);
         this.makeCurrencyOptionsList(filtered);
         filterSelector.addEventListener('keyup', (e) => {
             selector.innerHTML = '';
             if (filterSelector.value) {
 
-                filtered = Object.keys(currencies.rates).filter(function(elem) {
+                filtered = Object.keys(currencyData.rates).filter(function(elem) {
                     return elem.toLowerCase().startsWith(filterSelector.value.toLowerCase());
                 });
             };
             if (filterSelector.value == '') {
-                filtered = Object.keys(currencies.rates);
+                filtered = Object.keys(currencyData.rates);
             }
 
             console.log(filtered[0]);
@@ -300,8 +365,8 @@ const AppConfiguration = {
     },
 
     makeCurrencyOptionsList(filtered) {
-        filtered = Object.keys(currencies.rates);
-        if (filtered.length == 0) filtered = ["...", ...Object.keys(currencies.rates)];
+        filtered = Object.keys(currencyData.rates);
+        if (filtered.length == 0) filtered = ["...", ...Object.keys(currencyData.rates)];
         // console.log(filtered);
 
         let selector = document.querySelector('.base-select');
@@ -322,12 +387,13 @@ const AppConfiguration = {
         let selector2 = document.querySelector('.Comparison-filter');
         let filtered;
         if (selector2.value) {
-            filtered = Object.keys(currencies.rates).filter(function(elem) {
+            filtered = Object.keys(currencyData.rates).filter(function(elem) {
                 return elem.toLowerCase().startsWith(selector2.value.toLowerCase());
             })
-        } else filtered = Object.keys(currencies.rates);
+        } else filtered = Object.keys(currencyData.rates);
         let selector = document.querySelector('.comparison div');
-        //let filtered = Object.keys(currencies.rates);
+        //let filtered = Object.keys(currencyData.rates);
+        console.log('filtered', 'is this', filtered);
         this.makeComparisonList(filtered);
 
         // selector2.value = '';
@@ -339,11 +405,11 @@ const AppConfiguration = {
             let form = document.querySelector('.comparison');
 
             // e.preventDefault();
-            filtered = Object.keys(currencies.rates).filter(function(elem) {
+            filtered = Object.keys(currencyData.rates).filter(function(elem) {
                 return elem.toLowerCase().startsWith(selector2.value.toLowerCase());
             })
             if (selector2.value == '') {
-                filtered = Object.keys(currencies.rates);
+                filtered = Object.keys(currencyData.rates);
             }
 
             AppConfiguration.makeComparisonList(filtered);
@@ -363,28 +429,28 @@ const AppConfiguration = {
         }
 
         for (let curr of filtered) {
-            if (curr != currencies.convertFrom) {
+            if (curr != currencyData.convertFrom) {
                 let option = document.createElement('li');
-                option.innerHTML = `<span style='display:inline-block;width:3em;'>${curr}:</span>${currencies.description[curr]}`;
+                option.innerHTML = `<span style='display:inline-block;width:3em;'>${curr}:</span>${currencyData.description[curr]}`;
                 // option.value = curr; option.value = curr;
 
-                if (currencies.convertTo.includes(curr)) {
+                if (currencyData.convertTo.includes(curr)) {
                     option.classList.add('comparisonOptionSelected');
                 }
                 option.addEventListener('click', function(e) {
-                    if (currencies.convertTo.length < 5) {
+                    if (currencyData.convertTo.length < 5) {
                         option.classList.toggle('comparisonOptionSelected');
                     } else if (option.classList.contains('comparisonOptionSelected')) {
                         option.classList.remove('comparisonOptionSelected');
                         // error();
                     }
                     if (option.classList.contains('comparisonOptionSelected')) {
-                        currencies.convertTo.push(curr);
+                        currencyData.convertTo.push(curr);
 
                         // alert(option.textContent);
-                    } else if (currencies.convertTo.indexOf(curr) != -1) {
-                        let ix = currencies.convertTo.indexOf(curr);
-                        currencies.convertTo.splice(ix, 1);
+                    } else if (currencyData.convertTo.indexOf(curr) != -1) {
+                        let ix = currencyData.convertTo.indexOf(curr);
+                        currencyData.convertTo.splice(ix, 1);
                     }
                     //e.target.style.background = 'lightblue';
 
@@ -401,11 +467,11 @@ const AppConfiguration = {
     },
     updateShowComparisons() {
         let div1 = document.querySelector('.section-config-show-base');
-        div1.textContent = currencies.convertFrom;
+        div1.textContent = currencyData.convertFrom;
         let div = document.querySelector('.section-config-show-comparisons');
         div.innerHTML = '';
 
-        for (curr of currencies.convertTo) {
+        for (curr of currencyData.convertTo) {
             let p = document.createElement('p');
             p.textContent = curr;
             div.appendChild(p);
@@ -423,12 +489,12 @@ class App {
         AppConfiguration.makeComparisonSection();
 
         //each call to render clears html of the barcharts area (.ChartContent)
-        App.clearContents(BarChart.getMainContent());
+        App.clearContents(BarChart.Utility.getMainContent());
         console.log('I am rendering');
 
-        BarChart.makeCharts();
+        BarChart.makeAllBarCharts();
         //on resized window, barcharts will be resized form vertical to horizontal- conditionally
-        window.onresize = BarChart.resizeAll;
+        window.onresize = BarChart.Utility.resizeAll;
 
 
     }
@@ -447,4 +513,4 @@ class App {
 
 console.log('mainjs');
 
-CurrencyFetch.APIData(requestURL);
+CurrencyFetch.APIData(baseURL);

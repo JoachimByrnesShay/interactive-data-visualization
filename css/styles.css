@@ -29,6 +29,37 @@ html {
 
 /* style entire body, aka .Page */
 
+.containerBase::after {/* opacity: .1;
+ */
+  content: '';
+  background: midnightblue;
+  background: rgba(204,204,204,0.5);
+  /* top: 0;right: 0;left: 0;bottom: 0;
+ */
+  height: 100%;
+  /* border: 1px solid black;
+ */
+  position: absolute;
+}
+
+.containerBase {
+}
+
+.indicateBase {
+  position: absolute;
+  color: black;
+  background: transparent;
+  color: transparent;
+  top: 5em;
+  left: 60%;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  display: inline-block;
+  margin: 0 auto;
+  text-shadow: 3px 5px 3px black;
+  z-index: 5000;
+}
+
 .section-config-show-comparisons {
   background: lightcoral;
 }
@@ -173,11 +204,11 @@ Comparisons li:active, .selectComparisons li:visited {
   padding-left: .5em;
 }
 
-.ChartContent::before {
+/* .ChartContent::before {
   content: '';
-  /* a plain fallback setting for browser versions with no linear-gradient */
+ 
   background: #ebf5f9;
-  /* intended background for .CharContent */
+ 
   background-image: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#2ec3eb 51%,#d5ebfb 100%);
   position: absolute;
   top: 0;
@@ -186,9 +217,12 @@ Comparisons li:active, .selectComparisons li:visited {
   right: 0;
   z-index: -1;
   display: block;
-}
+} */
 
 .ChartContent {
+  background: #ebf5f9;
+  /* intended background for .CharContent */
+  background-image: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#2ec3eb 51%,#d5ebfb 100%);
   display: flex;
   position: relative;
   justify-content: space-around;
@@ -218,6 +252,7 @@ Comparisons li:active, .selectComparisons li:visited {
   padding-top: 5%;
   align-items: flex-start;
   justify-content: center;
+  z-index: 75;
 }
 
 /* alternate background on barCharts from light background dark text to dark background light text */
@@ -241,7 +276,7 @@ Comparisons li:active, .selectComparisons li:visited {
   }
 }
 
-.clearGraphs div {
+.clearGraphs .ChartContent-barChart {
   animation: clearGraphs 2s normal forwards;
   animation-iteration-count: 1;
 }
@@ -275,6 +310,9 @@ Comparisons li:active, .selectComparisons li:visited {
   color: var(--Modal-textColor);
   display: none;
   background-color: var(--Modal-backgroundColor);
+  /* background: var(--Modal-backgroundColor);background-image: var(--Modal-backgroundColor);
+ */
+  opacity: 1;
   border-radius: .6em;
   position: absolute;
   left: -55%;
@@ -283,7 +321,7 @@ Comparisons li:active, .selectComparisons li:visited {
   height: 110px;
   margin: 0;
   box-shadow: 2px 3px 1px var(--Page-boxShadowColor);
-  z-index: 50;
+  z-index: 7000;
 }
 
 /* state of modal = display */
@@ -315,6 +353,20 @@ Comparisons li:active, .selectComparisons li:visited {
 }
 
 @media only screen and (max-width:  950px) {/* change orientetion of .ChartContent flex items on smaller screens, i.e. vertical to horizontal barCharts */
+
+  .indicateBase {
+    position: absolute;
+    color: black;
+    color: transparent;
+    top: 30%;
+    left: 60%;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    /* display: inline-block;
+ *//* margin: 0 auto;
+ */
+    text-shadow: 3px 5px 3px black;
+  }
 
   .ChartContent {
     flex-direction: column;
