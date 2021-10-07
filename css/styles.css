@@ -29,20 +29,59 @@ html {
 
 /* style entire body, aka .Page */
 
-.containerBase::after {/* opacity: .1;
+.containerBase::before {/* opacity: .1;
  */
   content: '';
-  background: midnightblue;
-  background: rgba(204,204,204,0.5);
-  /* top: 0;right: 0;left: 0;bottom: 0;
+  /* background: rgba(0,0,180,0.2);
  */
+  background: rgba(175,100,55,0.5);
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
   height: 100%;
-  /* border: 1px solid black;
- */
   position: absolute;
 }
 
-.containerBase {
+@keyframes flashText {
+  0% {
+    text-shadow: 3px 5px 3px black;
+    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
+    color: transparent;
+    background: transparent;
+  }
+
+  50% {
+    color: black;
+    text-shadow: 3px 5px 10px orange, 5px 10px 3px black;
+  }
+
+  100% {
+    text-shadow: 3px 5px 3px black;
+    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
+    color: transparent;
+    background: transparent;
+  }
+}
+
+@keyframes flashBackground {
+  0% {
+    background-color: blue ;
+  }
+
+  100% {
+    background-color: green;
+  }
+}
+
+.containerBase:hover .indicateBase {
+  animation: flashText 400ms normal forwards;
+  animation-iteration-count: 3;
+}
+
+.containerBase:hover .indicateBase::before {
+  animation: flashBackground 400ms normal forwards;
+  animation-iteration-count: 3;
 }
 
 .indicateBase {
@@ -57,7 +96,7 @@ html {
   display: inline-block;
   margin: 0 auto;
   text-shadow: 3px 5px 3px black;
-  z-index: 5000;
+  z-index: 50;
 }
 
 .section-config-show-comparisons {
@@ -321,7 +360,7 @@ Comparisons li:active, .selectComparisons li:visited {
   height: 110px;
   margin: 0;
   box-shadow: 2px 3px 1px var(--Page-boxShadowColor);
-  z-index: 7000;
+  z-index: 70;
 }
 
 /* state of modal = display */

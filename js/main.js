@@ -7,7 +7,7 @@ let baseSubURLDescriptions;
 let baseSubURLRates;
 let getDescriptions;
 const currencyData = {
-    convertFrom: 'SCR',
+    convertFrom: 'USD',
     convertTo: ['EUR', 'GBP', 'CNY', 'BGN', 'AED'],
     rates: {},
     description: {},
@@ -15,7 +15,7 @@ const currencyData = {
 
 // this if else branch logic is for development purposes and will be removed upon deployment. 
 baseURL = `https://openexchangerates.org/api/`;
-baseURL = 'https://api.exchangerate.host/';
+//baseURL = 'https://api.exchangerate.host/';
 if (baseURL == 'https://openexchangerates.org/api/') {
     baseSubURLDescriptions = 'currencies.json';
     baseSubURLRates = (APP_ID) => `latest.json?app_id=${APP_ID}&base='${currencyData.convertFrom}'`;
