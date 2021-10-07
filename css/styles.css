@@ -51,8 +51,9 @@ html {
     background: transparent;
   }
 
-  50% {
-    color: black;
+  50% {/* //color: black;
+ */
+    color: grey;
     text-shadow: 3px 5px 10px orange, 5px 10px 3px black;
   }
 
@@ -76,12 +77,12 @@ html {
 
 .containerBase:hover .indicateBase {
   animation: flashText 400ms normal forwards;
-  animation-iteration-count: 3;
+  animation-iteration-count: 2;
 }
 
 .containerBase:hover .indicateBase::before {
   animation: flashBackground 400ms normal forwards;
-  animation-iteration-count: 3;
+  animation-iteration-count: 2;
 }
 
 .indicateBase {
@@ -105,12 +106,14 @@ html {
 
 .base-select {/* height: 5em;
  *//* //height: 3em;
+ *//* width: 110px;
  */
-  width: 110px;
+  height: 50px;
   border: 2px solid black;
   border-radius: .5em;
   overflow-x: hidden;
   display: flex;
+  flex-direction: column;
   padding: 4px;
   overflow-y: hidden;
   scroll-behavior: smooth;
@@ -119,27 +122,57 @@ html {
 .baseSelection-scroll {
   background: lightblue;
   display: flex;
+  flex-direction: column;
+  width: 19em;
+}
+
+.Config-baseSelection {
+  display: grid;
+  grid-template-rows: 1fr 5fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "title title"
+                      "filtered selector";
+}
+
+.Config-baseSelection h2 {
+  grid-area: title;
+  justify-self: center;
+}
+
+.Config-baseSelection label {
+  grid-area: filtered;
+}
+
+.Config-baseSelection .baseSelection-scroll {
+  grid-area: selector;
+}
+
+.Base-filter {
+  max-width: 4em;
 }
 
 .Config .arrow {
   width: 4em;
-  background-color: green;
+  background-color: grey;
   height: 100%;
 }
 
 .arrow.left {
 }
 
+.Config .base-select {
+  font-size: 14px;
+}
+
 .base-select-li {/* //display: inline-block;
  */
   display: inline-block;
-  background: red;
-  text-align: center;
-  min-width: 40px;
+  background: lightslategray;
   /* padding: .5em .5em .5em .5em;
  */
-  margin-left: 6px;
-  margin-right: 6px;
+  min-height: 30px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   border: 1px solid blue;
   border-radius: 3px;
 }

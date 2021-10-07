@@ -291,8 +291,9 @@ const AppConfiguration = {
             //     s
             // }
             timerRightArrow = setInterval(function() {
-                selector.scrollBy(30, 0);
-            }, 100);
+                //selector.scrollBy(30, 0);
+                selector.scrollBy(0, 25);
+            }, 70);
             //scrollDelay = setTimeout()
             // rightMouseDown = true;
             // e.target.addEventListener('mouseup', function(g) {
@@ -306,8 +307,9 @@ const AppConfiguration = {
             //     selector.scrollBy(40, 0);
             // }
             timerLeftArrow = setInterval(function() {
-                selector.scrollBy(-30, 0)
-            }, 100);
+                //selector.scrollBy(-30, 0)
+                selector.scrollBy(0, -25);
+            }, 70);
             // rightMouseDown = true;
             // e.target.addEventListener('mouseup', function(g) {
             //     rightMouseDown = false;
@@ -342,6 +344,7 @@ const AppConfiguration = {
             //filtered[0].classList.add('focus-li');
             this.makeCurrencyOptionsList(filtered);
             if (filtered[0]) {
+
                 let options = document.querySelectorAll('.base-select li');
                 let selected;
                 for (option of options) {
@@ -349,6 +352,7 @@ const AppConfiguration = {
                         console.log(option);
 
                         option.scrollIntoView({ block: "center", inline: 'center', behavior: 'auto' });
+
                         break;
                     }
                 }
@@ -368,19 +372,25 @@ const AppConfiguration = {
         filtered = Object.keys(currencyData.rates);
         if (filtered.length == 0) filtered = ["...", ...Object.keys(currencyData.rates)];
         // console.log(filtered);
-
+        let firstOption;
         let selector = document.querySelector('.base-select');
         for (curr of filtered) {
 
             // let option = document.createElement('option');;
             let option = document.createElement('li');
+            if (!firstOption) {
+                firstOption = option;
+            }
             option.classList.add('base-select-li');
             // option.value = curr;
             //console.log(option);
-            option.textContent = curr;
+            option.textContent = `${curr}:${currencyData.description[curr]}`;
+            //option.title = currencyData.description[curr];
             selector.appendChild(option);
-        }
 
+
+        }
+        firstOption.scrollIntoView({ block: "center", inline: 'center', behavior: 'auto' });
 
     },
     makeComparisonSection() {
