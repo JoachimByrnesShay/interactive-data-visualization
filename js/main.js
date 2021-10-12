@@ -264,8 +264,8 @@ const Configuration = {
     SHOW_COMPARISONS_CLASS_NAME: 'Configure-showComparisons',
     COMPARISON_OPTION_CLASS_NAME: 'Configure-comparisonOption',
     COMPARISONS_FORM_CLASS_NAME: 'Configure-comparisonsForm',
-    COMPARISONS_SELECTOR_CLASS_NAME: 'Configure-comparisonsSelect',
-    COMPARISONS_FILTER_CLASS_NAME: 'Configure-comparisonsFilter',
+    COMPARISONS_SELECT_BOX_CLASS_NAME: 'Configure-comparisonsSelectBox',
+    COMPARISONS_FILTER_FIELD_CLASS_NAME: 'Configure-comparisonsFilterField',
 
 
     changeBase(val) {
@@ -317,17 +317,21 @@ const Configuration = {
             // function scrollDelay() {
             //     s
             // }
+            console.log(e);
             timerRightArrow = setInterval(function() {
                 //selector.scrollBy(30, 0);
                 selector.scrollBy(0, 25);
             }, 70);
-            //scrollDelay = setTimeout()
-            // rightMouseDown = true;
-            // e.target.addEventListener('mouseup', function(g) {
-            //     rightMouseDown = false;
-            // })
-            // while (rightMouseDown) {
+            console.log(selector.scrollY);
+            // e.target.addEventListener('mouseup', function(){clearInterval(timerRightArrow)});
         });
+        //scrollDelay = setTimeout()
+        // rightMouseDown = true;
+        // e.target.addEventListener('mouseup', function(g) {
+        //     rightMouseDown = false;
+        // })
+        // while (rightMouseDown) {
+        // });
 
         left.addEventListener('mousedown', function(e) {
             // if (e.type == 'mousedown') {
@@ -343,9 +347,9 @@ const Configuration = {
             // })
             // while (rightMouseDown) {
         });
-        right.addEventListener('mouseup', function() {
-            clearInterval(timerRightArrow);
-        });
+        // right.addEventListener('mouseup', function() {
+        //     clearInterval(timerRightArrow);
+        // });
         left.addEventListener('mouseup', function() {
             clearInterval(timerLeftArrow);
         });
@@ -362,14 +366,17 @@ const Configuration = {
                 filtered = Object.keys(currencyData.rates);
             }
 
-            if (filterSelector.value) {
+            // if (filterSelector.value) {
 
-                filtered = Object.keys(currencyData.rates).filter(function(elem) {
-                    return elem.toLowerCase().startsWith(filterSelector.value.toLowerCase());
-                });
-            };
+            filtered = Object.keys(currencyData.rates).filter(function(elem) {
 
-            console.log(filtered);
+                return elem.toLowerCase().startsWith(filterSelector.value.toLowerCase());
+
+            });
+
+            // };
+
+
 
             //if (e.keyCode == 13) Configuration.changeBase();
 
@@ -435,64 +442,70 @@ const Configuration = {
 
         }
         if (filtered.length) {
+            // if (firstOption) {
             firstOption.scrollIntoView({ block: "center", inline: 'center', behavior: 'auto' });
         };
-
+        // }
     },
     makeComparisonsSection() {
-        let selector2 = App.querySelectorByClass(Configuration.COMPARISONS_FILTER_CLASS_NAME);
-        let filtered;
-        if (selector2.value) {
-            filtered = Object.keys(currencyData.rates).filter(function(elem) {
-                return elem.toLowerCase().startsWith(selector2.value.toLowerCase());
-            })
-        } else filtered = Object.keys(currencyData.rates);
-        let selector = App.querySelectorByClass(Configuration.COMPARISONS_SELECTOR_CLASS_NAME);
+        let filter_field = App.querySelectorByClass(Configuration.COMPARISONS_FILTER_FIELD_CLASS_NAME);
+        let filtered_result;
+        filter_field.value = '';
+        // if (filter_field.value) {
+        //     filtered_result = Object.keys(currencyData.rates).filter(function(elem) {
+        //         return elem.toLowerCase().startsWith(filter_field.value.toLowerCase());
+        //     })
+        // } else filtered_result = Object.keys(currencyData.rates);
+        filtered_result = Object.keys(currencyData.rates);
+        let select_box = App.querySelectorByClass(Configuration.COMPARISONS_SELECT_BOX_CLASS_NAME);
+        //select_box.innerHTML = '';
         //let filtered = Object.keys(currencyData.rates);
 
-        this.makeComparisonsList(filtered);
+        this.makeComparisonsList(filtered_result);
 
         // selector2.value = '';
 
 
-        selector2.addEventListener('keyup', function(e) {
-
+        filter_field.addEventListener('keyup', function(e) {
+            console.log(filter_field.value);
 
             let form = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS_NAME);
 
             // e.preventDefault();
-            filtered = Object.keys(currencyData.rates).filter(function(elem) {
-                return elem.toLowerCase().startsWith(selector2.value.toLowerCase());
-            })
-            if (selector2.value == '') {
-                filtered = Object.keys(currencyData.rates);
+            filtered_result = Object.keys(currencyData.rates).filter(function(elem) {
+                return elem.toLowerCase().startsWith(filter_field.value.toLowerCase());
+            });
+
+            if (filter_field.value == '') {
+                filtered_result = Object.keys(currencyData.rates);
             }
 
-            Configuration.makeComparisonsList(filtered);
-            // }
+            Configuration.makeComparisonsList(filtered_result);
+
 
         });
     },
-    makeComparisonsList(filtered) {
+    makeComparisonsList(filtered_result) {
 
-        let selector = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS_NAME);
+        // let form = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS_NAME);
         // let ul = document.createElement('ul');
-        //selector.innerHTML = '';
-        let ul = App.querySelectorByClass(Configuration.COMPARISONS_SELECTOR_CLASS_NAME);
+        //filtered_result.innerHTML = '';
+        let select_box = App.querySelectorByClass(Configuration.COMPARISONS_SELECT_BOX_CLASS_NAME);
         //Configure - comparisonsSelect
-
-        if (filtered.length === 0) {
-            filtered = [];
+        select_box.innerHTML = '';
+        if (filtered_result.length == 0) {
+            filtered_result = [];
         }
 
-        for (let curr of filtered) {
-            if (curr != currencyData.convertFrom) {
+        for (let currency of filtered_result) {
+            if (currency != currencyData.convertFrom) {
                 let option = document.createElement('li');
-                option.innerHTML = `<span style='display:inline-block;width:3em;'>${curr}:</span>${currencyData.description[curr]}`;
+                console.log(option);
+                option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}:</span>${currencyData.description[currency]}`;
                 // option.value = curr; option.value = curr;
 
                 option.classList.add(Configuration.COMPARISON_OPTION_CLASS_NAME);
-                if (currencyData.convertTo.includes(curr)) {
+                if (currencyData.convertTo.includes(currency)) {
 
                     option.classList.add(Configuration.SELECTED_COMPARISON_CLASS_NAME);
                 }
@@ -504,11 +517,11 @@ const Configuration = {
                         // error();
                     }
                     if (option.classList.contains(Configuration.SELECTED_COMPARISON_CLASS_NAME)) {
-                        currencyData.convertTo.push(curr);
+                        currencyData.convertTo.push(currency);
 
                         // alert(option.textContent);
-                    } else if (currencyData.convertTo.indexOf(curr) != -1) {
-                        let ix = currencyData.convertTo.indexOf(curr);
+                    } else if (currencyData.convertTo.indexOf(currency) != -1) {
+                        let ix = currencyData.convertTo.indexOf(currency);
                         currencyData.convertTo.splice(ix, 1);
                     }
                     //e.target.style.background = 'lightblue';
@@ -518,10 +531,11 @@ const Configuration = {
 
 
                 });
-                ul.appendChild(option)
+                select_box.appendChild(option)
 
             }
         }
+        //Configuration.makeComparisonsSection();
         Configuration.showComparisons();
         //selector.appendChild(ul);
     },
@@ -531,9 +545,9 @@ const Configuration = {
         let div = App.querySelectorByClass(Configuration.SHOW_COMPARISONS_CLASS_NAME);
         div.innerHTML = '';
 
-        for (curr of currencyData.convertTo) {
+        for (let currency of currencyData.convertTo) {
             let p = document.createElement('p');
-            p.textContent = curr;
+            p.textContent = currency;
             div.appendChild(p);
         }
     }

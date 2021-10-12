@@ -141,7 +141,7 @@ html {
   border-radius: 3px;
 }
 
-.Configure-comparisonsSelect {
+.Configure-comparisonsSelectBox {
   height: 5em;
   border: 2px solid black;
   overflow-y: scroll;
@@ -151,7 +151,7 @@ html {
   background: lightyellow;
 }
 
-.Configure-comparisonsSelect:hover {
+.Configure-comparisonsSelectBox:hover {
   cursor: default;
 }
 
