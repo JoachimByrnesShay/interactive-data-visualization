@@ -16,39 +16,39 @@
         <header class='Header'>
             <h1 class='Header-title'>Currency Visualization</h1>
         </header>
-        <section class='Config'>
-            <div class='Config-baseSelection'>
-                <h2>Select base</h2>
-                <!-- <select class='' onChange="changeBase();"></select> -->
-                <label for='filter2'>FILTER
-                    <input type='text' id='filter2' class='Base-filter' name='filter2' />
+        <section class='Configure'>
+            <div class='Configure-base'>
+                <h2 class='Configure-baseHeading'>Select base</h2>
+                <label class='Configure-baseFilterLabel' for='Configure-baseFilter'>FILTER
+                    <input type='text' id='Configure-baseFilter' class='Configure-baseFilter' name='Configure-baseFilter'>
                 </label>
-                <div class='baseSelection-scroll'>
-                    <div class='arrow left'>&#8609;
+                <div class='Configure-baseSelectControl'>
+                    <div class='Configure-baseScrollArrow u-leftArrow'>&#8609;
                     </div>
-                    <ul class='base-select' onChange='AppConfiguration.changeBase();'>
+                    <ul class='Configure-baseSelect'>
                     </ul>
-                    <div class='arrow right'>&#8680;&#10145;</div>
+                    <div class='Configure-baseScrollArrow u-rightArrow'>&#8680;&#10145;</div>
                 </div>
             </div>
-            <div class='section-config-conversions'>
-                <h2>Select <= 5 to compare</h2> <form class='comparison' onSubmit='return false;'>
-                        <label for='filter'>FILTER
-                            <input type='text' id='filter' class='Comparison-filter' name='filter' />
-                        </label>
-                        <div>
-                        </div>
-                        </form>
+            <div class='Configure-comparisons'>
+                <h2 class='Configure-comparisonHeading'>Select &lt;= 5 to compare</h2>
+                <form class='Configure-comparisonsForm' onSubmit='return false;'>
+                    <label for='Configure-comparisonsFilter'>FILTER
+                        <input type='text' id='Configure-comparisonsFilter' class='Configure-comparisonsFilter' name='Configure-comparisonsFilter'>
+                    </label>
+                    <div class='Configure-comparisonsSelect'>
+                    </div>
+                </form>
             </div>
-            <div class='section-config-selections'>
+            <div class='Configure-showConfiguration'>
                 <h3>Your base:</h3>
-                <h4 class='section-config-show-base'></h4>
+                <h4 class='Configure-showBase'></h4>
                 <h3>Your comparisons:</h3>
-                <div class='section-config-show-comparisons'></div>
+                <div class='Configure-showComparisons'></div>
             </div>
-            <div class=''>
+            <div class='Configure-reset'>
                 <h2>Reset Comparisons</h2>
-                <button onClick="BarChart.Utility.clearCharts();">
+                <button class='Configure-clearCharts' onClick="BarChart.Utility.clearCharts();">
                     clearCharts
                 </button>
             </div>
@@ -58,8 +58,8 @@
         <footer class='Footer'>
             <p class='Footer-copywrite'>&copy;&nbsp;2021&nbsp;Joachim Byrnes-Shay</p>
         </footer>
+        <!-- modal activation controlled in js called via above onClick events -->
     </div>
-    <!-- modal activation controlled in js called via above onClick events -->
     <script src='js/main.js'></script>
 </body>
 

@@ -29,7 +29,7 @@ html {
 
 /* style entire body, aka .Page */
 
-.containerBase::before {/* opacity: .1;
+.ChartContent-barChartContainer.is-forBaseChart::before {/* opacity: .1;
  */
   content: '';
   /* background: rgba(0,0,180,0.2);
@@ -43,49 +43,7 @@ html {
   position: absolute;
 }
 
-@keyframes flashText {
-  0% {
-    text-shadow: 3px 5px 3px black;
-    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
-    color: transparent;
-    background: transparent;
-  }
-
-  50% {/* //color: black;
- */
-    color: grey;
-    text-shadow: 3px 5px 10px orange, 5px 10px 3px black;
-  }
-
-  100% {
-    text-shadow: 3px 5px 3px black;
-    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
-    color: transparent;
-    background: transparent;
-  }
-}
-
-@keyframes flashBackground {
-  0% {
-    background-color: blue ;
-  }
-
-  100% {
-    background-color: green;
-  }
-}
-
-.containerBase:hover .indicateBase {
-  animation: flashText 400ms normal forwards;
-  animation-iteration-count: 2;
-}
-
-.containerBase:hover .indicateBase::before {
-  animation: flashBackground 400ms normal forwards;
-  animation-iteration-count: 2;
-}
-
-.indicateBase {
+.ChartContent-indicateBase {
   position: absolute;
   color: black;
   background: transparent;
@@ -100,11 +58,11 @@ html {
   z-index: 50;
 }
 
-.section-config-show-comparisons {
+.Configuration-showComparisons {
   background: lightcoral;
 }
 
-.base-select {/* height: 5em;
+.Configure-baseSelect {/* height: 5em;
  *//* //height: 3em;
  *//* width: 110px;
  */
@@ -119,14 +77,15 @@ html {
   scroll-behavior: smooth;
 }
 
-.baseSelection-scroll {
+.Configure-baseSelectControl {
   background: lightblue;
   display: flex;
   flex-direction: column;
   width: 19em;
+  grid-area: selector;
 }
 
-.Config-baseSelection {
+.Configure-base {
   display: grid;
   grid-template-rows: 1fr 5fr;
   grid-template-columns: 1fr 1fr;
@@ -134,37 +93,42 @@ html {
                       "filtered selector";
 }
 
-.Config-baseSelection h2 {
+.Configure-baseHeading {
   grid-area: title;
   justify-self: center;
 }
 
-.Config-baseSelection label {
+.Configure-baseFilterLabel {
   grid-area: filtered;
 }
 
-.Config-baseSelection .baseSelection-scroll {
-  grid-area: selector;
-}
-
-.Base-filter {
+.Configure-baseFilter {
   max-width: 4em;
 }
 
-.Config .arrow {
+.Configure-baseScrollArrow {
   width: 4em;
   background-color: grey;
   height: 100%;
 }
 
-.arrow.left {
+.Configure-baseScrollArrow.u-leftArrow {
 }
 
-.Config .base-select {
+.Configure-baseScrollArrow.u-rightArrow {
+}
+
+.Configure-baseSelect {
   font-size: 14px;
+  list-style-type: none;
 }
 
-.base-select-li {/* //display: inline-block;
+.Configure-reset, .Configure-comparisonsForm, .Configure-baseHeading,
+.Configure-comparisonsHeading, .Configure-baseFilter {
+  background: beige;
+}
+
+.Configure-baseOption {/* //display: inline-block;
  */
   display: inline-block;
   background: lightslategray;
@@ -177,51 +141,44 @@ html {
   border-radius: 3px;
 }
 
-.base-select .focus-li {
-  align-self: center;
-}
-
-.selectComparisons {
+.Configure-comparisonsSelect {
   height: 5em;
   border: 2px solid black;
   overflow-y: scroll;
   scroll-behavior: smooth;
   width: 22em;
+  list-style-type: none;
+  background: lightyellow;
 }
 
-.selectComparisons:hover {
+.Configure-comparisonsSelect:hover {
   cursor: default;
 }
 
-.comparisonOption {
+.Configure-comparisonOption {
   padding: 0;
   margin: .3em;
   border: 1px solid transparent;
+  list-style-type: none;
 }
 
-/* .
-Comparisons li:active, .selectComparisons li:visited {
-  background: lightblue;
-}
- */
-
-.comparisonOptionSelected {
+.Configure-selectedComparison {
   background: lightblue;
   border: 1px solid black;
   border-radius: 4px;
 }
 
-.section-config-show-comparisons {
+.Configure-showComparisons {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   background: green;
 }
 
-.section-config-show-comparisons p:hover {
+.Configure-showComparisons p:hover {
   cursor: help;
 }
 
-.Config {
+.Configure {
   font-size: 1em;
   height: var(--section-config-height);
   display: flex;
@@ -230,18 +187,15 @@ Comparisons li:active, .selectComparisons li:visited {
   color: black;
 }
 
-.Config div {
+.Configure-showBase, .Configure-showComparisons, .Configure-showConfiguration {
   background: beige;
   /* align-self: center;
  */
   align-self: baseline;
 }
 
-.Config * {
+.Configure * {
   font-size: 1em;
-}
-
-.Config .filter {
 }
 
 .Page {
@@ -254,8 +208,8 @@ Comparisons li:active, .selectComparisons li:visited {
 
 .Page-container {
   width: 80%;
-  margin: 0 auto;
   height: 100%;
+  margin: 0 auto;
 }
 
 /* .Header as flex-box to be future-proof for next iterations */
@@ -278,9 +232,7 @@ Comparisons li:active, .selectComparisons li:visited {
 
 /* .ChartContent::before {
   content: '';
- 
   background: #ebf5f9;
- 
   background-image: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#2ec3eb 51%,#d5ebfb 100%);
   position: absolute;
   top: 0;
@@ -289,7 +241,8 @@ Comparisons li:active, .selectComparisons li:visited {
   right: 0;
   z-index: -1;
   display: block;
-} */
+}
+ */
 
 .ChartContent {
   background: #ebf5f9;
@@ -304,7 +257,7 @@ Comparisons li:active, .selectComparisons li:visited {
   border: .5em solid var(--ChartContent-borderColor);
 }
 
-.ChartContent-container {
+.ChartContent-barChartContainer {
   height: 100%;
   position: relative;
   display: flex;
@@ -329,51 +282,13 @@ Comparisons li:active, .selectComparisons li:visited {
 
 /* alternate background on barCharts from light background dark text to dark background light text */
 
-.ChartContent-container:nth-of-type(even) .ChartContent-barChart {
+.ChartContent-barChartContainer:nth-of-type(even) .ChartContent-barChart {
   background: var(--ChartContent-barChart--even-backgroundColor);
   color: black;
 }
 
-.ChartContent-container:nth-of-type(odd) .ChartContent-barChart {
+.ChartContent-barChartContainer:nth-of-type(odd) .ChartContent-barChart {
   background: var(--ChartContent-barChart--odd-backgroundColor);
-}
-
-@keyframes clearGraphs {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-.clearGraphs .ChartContent-barChart {
-  animation: clearGraphs 2s normal forwards;
-  animation-iteration-count: 1;
-}
-
-/* rotate modal while shrinking it and throwing a small shadow */
-
-@keyframes disappearModal {
-  0% {
-    box-shadow: 5px 5px 5px grey;
-  }
-
-  100% {
-    transform: rotate(380deg);
-    height: 7%;
-    width: 4%;
-    font-size: 3px;
-    box-shadow: 15px 15px 15px black;
-  }
-}
-
-/* when modal activated on barchart click, activate 'disappearing modal' animation when user mouseoff barchart */
-
-.ChartContent-barChart:not(:hover) .Modal {
-  animation: disappearModal 800ms normal forwards;
-  animation-iteration-count: 1;
 }
 
 /* custom modal instead of alert box, one modal absolute positioned per each ChartContent-container */
@@ -424,9 +339,9 @@ Comparisons li:active, .selectComparisons li:visited {
   width: 7em;
 }
 
-@media only screen and (max-width:  950px) {/* change orientetion of .ChartContent flex items on smaller screens, i.e. vertical to horizontal barCharts */
+@media only screen and (max-width: 950px) {/*change orientetion of .ChartContent flex items on smaller screens, i.e. vertical to horizontal barCharts */
 
-  .indicateBase {
+  .ChartContent-indicateBase {
     position: absolute;
     color: black;
     color: transparent;
@@ -434,9 +349,6 @@ Comparisons li:active, .selectComparisons li:visited {
     left: 60%;
     writing-mode: horizontal-tb;
     text-orientation: mixed;
-    /* display: inline-block;
- *//* margin: 0 auto;
- */
     text-shadow: 3px 5px 3px black;
   }
 
@@ -445,13 +357,12 @@ Comparisons li:active, .selectComparisons li:visited {
     justify-content: space-around;
   }
 
-  .ChartContent-container {
+  .ChartContent-barChartContainer {
     width: 100%;
     height: inherit;
   }
 
-  .ChartContent-barChart {/* since ChartContent-barCharts have INLINE hardcoded styling of height in html for default vertical charts, use !important to change height for this class in css stylesheet *//* height: 70% !important;
- */
+  .ChartContent-barChart {/* since ChartContent-barCharts have INLINE hardcoded styling of height in html for default vertical charts, use !important to change height for this class in css stylesheet */
     height: 70%;
     justify-self: flex-end;
     align-self: center;
@@ -472,26 +383,6 @@ Comparisons li:active, .selectComparisons li:visited {
     align-items: center;
   }/*
    set width of barCharts to height (the originally hardcoded inline value), i.e. for switch from vertical to horizontal charts */
-
-  .ChartContent-barChart.is-eurSize {
-    width: var(--EUR--smallMediaWidth);
-  }
-
-  .ChartContent-barChart.is-bgnSize {
-    width: var(--BGN--smallMediaWidth);
-  }
-
-  .ChartContent-barChart.is-usdSize {
-    width: var(--USD--smallMediaWidth);
-  }
-
-  .ChartContent-barChart.is-qarSize {
-    width: var(--QAR--smallMediaWidth);
-  }
-
-  .ChartContent-barChart.is-gelSize {
-    width: var(--GEL--smallMediaWidth);
-  }
 }
 
 /* make acceptably responsive for extremely small-width screen devices */
@@ -515,4 +406,86 @@ Comparisons li:active, .selectComparisons li:visited {
     font-size: .5em;
     padding-top: 5%;
   }
+}
+
+/* animations */
+
+@keyframes flashText {
+  0% {
+    text-shadow: 3px 5px 3px black;
+    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
+    color: transparent;
+    background: transparent;
+  }
+
+  50% {/* //color: black;
+ */
+    color: grey;
+    text-shadow: 3px 5px 10px orange, 5px 10px 3px black;
+  }
+
+  100% {
+    text-shadow: 3px 5px 3px black;
+    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
+    color: transparent;
+    background: transparent;
+  }
+}
+
+@keyframes flashBackground {
+  0% {
+    background-color: blue ;
+  }
+
+  100% {
+    background-color: green;
+  }
+}
+
+.ChartContent-barChartContainer.is-forBaseChart:hover .ChartContent-indicateBase {
+  animation: flashText 400ms normal forwards;
+  animation-iteration-count: 2;
+}
+
+.ChartContent-barChartContainer.is-forBaseChart:hover .ChartContent-indicateBase::before {
+  animation: flashBackground 400ms normal forwards;
+  animation-iteration-count: 2;
+}
+
+@keyframes clearCharts {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.ChartContent--clearCharts .ChartContent-barChart {
+  animation: clearCharts 2s normal forwards;
+  animation-iteration-count: 1;
+}
+
+/* rotate modal while shrinking it and throwing a small shadow */
+
+@keyframes disappearModal {
+  0% {
+    box-shadow: 5px 5px 5px grey;
+  }
+
+  100% {
+    transform: rotate(380deg);
+    height: 7%;
+    width: 4%;
+    font-size: 3px;
+    box-shadow: 15px 15px 15px black;
+  }
+}
+
+/* when modal activated on barchart click, activate 'disappearing modal' animation when user mouseoff barchart */
+
+.ChartContent-barChart:not(:hover) .Modal {
+  animation: disappearModal 800ms normal forwards;
+  animation-iteration-count: 1;
 }
