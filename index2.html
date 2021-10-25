@@ -15,37 +15,36 @@
     <div class='Page-container'>
         <header class='Header'>
             <h1 class='Header-title'>Currency Visualization</h1>
-            <div class='Header-flashContainer'>message</div>
         </header>
         <section class='Configure'>
             <div class='Configure-base'>
-                <h2 class='Configure-baseHeading'>Change your base currency from <span class='Configure-headerBaseValue'> </span></h2>
-                <form class='Configure-baseForm' onSubmit='return false;'>
-                    <label for='Configure-baseFilterLabel' for='Configure-baseFilter'>FILTER
-                        <input type='text' id='Configure-baseFilter' class='Configure-baseFilter' name='Configure-baseFilter'>
-                    </label>
-                    <ul class='Configure-baseSelectBox'>
+                <label class='Configure-baseFilterLabel' for='Configure-baseFilter'>FILTER
+                    <input type='text' id='Configure-baseFilter' class='Configure-baseFilter' name='Configure-baseFilter'>
+                </label>
+                <div class='Configure-baseSelectControl'>
+                    <h2 class='Configure-baseHeading'>Select base</h2>
+                    <div class='Configure-baseScrollArrow u-upArrow'>&#8593;
+                    </div>
+                    <ul class='Configure-baseSelect'>
                     </ul>
-                </form>
+                    <div class='Configure-baseScrollArrow u-downArrow'>&#8595;</div>
+                </div>
             </div>
             <div class='Configure-comparisons'>
                 <h2 class='Configure-comparisonHeading'>Select &lt;= 5 to compare</h2>
                 <form class='Configure-comparisonsForm' onSubmit='return false;'>
                     <label for='Configure-comparisonsFilterField'>FILTER
-                        <input type='text' id='Configure-comparisonsFilterField' class='Configure-comparisonsFilterField' name='Configure-comparisonsFilterField' placeholder="Select <= 5 to compare">
+                        <input type='text' id='Configure-comparisonsFilterField' class='Configure-comparisonsFilterField' name='Configure-comparisonsFilterField'>
                     </label>
                     <ul class='Configure-comparisonsSelectBox'>
                     </ul>
                 </form>
             </div>
             <div class='Configure-showConfiguration'>
-                <div class='Configure-showBase'>
-                    <h3>Base:</h3>
-                </div>
-                <div class='Configure-showComparisons'>
-                    <h3>Comparisons:</h3>
-                    <div class='Configure-listComparisons'></div>
-                </div>
+                <h3>Base:</h3>
+                <h4 class='Configure-showBase'></h4>
+                <h3>Comparisons:</h3>
+                <div class='Configure-showComparisons'></div>
             </div>
             <div class='Configure-reset'>
                 <h2>Reset Comparisons</h2>
@@ -61,7 +60,7 @@
         </footer>
         <!-- modal activation controlled in js called via above onClick events -->
     </div>
-    <script src='js/main2.js'></script>
+    <script src='js/main.js'></script>
 </body>
 
 </html>

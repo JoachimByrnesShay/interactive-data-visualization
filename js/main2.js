@@ -56,7 +56,7 @@ const CurrencyFetch = {
         let symbolsURL = url + this.baseSubURLDescriptions;
         return fetch(symbolsURL).then(response => response.json())
             .then(data => {
-                console.log(Object.entries(data))
+                //console.log(Object.entries(data))
                 for ([k, v] of Object.entries(data)) {
                     currencyData.description[k] = v;
                 }
@@ -68,7 +68,7 @@ const CurrencyFetch = {
 
         return fetch(ratesURL).then((response) => response.json())
             .then(data => {
-                console.log('rates', data.rates);
+
                 for (let currency of Object.keys(data.rates)) {
                     currencyData.rates[currency] = data.rates[currency];
                 }
@@ -78,7 +78,7 @@ const CurrencyFetch = {
     APIData(url) {
         this.descriptions(url).then(() => {
             this.rates(url).then(() => {
-                console.log(currencyData);
+
                 App.render();
             });
         });
@@ -152,6 +152,7 @@ const BarChart = {
                 this.visuallyIndicateChartIsBase(currency, chartContainer);
 
                 let barChart = this.makeBarChart(currency);
+
                 chartContainer.appendChild(barChart);
                 container.appendChild(chartContainer);
             }
@@ -228,8 +229,9 @@ BarChart.Utility = {
             main.classList.remove(BarChart.CLEAR_ALL_GRAPHS_CLASS_NAME);
             App.clearContents(main);
             App.render();
+
         });
-        //render();
+
     },
     resizeAll() {
 
@@ -238,7 +240,8 @@ BarChart.Utility = {
         for (barChart of charts) {
             let size = barChart.dataset.size;
 
-            if (document.body.clientWidth <= 950) {
+            //if (document.body.clientWidth <= 950) {
+            if (window.innerWidth <= 950) {
                 barChart.style.width = size;
                 barChart.style.height = '70%';
 
@@ -291,11 +294,12 @@ const Modal = {
 // AppConfiguration object provides organization of methods for presenting configuration options and controlling their behavior and associted behavior of display in configuration section
 
 const Configuration = {
-    BASE_SELECT_UL_CLASS_NAME: 'Configure-baseSelect',
+    BASE_SELECT_BOX_CLASS_NAME: 'Configure-baseSelectBox',
     BASE_OPTION_CLASS_NAME: 'Configure-baseOption',
-    BASE_SELECT_UP_ARROW_CLASS_NAME: 'Configure-baseScrollArrow.u-upArrow',
-    BASE_SELECT_DOWN_ARROW_CLASS_NAME: 'Configure-baseScrollArrow.u-downArrow',
-    BASE_FILTER_CLASS_NAME: 'Configure-baseFilter',
+    // BASE_SELECT_UP_ARROW_CLASS_NAME: 'Configure-baseScrollArrow.u-upArrow',
+    // BASE_SELECT_DOWN_ARROW_CLASS_NAME: 'Configure-baseScrollArrow.u-downArrow',
+    BASE_FORM_CLASS_NAME: 'Configure-baseForm',
+    BASE_FILTER_FIELD_CLASS_NAME: 'Configure-baseFilter',
     SELECTED_COMPARISON_CLASS_NAME: 'Configure-selectedComparison',
     SHOW_BASE_CLASS_NAME: 'Configure-showBase',
     SHOW_COMPARISONS_CLASS_NAME: 'Configure-showComparisons',
@@ -306,139 +310,217 @@ const Configuration = {
 
 
     changeBase(val) {
-
-        let select = App.querySelectorByClass(this.BASE_SELECT_UL_CLASS_NAME);
+        let select = App.querySelectorByClass(this.BASE_SELECT_BOX_CLASS_NAME);
+        App.querySelectorByClass('Configure-headerBaseValue').innerHTML = val;
         currencyData.convertFrom = val; //select.value;
 
         if (currencyData.convertTo.includes(val)) {
+
             currencyData.convertTo.splice(currencyData.convertTo.indexOf(val), 1);
         }
         CurrencyFetch.APIData(baseURL);
-        //App.render();
-    },
-    makeScrollWithArrowListener(arrow, bool) {
-
-        let selector = App.querySelectorByClass(this.BASE_SELECT_UL_CLASS_NAME);
-        let timeArrow;
-        arrow.addEventListener('mousedown', function(e) {
-            let distance = 25;
-            if (!bool) {
-                distance *= -1;
-            };
-            timeArrow = setInterval(function() {
-                selector.scrollBy(0, distance);
-            }, 70);
-
+        let thing = App.querySelectorByClass('Configure-showConfiguration');
+        thing.classList.add('Configure-configurationCurrencyAnim');
+        thing.addEventListener('animationend', () => {
+            thing.classList.remove('Configure-configurationCurrencyAnim');
         });
-        arrow.addEventListener('mouseup', function(e) {
-            clearInterval(timeArrow);
-        })
+        App.render();
 
     },
-    makeBaseFilterListener(filter_field) {
-        filter_field.addEventListener('keyup', (e) => {
+    //     let select = App.querySelectorByClass(this.BASE_SELECT_UL_CLASS_NAME);
+    //     currencyData.convertFrom = val; //select.value;
 
-            if (filter_field.value == '') {
-                filtered = Object.keys(currencyData.rates);
-            }
-            filtered = Object.keys(currencyData.rates).filter(function(elem) {
+    //     if (currencyData.convertTo.includes(val)) {
+    //         currencyData.convertTo.splice(currencyData.convertTo.indexOf(val), 1);
+    //     }
+    //     CurrencyFetch.APIData(baseURL);
+    //     //App.render();
+    // },
+    // makeScrollWithArrowListener(arrow, bool) {
+
+    //     let selector = App.querySelectorByClass(this.BASE_SELECT_UL_CLASS_NAME);
+    //     let timeArrow;
+    //     arrow.addEventListener('mousedown', function(e) {
+    //         let distance = 25;
+    //         if (!bool) {
+    //             distance *= -1;
+    //         };
+    //         timeArrow = setInterval(function() {
+    //             selector.scrollBy(0, distance);
+    //         }, 70);
+
+    //     });
+    //     arrow.addEventListener('mouseup', function(e) {
+    //         clearInterval(timeArrow);
+    //     })
+
+    // },
+    // makeBaseFilterListener(filter_field) {
+    //     filter_field.addEventListener('keyup', (e) => {
+
+    //         if (filter_field.value == '') {
+    //             filtered = Object.keys(currencyData.rates);
+    //         }
+    //         filtered = Object.keys(currencyData.rates).filter(function(elem) {
+    //             return elem.toLowerCase().startsWith(filter_field.value.toLowerCase());
+    //         });
+    //         this.makeCurrencyOptionsList(filtered);
+    //     });
+    // },
+    // // filter_field.addEventListener('keyup', function(e) {
+
+
+    // //            let form = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS_NAME);
+    // //            filtered_result = Object.keys(currencyData.rates).filter(function(elem) {
+    // //                return elem.toLowerCase().startsWith(filter_field.value.toLowerCase());
+    // //            });
+
+    // //            if (filter_field.value == '') {
+    // //                filtered_result = Object.keys(currencyData.rates);
+    // //            }
+
+    // //            Configuration.makeComparisonsList(filtered_result);
+
+
+    // //        });
+    // makeBaseCurrencyOptions() {
+
+    //     let selector = App.querySelectorByClass(this.BASE_SELECT_UL_CLASS_NAME);
+    //     selector.value = currencyData.convertFrom;
+    //     let up_arrow = App.querySelectorByClass(this.BASE_SELECT_UP_ARROW_CLASS_NAME)
+    //     let down_arrow = App.querySelectorByClass(this.BASE_SELECT_DOWN_ARROW_CLASS_NAME);
+    //     this.makeScrollWithArrowListener(up_arrow, false);
+    //     this.makeScrollWithArrowListener(down_arrow, true);
+
+    //     let filterSelector = App.querySelectorByClass(this.BASE_FILTER_CLASS_NAME);
+
+    //     let filtered;
+
+    //     filtered = Object.keys(currencyData.rates).sort();
+    //     console.log(filtered);
+    //     //delete filtered[currencyData.convertFrom];
+    //     this.makeBaseCurrencyOptionsList(filtered);
+    //     this.makeBaseFilterListener(filterSelector);
+    //     // filterSelector.addEventListener('keyup', (e) => {
+
+    //     //     if (filterSelector.value == '') {
+    //     //         filtered = Object.keys(currencyData.rates);
+    //     //     }
+
+    //     //     filtered = Object.keys(currencyData.rates).filter(function(elem) {
+
+    //     //         return elem.toLowerCase().startsWith(filterSelector.value.toLowerCase());
+    //     //     });
+
+    //     //     this.makeCurrencyOptionsList(filtered);
+
+    //     // });
+    //     if (filtered[0]) {
+
+    //         let options = App.querySelectorAllByClass(this.BASE_OPTION_CLASS_NAME);
+    //         let selected;
+
+    //         for (let option of options) {
+    //             if (option.dataset.curr == filtered[0]) {
+
+
+    //                 option.scrollIntoView({ block: "center", inline: 'center', behavior: 'auto' });
+
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     this.makeBaseCurrencyOptionsList(filtered);
+    // },
+
+    // makeBaseCurrencyOptionsList(filtered_result) {
+    //     let firstOption;
+    //     let selector = App.querySelectorByClass(this.BASE_SELECT_UL_CLASS_NAME);
+    //     for (let curr of filtered_result) {
+
+    //         let option = document.createElement('li');
+    //         if (!firstOption) {
+    //             firstOption = option;
+    //         }
+
+    //         option.classList.add(Configuration.BASE_OPTION_CLASS_NAME);
+
+    //         option.textContent = `${curr}:${currencyData.description[curr]}`;
+    //         option.dataset.curr = curr;
+    //         option.addEventListener('click', function(e) {
+    //             Configuration.changeBase(curr);
+    //         });
+
+    //         selector.appendChild(option);
+
+    //     }
+    //     if (filtered_result.length) {
+    //         firstOption.scrollIntoView({ block: "center", inline: 'center', behavior: 'auto' });
+    //     };
+    // },
+    // makeBaseSection() {
+    //     let filter_field = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS_NAME);
+    //     let filtered_result;
+    //     filter_field.value = '';
+    //     filtered_result = Object.keys(currencyData.rates);
+    //     let select_box = App.querySelectorByClass(Configuration.COMPARISONS_SELECT_BOX_CLASS_NAME);
+
+    //     this.makeComparisonsList(filtered_result);
+
+    //     filter_field.addEventListener('keyup', function(e) {
+
+
+    //         let form = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS_NAME);
+    //         filtered_result = Object.keys(currencyData.rates).filter(function(elem) {
+    //             return elem.toLowerCase().startsWith(filter_field.value.toLowerCase());
+    //         });
+
+    //         if (filter_field.value == '') {
+    //             filtered_result = Object.keys(currencyData.rates);
+    //         }
+
+    //         Configuration.makeComparisonsList(filtered_result);
+
+
+    //     });
+    // },
+
+    makeBaseSection() {
+        let filter_field = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS_NAME);
+        App.querySelectorByClass('Configure-headerBaseValue').innerHTML = currencyData.convertFrom;
+        App.querySelectorByClass('Configure-headerBaseValue').ariaLabel = currencyData.description[currencyData.convertFrom];
+        App.querySelectorByClass('Configure-headerBaseValue').style.display = "inline-block";
+        App.querySelectorByClass('Configure-headerBaseValue').classList.add('Configure-headerBaseValueAnim');
+
+        App.querySelectorByClass('Configure-headerBaseValue').addEventListener('animationend', () => {
+            App.querySelectorByClass('Configure-headerBaseValue').classList.remove('Configure-headerBaseValueAnim');
+        });
+
+        let filtered_result;
+        filter_field.value = '';
+        filtered_result = Object.keys(currencyData.rates);
+        let select_box = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS_NAME);
+
+        Configuration.makeBaseList(filtered_result);
+
+        filter_field.addEventListener('keyup', function(e) {
+            let form = App.querySelectorByClass(Configuration.BASE_FORM_CLASS_NAME);
+            filtered_result = Object.keys(currencyData.rates).filter(function(elem) {
                 return elem.toLowerCase().startsWith(filter_field.value.toLowerCase());
             });
-            this.makeCurrencyOptionsList(filtered);
+
+            if (filter_field.value == '') {
+                filtered_result = Object.keys(currencyData.rates);
+            }
+
+            Configuration.makeBaseList(filtered_result);
+
         });
-    },
-    // filter_field.addEventListener('keyup', function(e) {
 
 
-    //            let form = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS_NAME);
-    //            filtered_result = Object.keys(currencyData.rates).filter(function(elem) {
-    //                return elem.toLowerCase().startsWith(filter_field.value.toLowerCase());
-    //            });
-
-    //            if (filter_field.value == '') {
-    //                filtered_result = Object.keys(currencyData.rates);
-    //            }
-
-    //            Configuration.makeComparisonsList(filtered_result);
-
-
-    //        });
-    makeCurrencyOptions() {
-
-        let selector = App.querySelectorByClass(this.BASE_SELECT_UL_CLASS_NAME);
-        selector.value = currencyData.convertFrom;
-        let up_arrow = App.querySelectorByClass(this.BASE_SELECT_UP_ARROW_CLASS_NAME)
-        let down_arrow = App.querySelectorByClass(this.BASE_SELECT_DOWN_ARROW_CLASS_NAME);
-        this.makeScrollWithArrowListener(up_arrow, false);
-        this.makeScrollWithArrowListener(down_arrow, true);
-
-        let filterSelector = App.querySelectorByClass(this.BASE_FILTER_CLASS_NAME);
-
-        let filtered;
-
-        filtered = Object.keys(currencyData.rates).sort();
-        console.log(filtered);
-        //delete filtered[currencyData.convertFrom];
-        this.makeCurrencyOptionsList(filtered);
-        this.makeBaseFilterListener(filterSelector);
-        // filterSelector.addEventListener('keyup', (e) => {
-
-        //     if (filterSelector.value == '') {
-        //         filtered = Object.keys(currencyData.rates);
-        //     }
-
-        //     filtered = Object.keys(currencyData.rates).filter(function(elem) {
-
-        //         return elem.toLowerCase().startsWith(filterSelector.value.toLowerCase());
-        //     });
-
-        //     this.makeCurrencyOptionsList(filtered);
-
-        // });
-        if (filtered[0]) {
-
-            let options = App.querySelectorAllByClass(this.BASE_OPTION_CLASS_NAME);
-            let selected;
-
-            for (let option of options) {
-                if (option.dataset.curr == filtered[0]) {
-
-
-                    option.scrollIntoView({ block: "center", inline: 'center', behavior: 'auto' });
-
-                    break;
-                }
-            }
-        }
-        this.makeCurrencyOptionsList(filtered);
-    },
-
-    makeCurrencyOptionsList(filtered_result) {
-        let firstOption;
-        let selector = App.querySelectorByClass(this.BASE_SELECT_UL_CLASS_NAME);
-        for (let curr of filtered_result) {
-
-            let option = document.createElement('li');
-            if (!firstOption) {
-                firstOption = option;
-            }
-
-            option.classList.add(Configuration.BASE_OPTION_CLASS_NAME);
-
-            option.textContent = `${curr}:${currencyData.description[curr]}`;
-            option.dataset.curr = curr;
-            option.addEventListener('click', function(e) {
-                Configuration.changeBase(curr);
-            });
-
-            selector.appendChild(option);
-
-        }
-        if (filtered_result.length) {
-            firstOption.scrollIntoView({ block: "center", inline: 'center', behavior: 'auto' });
-        };
     },
     makeComparisonsSection() {
+
         let filter_field = App.querySelectorByClass(Configuration.COMPARISONS_FILTER_FIELD_CLASS_NAME);
         let filtered_result;
         filter_field.value = '';
@@ -449,7 +531,6 @@ const Configuration = {
 
         filter_field.addEventListener('keyup', function(e) {
 
-
             let form = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS_NAME);
             filtered_result = Object.keys(currencyData.rates).filter(function(elem) {
                 return elem.toLowerCase().startsWith(filter_field.value.toLowerCase());
@@ -457,12 +538,53 @@ const Configuration = {
 
             if (filter_field.value == '') {
                 filtered_result = Object.keys(currencyData.rates);
-            }
 
+            }
             Configuration.makeComparisonsList(filtered_result);
 
 
+
+
         });
+
+    },
+    makeBaseList(filtered_result) {
+
+        let select_box = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS_NAME);
+        select_box.innerHTML = '';
+        if (filtered_result.length == 0) {
+            filtered_result = [];
+        }
+
+        for (let currency of filtered_result) {
+            if (currency != currencyData.convertFrom) {
+                let option = document.createElement('li');
+                option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}:</span>${currencyData.description[currency]}`;
+                option.dataset['code'] = currency;
+                select_box.appendChild(option);
+                option.classList.add(Configuration.BASE_OPTION_CLASS_NAME);
+
+                option.addEventListener('click', function(e) {
+
+                    Configuration.changeBase(option.dataset['code']);
+                    //     option.classList.toggle(Configuration.SELECTED_BASE_CLASS_NAME);
+                    //     if (option.classList.contains(Configuration.SELECTED_BASE_CLASS_NAME)) {
+                    //         option.classList.remove(Configuration.SELECTED_BASE_CLASS_NAME);
+
+                    //     } else if (option.classList.contains(Configuration.SELECTED_COMPARISON_CLASS_NAME)) {
+                    //         currencyData.convertTo.push(currency);
+
+                    //     } else if (currencyData.convertTo.indexOf(currency) != -1) {
+                    //         let ix = currencyData.convertTo.indexOf(currency);
+                    //         currencyData.convertTo.splice(ix, 1);
+                    //     }
+
+                    // });
+                });
+
+
+            }
+        }
     },
     makeComparisonsList(filtered_result) {
 
@@ -476,7 +598,7 @@ const Configuration = {
             if (currency != currencyData.convertFrom) {
                 let option = document.createElement('li');
 
-                option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}:</span>${currencyData.description[currency]}`;
+                option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}</span>: ${currencyData.description[currency]}`;
 
                 option.classList.add(Configuration.COMPARISON_OPTION_CLASS_NAME);
                 if (currencyData.convertTo.includes(currency)) {
@@ -484,7 +606,12 @@ const Configuration = {
                     option.classList.add(Configuration.SELECTED_COMPARISON_CLASS_NAME);
                 }
                 option.addEventListener('click', function(e) {
+                    if (currencyData.convertTo.length == 5) {
+                        App.querySelectorByClass('Header-flashContainer').classList.add('Header-flashMessage')
+                    }
                     if (currencyData.convertTo.length < 5) {
+
+
                         option.classList.toggle(Configuration.SELECTED_COMPARISON_CLASS_NAME);
                     } else if (option.classList.contains(Configuration.SELECTED_COMPARISON_CLASS_NAME)) {
                         option.classList.remove(Configuration.SELECTED_COMPARISON_CLASS_NAME);
@@ -496,7 +623,13 @@ const Configuration = {
                     } else if (currencyData.convertTo.indexOf(currency) != -1) {
                         let ix = currencyData.convertTo.indexOf(currency);
                         currencyData.convertTo.splice(ix, 1);
+                        App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage')
+
+                    } else {
+
                     }
+                    console.log(currencyData.convertTo.length);
+
 
 
                     App.render();
@@ -505,17 +638,32 @@ const Configuration = {
 
             }
         }
+
         Configuration.showComparisons();
     },
     showComparisons() {
         let div1 = App.querySelectorByClass(Configuration.SHOW_BASE_CLASS_NAME);
-        div1.textContent = currencyData.convertFrom;
+        let alreadyP;
+        if (alreadyP = div1.querySelector('p')) {
+            div1.removeChild(alreadyP);
+        }
+        let showBaseP = document.createElement('p');
+        showBaseP.textContent = currencyData.convertFrom;
+        showBaseP.ariaLabel = currencyData.description[currencyData.convertFrom];
+        showBaseP.classList.add('Configure-baseParagraph')
+        div1.appendChild(showBaseP);
         let div = App.querySelectorByClass(Configuration.SHOW_COMPARISONS_CLASS_NAME);
-        div.innerHTML = '';
+        div = document.querySelector('.Configure-listComparisons');
+
+
+
+        App.querySelectorByClass('Configure-listComparisons').innerHTML = '';
 
         for (let currency of currencyData.convertTo) {
             let p = document.createElement('p');
             p.textContent = currency;
+            p.classList.add('Configure-comparisonParagraph')
+            p.ariaLabel = currencyData.description[currency];
             div.appendChild(p);
         }
     }
@@ -528,7 +676,7 @@ class App {
     // render app
     static render() {
 
-        Configuration.makeCurrencyOptions();
+        Configuration.makeBaseSection();
         Configuration.makeComparisonsSection();
 
         //each call to render clears html of the barcharts area (.ChartContent)
