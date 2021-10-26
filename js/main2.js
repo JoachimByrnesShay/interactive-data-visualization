@@ -150,10 +150,20 @@ const BarChart = {
                 let chartContainer = document.createElement('div');
                 chartContainer.classList.add(this.CHART_CONTAINER_CLASS_NAME);
                 this.visuallyIndicateChartIsBase(currency, chartContainer);
-
+                // let title = document.createElement('p');
+                // title.classList.add('ChartContent-barChartTitle');
+                // title.textContent = currency;
                 let barChart = this.makeBarChart(currency);
-
+                // chartContainer.appendChild(title);
                 chartContainer.appendChild(barChart);
+                // console.log('barchart size', barChart.dataset.size);
+                // let size = barChart.dataset.size;
+                // if (parseInt(size) >= 8) {
+                //     let containerHeight = chartContainer.style.height;
+                //     console.log(containerHeight);
+                //     title.style.top = String(parseInt(size) - (0.3 * parseInt(size))) + '%';
+                // }
+
                 container.appendChild(chartContainer);
             }
         }
@@ -167,6 +177,7 @@ const BarChart = {
             chartContainer.classList.add(this.CHART_CONTAINER_IS_BASE_CLASS_NAME);
             div.textContent = 'BASE CURRENCY';
             chartContainer.appendChild(div);
+            console.log(div.parentNode);
         }
 
     },
@@ -177,10 +188,21 @@ const BarChart = {
 
         let title = document.createElement('p');
         title.textContent = currencyCode;
+        title.classList.add('ChartContent-barChartTitle');
         let modal = Modal.makeModal(currencyCode);
+
         barChart.append(title, modal);
+        barChart.append(modal);
         this.Utility.setInitialSize(barChart, currencyCode);
-        barChart.onclick = () => Modal.activateModal(barChart);
+        let size = parseInt(barChart.dataset.size);
+        // console.log(size);
+
+        barChart.onclick = (e) => {
+            e.preventDefault();
+            Modal.activateModal(barChart);
+        }
+
+
         return barChart;
     }
 
@@ -198,14 +220,39 @@ BarChart.Utility = {
         }
         return 100 / max;
     },
+    offsetTitle(barChart, size) {
+        let title = App.querySelectorByClass('ChartContent-barChartTitle', context = barChart);
+        title.classList.add('u-offset');
+        console.log(title);
+        let titleOffset = `calc(${size} + 1em)`;
+        console.log(titleOffset);
+        title.style.position = 'absolute';
+        title.classList.add('U-blackText');
+        if (window.innerWidth > 950) {
+            title.style.bottom = titleOffset
+
+            title.style.left = 'unset';
+
+        } else {
+            title.style.left = titleOffset;
+            title.style.bottom = 'unset';
+        }
+    },
     setInitialSize(barChart, currencyCode) {
         let ratio = BarChart.Utility.getSizeRatio();
         let chartSize = `${currencyData.rates[currencyCode] * ratio}%`;
 
-        if (document.body.clientWidth > 950) {
+        // if (document.body.clientWidth > 950) {
+        if (window.innerWidth > 950) {
             barChart.style.height = chartSize;
+
+
         } else barChart.style.width = chartSize;
+
         barChart.setAttribute('data-size', chartSize);
+        if (parseInt(chartSize) < 8) {
+            this.offsetTitle(barChart, chartSize);
+        }
 
     },
     getMainContent(main = this.MAIN_CONTENT_CLASS_NAME) {
@@ -243,12 +290,17 @@ BarChart.Utility = {
             //if (document.body.clientWidth <= 950) {
             if (window.innerWidth <= 950) {
                 barChart.style.width = size;
-                barChart.style.height = '70%';
+                barChart.style.height = '80%';
 
 
             } else {
                 barChart.style.height = size;
                 barChart.style.width = '7em';
+            }
+            if (parseInt(size) < 8) {
+
+                BarChart.Utility.offsetTitle(barChart, size);
+
             }
 
         }
@@ -608,9 +660,10 @@ const Configuration = {
                 option.addEventListener('click', function(e) {
                     if (currencyData.convertTo.length == 5) {
                         App.querySelectorByClass('Header-flashContainer').classList.add('Header-flashMessage')
+                        App.querySelectorByClass('Header-flashMessage').innerHTML = "<p>ONLY SELECT UP TO 5 COMPARISONS.</p> <p>RE-CLICK ANY CHOICE TO DESELECT.</p>";
                     }
                     if (currencyData.convertTo.length < 5) {
-
+                        App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage')
 
                         option.classList.toggle(Configuration.SELECTED_COMPARISON_CLASS_NAME);
                     } else if (option.classList.contains(Configuration.SELECTED_COMPARISON_CLASS_NAME)) {
@@ -628,7 +681,12 @@ const Configuration = {
                     } else {
 
                     }
-                    console.log(currencyData.convertTo.length);
+
+                    App.querySelectorByClass('Header-flashContainer').addEventListener('animationend', () => {
+                        App.querySelectorByClass('Header-flashContainer').innerHTML = '';
+                        App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage');
+                    });
+
 
 
 

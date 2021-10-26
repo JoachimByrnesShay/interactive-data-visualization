@@ -19,12 +19,22 @@
 
 html {
   box-sizing: border-box;
+  max-height: 100vw;
+}
+
+body {
+  min-width: 320px;
+  max-height: 100vw;
 }
 
 *, *:before, *:after, li {
   margin: 0;
   padding: 0;
   box-sizing: inherit;
+}
+
+.U-blackText {
+  color: black;
 }
 
 /* style entire body, aka .Page */
@@ -80,6 +90,10 @@ html {
   border-radius: 3px;
 }
  */
+
+.Configure-comparisons {/* margin-top: .3em;
+ */
+}
 
 .Configure-comparisonsSelectBox, .Configure-baseSelectBox {
   height: 5em;
@@ -179,13 +193,15 @@ html {
 
 .Configure {
   font-size: 1em;
-  min-height: var(--section-config-height);
+  /* min-height: var(--section-config-height);
+ */
   background-image: linear-gradient(to left, #ebf1f6 0%,#abd3ee 20%,#2ec3eb 71%,#d5ebfb 100%);
   color: black;
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(20em,1fr));
   justify-content: space-around;
   grid-column-gap: .5em;
+  align-content: top;
 }
 
 .Configure-showConfiguration, .Configure-reset {
@@ -246,19 +262,21 @@ html {
 
 .Page-container {
   width: 80%;
-  height: 100%;
+  height: 100vh;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1;
+  grid-template-rows: 2fr 5fr 25fr 1fr;
 }
 
 /* .Header as flex-box to be future-proof for next iterations */
 
 .Header {
-  height: 4em;
   background: var(--Header-backgroundColor);
-  display: flex;
   align-items: stretch;
-  flex: 1;
   padding: .3em;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .Header-title {
@@ -272,14 +290,40 @@ html {
   align-items: center;
 }
 
+@keyframes timeFlashHeader {
+  0% {
+    display: flex;
+    background: orange;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    background: orange;
+    opacity: 0;
+  }
+}
+
+.Header-flashContainer {
+  color: black;
+  font-style: bold;
+  display: none;
+}
+
 .Header-flashMessage {
-  background: orange;
-  width: 50%;
-  align-items: center;
-  margin-left: 4%;
-  justify-content: center;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr;
+  align-items: baseline;
+  justify-items: center;
   border-radius: 7px;
-  display: flex;
+}
+
+.Header-flashMessage.Header-flashContainer {
+  animation: timeFlashHeader 4200ms normal forwards;
+  animation-iteration-count: 1;
 }
 
 /* .ChartContent::before {
@@ -304,15 +348,26 @@ html {
   position: relative;
   justify-content: space-around;
   align-content: flex-end;
-  /* height of header + footer = 9em */
-  height: calc(100vh - 6em - var(--section-config-height));
+  /* height of header + footer = 9em *//* height: calc(100vh - 6em - var(--section-config-height));
+ *//* height: calc(100vh - 6em - var(--section-config-height));
+ */
   border: .5em solid var(--ChartContent-borderColor);
 }
 
 .ChartContent-barChartContainer {
-  height: 100%;
   position: relative;
   display: flex;
+  /* text "selectability on" changes hover cursor in UI.  set to none so no cursor change this text which is merely an indicator displayed inside an element within one .ChartContent-barChartContainer */
+  user-select: none;
+}
+
+.ChartContent-barChartTitle {
+  font-style: bold;
+}
+
+.CharContent-barChartTitle.u-offset {
+  position: absolute;
+  color: black;
 }
 
 .ChartContent-barChart {
@@ -330,6 +385,7 @@ html {
   align-items: flex-start;
   justify-content: center;
   /* 
+
 : 20;
  */
 }
@@ -375,7 +431,6 @@ html {
 }
 
 .Footer {
-  height: 2em;
   padding-left: .5em;
   background: var(--Footer-backgroundColor);
   display: flex;
@@ -444,7 +499,7 @@ html {
 
 @media only screen and (max-width:  320px) {
   .ChartContent-barChart {
-    height: 100% !important;
+    height: 80% !important;
     align-items: center;
     font-size: .9em;
     padding-top: 9%;
@@ -460,42 +515,37 @@ html {
   }
 }
 
-@media only screen and (max-width:  240px) {
-  .ChartContent-barChart {
-    font-size: .5em;
-    padding-top: 5%;
-  }
-}
-
 @media only screen and (max-width: 950px) {
   .Configure-showConfiguration {
     display: none;
+  }
+
+  .ChartContent-barChartContainer {
+    height: 100%;
   }
 }
 
 /* animations */
 
-@keyframes flashText {
+/* @keyframes flashText {
   0% {
     text-shadow: 3px 5px 3px black;
-    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
     color: transparent;
     background: transparent;
   }
 
-  50% {/* //color: black;
- */
+  50% {
     color: grey;
     text-shadow: 3px 5px 10px orange, 5px 10px 3px black;
   }
 
   100% {
     text-shadow: 3px 5px 3px black;
-    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
     color: transparent;
     background: transparent;
   }
 }
+ */
 
 @keyframes flashBackground {
   0% {
@@ -507,7 +557,7 @@ html {
   }
 }
 
-.ChartContent-barChartContainer.is-forBaseChart:hover .ChartContent-indicateBase {
+/* .ChartContent-barChartContainer.is-forBaseChart:hover .ChartContent-indicateBase {
   animation: flashText 400ms normal forwards;
   animation-iteration-count: 2;
 }
@@ -516,6 +566,7 @@ html {
   animation: flashBackground 400ms normal forwards;
   animation-iteration-count: 2;
 }
+ */
 
 @keyframes clearCharts {
   0% {
