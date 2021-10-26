@@ -266,7 +266,7 @@ body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1;
-  grid-template-rows: 2fr 5fr 25fr 1fr;
+  grid-template-rows: 3fr 5fr 25fr 1fr;
 }
 
 /* .Header as flex-box to be future-proof for next iterations */
@@ -276,7 +276,7 @@ body {
   align-items: stretch;
   padding: .3em;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 4fr 1fr;
 }
 
 .Header-title {
@@ -310,19 +310,27 @@ body {
   color: black;
   font-style: bold;
   display: none;
+  padding: 0;
 }
 
 .Header-flashMessage {
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr;
   grid-template-columns: 1fr;
-  align-items: baseline;
-  justify-items: center;
   border-radius: 7px;
+  justify-items: center;
+  align-items: center;
+  font-size: 90%;
+  font-style: bold;
+}
+
+.Header-flashContainer p {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .Header-flashMessage.Header-flashContainer {
-  animation: timeFlashHeader 4200ms normal forwards;
+  animation: timeFlashHeader 7000ms normal forwards;
   animation-iteration-count: 1;
 }
 
@@ -521,7 +529,7 @@ body {
   }
 
   .ChartContent-barChartContainer {
-    height: 100%;
+    height: 5em;
   }
 }
 

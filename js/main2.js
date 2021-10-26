@@ -293,6 +293,7 @@ BarChart.Utility = {
                 barChart.style.height = '80%';
 
 
+
             } else {
                 barChart.style.height = size;
                 barChart.style.width = '7em';
@@ -660,7 +661,7 @@ const Configuration = {
                 option.addEventListener('click', function(e) {
                     if (currencyData.convertTo.length == 5) {
                         App.querySelectorByClass('Header-flashContainer').classList.add('Header-flashMessage')
-                        App.querySelectorByClass('Header-flashMessage').innerHTML = "<p>ONLY SELECT UP TO 5 COMPARISONS.</p> <p>RE-CLICK ANY CHOICE TO DESELECT.</p>";
+                        App.querySelectorByClass('Header-flashMessage').innerHTML = "<p>ONLY SELECT UP TO 5 COMPARISONS.<br>RE-CLICK ANY CHOICE TO DESELECT.</p>";
                     }
                     if (currencyData.convertTo.length < 5) {
                         App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage')
