@@ -15,187 +15,97 @@
   --section-config-height: 9em;
 }
 
-/* set margins and padding to default 0 and set box-sizing to border-box */
-
-html {
-  box-sizing: border-box;
+.u-bold {
+  font-style: bold;
 }
 
-*, *:before, *:after, li {
+/* animations */
+
+@keyframes flashBackground {
+  0% {
+    background-color: blue ;
+  }
+
+  100% {
+    background-color: green;
+  }
+}
+
+@keyframes clearCharts {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes flashConfiguration {
+  0% {
+    background-color: beige ;
+  }
+
+  50% {
+    background-color: red;
+    box-shadow: 1em 1em .3em rgba(200,200,0,.5) ,-1em -1em .3em rgba(255,255,0,.5);
+  }
+
+  100% {
+    background-color: beige;
+  }
+}
+
+@keyframes timeFlashHeader {
+  0% {
+    display: flex;
+    background: orange;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    background: orange;
+    opacity: 0;
+  }
+}
+
+/* rotate modal while shrinking it and throwing a small shadow */
+
+@keyframes disappearModal {
+  0% {
+    box-shadow: 5px 5px 5px grey;
+  }
+
+  100% {
+    transform: rotate(380deg);
+    height: 7%;
+    width: 4%;
+    font-size: 3px;
+  }
+}
+
+/******/
+
+/* MAIN PAGE/CONTAINER STyLES */
+
+/* set margins and padding to default 0 and set box-sizing to border-box */
+
+*, *:before, *:after, li, select, option, datalist option {
   margin: 0;
   padding: 0;
   box-sizing: inherit;
 }
 
-/* style entire body, aka .Page */
-
-.ChartContent-barChartContainer.is-forBaseChart::before {/* opacity: .1;
- */
-  content: '';
-  /* background: rgba(0,0,180,0.2);
- */
-  background: rgba(175,100,55,0.5);
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  height: 100%;
-  position: absolute;
+html {
+  box-sizing: border-box;
+  min-width: 320px;
 }
 
-.ChartContent-indicateBase {
-  position: absolute;
-  color: black;
-  background: transparent;
-  color: transparent;
-  top: 5em;
-  left: 60%;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  display: inline-block;
-  margin: 0 auto;
-  text-shadow: 3px 5px 3px black;
-  z-index: 500;
-}
-
-.Configuration-showComparisons {
-  background: lightcoral;
-}
-
-.Configure-baseSelect {/* height: 5em;
- *//* //height: 3em;
- *//* width: 110px;
- */
-  height: 50px;
-  border: 2px solid black;
-  border-radius: .5em;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  padding: 4px;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-}
-
-.Configure-baseSelectControl {
-  background: lightblue;
-  display: flex;
-  flex-direction: column;
-  width: 19em;
-  grid-area: selector;
-}
-
-.Configure-base {
-  display: grid;
-  grid-template-rows: 1fr 5fr;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas: "title title"
-                      "filtered selector";
-}
-
-.Configure-baseHeading {
-  grid-area: title;
-  justify-self: center;
-}
-
-.Configure-baseFilterLabel {
-  grid-area: filtered;
-}
-
-.Configure-baseFilter {
-  max-width: 4em;
-}
-
-.Configure-baseScrollArrow {
-  width: 4em;
-  background-color: grey;
-  height: 100%;
-}
-
-.Configure-baseScrollArrow.u-upArrow {
-}
-
-.Configure-baseScrollArrow.u-downArrow {
-}
-
-.Configure-baseSelect {
-  font-size: 14px;
-  list-style-type: none;
-}
-
-.Configure-reset, .Configure-comparisonsForm, .Configure-baseHeading,
-.Configure-comparisonsHeading, .Configure-baseFilter {
-  background: beige;
-}
-
-.Configure-baseOption {/* //display: inline-block;
- */
-  display: inline-block;
-  background: lightslategray;
-  /* padding: .5em .5em .5em .5em;
- */
-  min-height: 30px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  border: 1px solid blue;
-  border-radius: 3px;
-}
-
-.Configure-comparisonsSelectBox {
-  height: 5em;
-  border: 2px solid black;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
-  width: 22em;
-  list-style-type: none;
-  background: lightyellow;
-}
-
-.Configure-comparisonsSelectBox:hover {
-  cursor: default;
-}
-
-.Configure-comparisonOption {
-  padding: 0;
-  margin: .3em;
-  border: 1px solid transparent;
-  list-style-type: none;
-}
-
-.Configure-selectedComparison {
-  background: lightblue;
-  border: 1px solid black;
-  border-radius: 4px;
-}
-
-.Configure-showComparisons {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  background: green;
-}
-
-.Configure-showComparisons p:hover {
-  cursor: help;
-}
-
-.Configure {
-  font-size: 1em;
-  height: var(--section-config-height);
-  display: flex;
-  justify-content: space-around;
-  background-image: linear-gradient(to left, #ebf1f6 0%,#abd3ee 20%,#2ec3eb 71%,#d5ebfb 100%);
-  color: black;
-}
-
-.Configure-showBase, .Configure-showComparisons, .Configure-showConfiguration {
-  background: beige;
-  /* align-self: center;
- */
-  align-self: baseline;
-}
-
-.Configure * {
-  font-size: 1em;
+body {
+  max-height: 100vh;
 }
 
 .Page {
@@ -208,17 +118,19 @@ html {
 
 .Page-container {
   width: 80%;
-  height: 100%;
+  height: 100vh;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1;
+  grid-template-rows: 3fr 5fr 25fr 1fr;
 }
 
-/* .Header as flex-box to be future-proof for next iterations */
-
 .Header {
-  height: 4em;
   background: var(--Header-backgroundColor);
-  display: flex;
-  justify-content: space-between;
+  align-items: stretch;
+  padding: .3em;
+  display: grid;
+  grid-template-columns: 3fr 4fr 1fr;
 }
 
 .Header-title {
@@ -226,23 +138,195 @@ html {
   font-size: 16px;
   color: var(--Header-textColor);
   text-transform: uppercase;
-  align-self: center;
+  justify-self: flex-start;
   padding-left: .5em;
+  display: flex;
+  align-items: center;
 }
 
-/* .ChartContent::before {
-  content: '';
-  background: #ebf5f9;
-  background-image: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#2ec3eb 51%,#d5ebfb 100%);
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: -1;
+.Header-flashContainer {
+  color: black;
+  font-weight: bold;
+  display: none;
+  padding: 0;
+}
+
+.Header-flashMessage {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  border-radius: 7px;
+  justify-items: center;
+  align-items: center;
+  font-size: 90%;
+}
+
+.Header-flashContainer p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.Header-flashMessage.Header-flashContainer {
+  animation: timeFlashHeader 7000ms normal forwards;
+  animation-iteration-count: 1;
+}
+
+.U-blackText {
+  color: black;
+}
+
+.Configure * {
+  font-size: 1em;
+}
+
+.Configure {
+  font-size: 1em;
+  background-image: linear-gradient(to left, #ebf1f6 0%,#abd3ee 20%,#2ec3eb 71%,#d5ebfb 100%);
+  color: black;
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(20em,1fr));
+  justify-content: space-around;
+  grid-column-gap: .5em;
+  align-content: top;
+}
+
+.Configure-comparisonsSelectBox:hover, .Configure-baseSelectBox:hover {
+}
+
+.Configure-baseFilter {
+  max-width: 4em;
+}
+
+.Configure-clearChartsContainer {
+  background: beige;
+  display: grid;
+  margin-bottom: 1em;
+}
+
+.Configure-comparisonsSelectBox, .Configure-baseSelectBox {
+  height: 5em;
+  border: 2px solid black;
+  border-radius: 5px;
+  /* overflow-y: scroll;scroll-behavior: smooth;
+ */
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  max-width: 22em;
+  list-style-type: none;
+  background: lightyellow;
+}
+
+.Configure-baseSelectBox:focus {
+  outline: none;
+}
+
+.Configure-comparisonsSelectBox:hover {
+  cursor: default;
+}
+
+.Configure-comparisonOption, .Configure-baseOption {
+  padding: 3px 0 3px 0;
+  border: 1px solid transparent;
+  list-style-type: none;
+  border-top: 1px solid black;
+  height: 1.7em;
+  box-sizing: border-box;
+  margin-bottom: 3px;
+}
+
+.Configure-comparisonOption:not(.Configure-selectedComparison):hover {
+  background: radial-gradient(hsl(240,85%,80%) 10%, hsl(225,75%,46%) 90%);
+  background: lightblue;
+  box-shadow: 9px 7px 15px grey;
+  font-style: italic;
+  color: black;
   display: block;
 }
- */
+
+.Configure-selectedComparison {
+  background: lightblue;
+  background: radial-gradient(hsl(240,85%,80%) 10%, hsl(225,75%,46%) 90%);
+  border-top: 1px solid black;
+  color: white;
+  font-weight: bold;
+}
+
+.Configure-sbowComparisons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.Configure-showConfiguration p:hover, .Configure-headerBaseValue {
+  cursor: help;
+}
+
+.Configure-comparisonParagraph, .Configure-baseParagraph,
+.Configure-headerBaseValue {
+  background: white;
+  align-self: baseline;
+  margin: 2px;
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 3px;
+  position: relative;
+  display: inline-block;
+}
+
+.Configure-headerBaseValue {
+  position: relative;
+  display: inline-block;
+}
+
+.Configure-baseParagraph {
+  padding: .1em .3em .1em .3em;
+}
+
+.Configure-comparisonParagraph[data-tooltip-title]:hover::after,
+.Configure-baseParagraph[data-tooltip-title]:hover::after,
+.Configure-headerBaseValue:hover::after {
+  content: attr(data-tooltip-title);
+  position: absolute;
+  top: 50%;
+  left: 7%;
+  width: content;
+  background: slateblue;
+  color: white;
+  font-style: bold;
+  white-space: nowrap;
+  font-size: .8em;
+  text-align: left;
+  z-index: 10;
+  border-radius: 2px;
+  padding: .2em 1em;
+  box-shadow: -3px -4px 7px grey;
+}
+
+.Configure-showConfiguration, .Configure-clearChartsContainer {
+  background: beige;
+  border-radius: 5px;
+  min-width: 10em;
+  max-width: 22em;
+  margin-top: 1.2em;
+  align-self: baseline;
+}
+
+.Configure-clearChartsContainer {
+  width: fit-content;
+  text-align: center;
+}
+
+.Configure-headerBaseValueAnimate, .Configure-configurationCurrencyAnimate p {
+  animation: flashConfiguration 500ms normal forwards;
+  animation-iteration-count: 3;
+}
+
+.Configure-showConfiguration {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15% .5em 0;
+  align-self: baseline;
+  height: 6.5em;
+}
 
 .ChartContent {
   background: #ebf5f9;
@@ -252,15 +336,18 @@ html {
   position: relative;
   justify-content: space-around;
   align-content: flex-end;
-  /* height of header + footer = 9em */
-  height: calc(100vh - 6em - var(--section-config-height));
   border: .5em solid var(--ChartContent-borderColor);
 }
 
 .ChartContent-barChartContainer {
-  height: 100%;
   position: relative;
   display: flex;
+  /* text "selectability on" changes cursor to select cursor in UI on mouseover or drag.  set user-select to none so selectability is off, no cursor change when user drags or mouseover on chart text */
+  user-select: none;
+}
+
+.ChartContent-barChartContainer.is-forBaseChart {
+  background: rgba(175,100,55,.5);
 }
 
 .ChartContent-barChart {
@@ -277,7 +364,19 @@ html {
   padding-top: 5%;
   align-items: flex-start;
   justify-content: center;
-  z-index: 75;
+}
+
+/* style the titles (which are the currency codes) of individual barcharts */
+
+.ChartContent-barChartTitle {
+  font-style: bold;
+}
+
+/* u-offset class is added when barchart is too small to contain title text, in this case position absolute allows for good positioning of text slightly outside the chart, and color is changed to black to contrast with the main content background vs the default for charts which is for text to contrast with individual chart's background (which alternates light and dark across the displayed charts) */
+
+.CharContent-barChartTitle.u-offset {
+  position: absolute;
+  color: black;
 }
 
 /* alternate background on barCharts from light background dark text to dark background light text */
@@ -291,6 +390,32 @@ html {
   background: var(--ChartContent-barChart--odd-backgroundColor);
 }
 
+.ChartContent-indicateBase {
+  position: absolute;
+  color: black;
+  color: transparent;
+  top: 5em;
+  left: 60%;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  display: inline-block;
+  margin: 0 auto;
+  text-shadow: 3px 5px 3px black;
+  opacity: .5;
+}
+
+.ChartContent--clearCharts .ChartContent-barChartContainer {
+  animation: clearCharts 2s normal forwards;
+  animation-iteration-count: 1;
+}
+
+/* when modal activated on barchart click, activate 'disappearing modal' animation when user mouseoff barchart */
+
+.ChartContent-barChart:not(:hover) .Modal {
+  animation: disappearModal 800ms normal forwards;
+  animation-iteration-count: 1;
+}
+
 /* custom modal instead of alert box, one modal absolute positioned per each ChartContent-container */
 
 .Modal {
@@ -299,7 +424,6 @@ html {
   background-color: var(--Modal-backgroundColor);
   /* background: var(--Modal-backgroundColor);background-image: var(--Modal-backgroundColor);
  */
-  opacity: 1;
   border-radius: .6em;
   position: absolute;
   left: -55%;
@@ -308,20 +432,20 @@ html {
   height: 110px;
   margin: 0;
   box-shadow: 2px 3px 1px var(--Page-boxShadowColor);
-  z-index: 70;
+  z-index: 30;
 }
 
 /* state of modal = display */
 
 .Modal.is-displayed {/* make modal visible, and use flex to keep text centered consistently across screenwidth changes*/
   display: flex;
+  position: absolute;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 .Footer {
-  height: 2em;
   padding-left: .5em;
   background: var(--Footer-backgroundColor);
   display: flex;
@@ -329,14 +453,6 @@ html {
 
 .Footer-copywrite {
   align-self: center;
-}
-
-.mediaSmallSize {
-  height: 70%;
-}
-
-.mediaFullSize {
-  width: 7em;
 }
 
 @media only screen and (max-width: 950px) {/*change orientetion of .ChartContent flex items on smaller screens, i.e. vertical to horizontal barCharts */
@@ -360,10 +476,14 @@ html {
   .ChartContent-barChartContainer {
     width: 100%;
     height: inherit;
+    height: 5em;
+  }
+
+  .Configure-showConfiguration {
   }
 
   .ChartContent-barChart {/* since ChartContent-barCharts have INLINE hardcoded styling of height in html for default vertical charts, use !important to change height for this class in css stylesheet */
-    height: 70%;
+    height: 60%;
     justify-self: flex-end;
     align-self: center;
     border-radius: 0 .3em .3em 0;
@@ -381,15 +501,16 @@ html {
     height: 100%;
     width: 12em;
     align-items: center;
+    opacity: 1;
   }/*
    set width of barCharts to height (the originally hardcoded inline value), i.e. for switch from vertical to horizontal charts */
 }
 
 /* make acceptably responsive for extremely small-width screen devices */
 
-@media only screen and (max-width:  320px) {
+@media only screen and (max-width:  330px) {
   .ChartContent-barChart {
-    height: 100% !important;
+    height: 70% !important;
     align-items: center;
     font-size: .9em;
     padding-top: 9%;
@@ -399,93 +520,16 @@ html {
   .Footer, .Header-title {
     font-size: 70%;
   }
-}
 
-@media only screen and (max-width:  240px) {
-  .ChartContent-barChart {
-    font-size: .5em;
-    padding-top: 5%;
-  }
-}
-
-/* animations */
-
-@keyframes flashText {
-  0% {
-    text-shadow: 3px 5px 3px black;
-    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
-    color: transparent;
-    background: transparent;
+  .Configure-showConfiguration {
+    display: hidden;
   }
 
-  50% {/* //color: black;
- */
-    color: grey;
-    text-shadow: 3px 5px 10px orange, 5px 10px 3px black;
+  .Header-flashMessage.Header-flashContainer {
+    font-size: .4em !important;
   }
 
-  100% {
-    text-shadow: 3px 5px 3px black;
-    /* text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue; */
-    color: transparent;
-    background: transparent;
+  .Configure-showConfiguration {
+    display: none;
   }
-}
-
-@keyframes flashBackground {
-  0% {
-    background-color: blue ;
-  }
-
-  100% {
-    background-color: green;
-  }
-}
-
-.ChartContent-barChartContainer.is-forBaseChart:hover .ChartContent-indicateBase {
-  animation: flashText 400ms normal forwards;
-  animation-iteration-count: 2;
-}
-
-.ChartContent-barChartContainer.is-forBaseChart:hover .ChartContent-indicateBase::before {
-  animation: flashBackground 400ms normal forwards;
-  animation-iteration-count: 2;
-}
-
-@keyframes clearCharts {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-.ChartContent--clearCharts .ChartContent-barChart {
-  animation: clearCharts 2s normal forwards;
-  animation-iteration-count: 1;
-}
-
-/* rotate modal while shrinking it and throwing a small shadow */
-
-@keyframes disappearModal {
-  0% {
-    box-shadow: 5px 5px 5px grey;
-  }
-
-  100% {
-    transform: rotate(380deg);
-    height: 7%;
-    width: 4%;
-    font-size: 3px;
-    box-shadow: 15px 15px 15px black;
-  }
-}
-
-/* when modal activated on barchart click, activate 'disappearing modal' animation when user mouseoff barchart */
-
-.ChartContent-barChart:not(:hover) .Modal {
-  animation: disappearModal 800ms normal forwards;
-  animation-iteration-count: 1;
 }

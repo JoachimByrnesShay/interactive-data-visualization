@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles2.css">
     <title>Currency Visualization</title>
 </head>
@@ -20,48 +20,48 @@
         <section class='Configure'>
             <div class='Configure-base'>
                 <h2 class='Configure-baseHeading'>Change your base currency from <span class='Configure-headerBaseValue'> </span></h2>
-                <form class='Configure-baseForm' onSubmit='return false;'>
-                    <label for='Configure-baseFilterLabel' for='Configure-baseFilter'>FILTER
-                        <input type='text' id='Configure-baseFilter' class='Configure-baseFilter' name='Configure-baseFilter'>
+                <form class='Configure-baseForm'>
+                    <label for='Configure-baseFilter' for='Configure-baseFilter'>FILTER
+                        <input type='text' id='Configure-baseFilter' class='Configure-baseFilter' name='Configure-baseFilter' autofocus>
                     </label>
-                    <ul class='Configure-baseSelectBox'>
-                    </ul>
+                    <select class='Configure-baseSelectBox' size='4'>
+                    </select>
                 </form>
             </div>
             <div class='Configure-comparisons'>
-                <h2 class='Configure-comparisonHeading'>Select &lt;= 5 to compare</h2>
-                <form class='Configure-comparisonsForm' onSubmit='return false;'>
-                    <label for='Configure-comparisonsFilterField'>FILTER
-                        <input type='text' id='Configure-comparisonsFilterField' class='Configure-comparisonsFilterField' name='Configure-comparisonsFilterField' placeholder="Select <= 5 to compare">
+                <h2 class='Configure-comparisonHeading'>Select &lt;= 5 currencies to compare</h2>
+                <form class='Configure-comparisonsForm'>
+                    <label for='Configure-comparisonsFilter'>FILTER
+                        <input type='text' id='Configure-comparisonsFilter' class='Configure-comparisonsFilter' name='Configure-comparisonsFilter'>
                     </label>
-                    <ul class='Configure-comparisonsSelectBox'>
-                    </ul>
+                    <select class='Configure-comparisonsSelectBox' size='4'>
+                    </select>
                 </form>
             </div>
             <div class='Configure-showConfiguration'>
                 <div class='Configure-showBase'>
                     <h3>Base:</h3>
                 </div>
-                <div class='Configure-showComparisons'>
+                <div class='Configure-showComparisonsContainer'>
                     <h3>Comparisons:</h3>
-                    <div class='Configure-listComparisons'></div>
+                    <div class='Configure-showComparisons'></div>
                 </div>
             </div>
-            <div class='Configure-reset'>
+            <div class='Configure-clearChartsContainer'>
                 <h2>Reset Comparisons</h2>
-                <button class='Configure-clearCharts' onClick="BarChart.Utility.clearCharts();">
+                <button class='Configure-clearCharts'>
                     clearCharts
                 </button>
             </div>
         </section>
+        <!-- ChartContent fills with individual barCharts -->
         <main class='ChartContent'>
         </main>
         <footer class='Footer'>
             <p class='Footer-copywrite'>&copy;&nbsp;2021&nbsp;Joachim Byrnes-Shay</p>
         </footer>
-        <!-- modal activation controlled in js called via above onClick events -->
     </div>
-    <script src='js/main2.js'></script>
+    <script src='js/main.js'></script>
 </body>
 
 </html>
