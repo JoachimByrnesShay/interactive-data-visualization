@@ -95,6 +95,7 @@ const Configuration = {
 
         // base currency selection section and comparison currencies selection selection
         Configuration.makeBaseSection();
+        console.log('in config');
         Configuration.makeComparisonsSection();
     },
 
@@ -293,21 +294,26 @@ const Configuration = {
 
 
     makeComparisonsSection() {
+        console.log('in make comparisons section');
         // ensure that form for comparison currency selection config does not submit, i.e. when enter pressed. 
         // form submits refresh page and this is undesirable and unnecessary for user experience
         this.stopFormSubmit(App.querySelectorByClass(this.COMPARISONS_FORM_CLASS));
 
-        let filterField = App.querySelectorByClass(Configuration.COMPARISONS_FILTER_FIELD_CLASS);
+        //let filterField = App.querySelectorByClass(this.COMPARISONS_FILTER_FIELD_CLASS);
+        let filterField = App.querySelectorByClass('Configure-comparisonsFilter');
+        console.log(filterField);
         let filteredResult;
         filterField.value = '';
         filteredResult = Object.keys(currencyData.rates);
         let selectBox = App.querySelectorByClass(Configuration.COMPARISONS_SELECT_BOX_CLASS);
 
-        this.makeComparisonsList(filteredResult);
-        filterField.addEventListener('click', function(e) {
 
-            selectBox.focus();
-        });
+        this.makeComparisonsList(filteredResult);
+        // filterField.addEventListener('click', function(e) {
+
+        //     selectBox.focus();
+        // });
+
 
         filterField.addEventListener('keyup', function(e) { //selectBox.focus();
             // I have listeners on the form itself for 38 and 40 where a possible outcome is 
@@ -319,6 +325,7 @@ const Configuration = {
                 filteredResult = Object.keys(currencyData.rates).filter(function(elem) {
                     return elem.toLowerCase().startsWith(filterField.value.toLowerCase());
                 });
+
                 // if the filterField value becomes an empty string, such as if user deletes characters by backspace, the filteredResult is reset to all currency codes
                 if (filterField.value == '') {
 
@@ -326,7 +333,7 @@ const Configuration = {
                 }
 
                 // make baselist with filtered base options
-                Configuration.makeComparisonList(filteredResult);
+                Configuration.makeComparisonsList(filteredResult);
                 // }
             }
         });
@@ -336,11 +343,13 @@ const Configuration = {
         let filterField = App.querySelectorByClass(Configuration.COMPARISONS_FILTER_FIELD_CLASS);
         let selectBox = App.querySelectorByClass(Configuration.COMPARISONS_SELECT_BOX_CLASS);
 
-
-        selectBox.innerHTML = '';
-        if (filteredResult.length == 0) {
-            filteredResult = [];
+        if (filteredResult.includes(currencyData.convertFrom)) {
+            filteredResult.splice(filteredResult.indexOf(currencyData.convertFrom), 1);
         }
+        selectBox.innerHTML = '';
+        // if (filteredResult.length == 0) {
+        //     filteredResult = [];
+        // }
 
         selectBox.addEventListener('mouseenter', function(e) {
             selectBox.focus();
@@ -351,262 +360,167 @@ const Configuration = {
         });
 
         let index = -1
+        let lastIndex = filteredResult.length - 1;
+        let comparisonConfig = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS);
         for (let currency of filteredResult) {
-            if (currency != currencyData.convertFrom) {
-                let option = document.createElement('option');
-                option.tabIndex = 0;
-                option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}</span>: ${currencyData.fullNames[currency]}`;
 
-                option.classList.add(Configuration.COMPARISON_OPTION_CLASS);
-                if (currencyData.convertTo.includes(currency)) {
+            let option = document.createElement('option');
+            option.tabIndex = 0;
+            option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}</span>: ${currencyData.fullNames[currency]}`;
 
-                    option.classList.add(Configuration.SELECTED_COMPARISON_CLASS);
-                }
-                option.addEventListener('mouseenter', function(e) {
+            option.classList.add(Configuration.COMPARISON_OPTION_CLASS);
+            if (currencyData.convertTo.includes(currency)) {
 
-                    if (!document.hasFocus()) {
-                        option.classList.add('Configure-comparisonOption--hovered');
-                        option.selected = 'selected';
-                        option.setAttribute('checked', true);
-
-                    } else {
-                        option.focus();
-                        //option.setAttribute('active', true);
-                        option.classList.remove('Configure-comparisonOption--hovered');
-                        //option.selected = 'selected';
-                        option.setAttribute('checked', true);
-                        option.selected = 'selected';
-                        option.setAttribute('checked', true);
-                    }
-                    if (option.classList.contains('Configure-selectedComparison')) {
-                        option.classList.add('u-highlightComparison');
-                        //option.selected = 'selected';
-                        option.setAttribute('checked', true);
-                    }
-
-
-                    // keep the index up to date with the selectBox selectedIndex
-                    index = selectBox.selectedIndex;
-                });
-                option.addEventListener('mouseleave', function(e) {
-                    option.classList.remove('u-highlightComparison');
-                    //option.blur();
-                    //option.setAttribute('active', 'false');
-                    //option.selected = false;
-                    option.setAttribute('active', 'false');
-                    option.selected = false;
-                    option.classList.remove('Configure-comparisonOption--hovered');
-                    // option.setAttribute('selected', 'false');
-                    option.setAttribute('checked', false);
-                    option.setAttribute('selected', 'false');
-                    option.setAttribute('checked', false);
-                    index = selectBox.selectedIndex;
-
-
-                });
-
-
-
-
-                option.addEventListener('click', function(e) {
-                    if (currencyData.convertTo.length == 5) {
-                        App.querySelectorByClass('Header-flashContainer').classList.add('Header-flashMessage')
-                        App.querySelectorByClass('Header-flashMessage').innerHTML = "<p>ONLY SELECT UP TO 5 COMPARISONS.<br>DESELECT A SELECTED CHOICE, i.e click it.</p>";
-                    }
-                    if (currencyData.convertTo.length < 5) {
-                        App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage')
-
-                        option.classList.toggle(Configuration.SELECTED_COMPARISON_CLASS);
-                    } else if (option.classList.contains(Configuration.SELECTED_COMPARISON_CLASS)) {
-                        option.classList.remove(Configuration.SELECTED_COMPARISON_CLASS);
-
-                    }
-                    if (option.classList.contains(Configuration.SELECTED_COMPARISON_CLASS)) {
-                        currencyData.convertTo.push(currency);
-
-                    } else if (currencyData.convertTo.indexOf(currency) != -1) {
-                        let ix = currencyData.convertTo.indexOf(currency);
-                        currencyData.convertTo.splice(ix, 1);
-                        App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage')
-
-                    }
-
-                    App.querySelectorByClass('Header-flashContainer').addEventListener('animationend', () => {
-                        App.querySelectorByClass('Header-flashContainer').innerHTML = '';
-                        App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage');
-                    });
-                    App.render();
-                });
-
-
-                selectBox.appendChild(option);
-
-
-                selectBox.addEventListener('keydown', function(e) {
-
-                    // test for enter key and presence of an index value
-                    // we update base currency value on enter key press on option just as for mouseclick on option
-                    if (e.keyCode == 13 && index > -1) {
-                        index = selectBox.selectedIndex;
-                        // FIX THIS , make it a function//
-                        Configuration.changeBase(selectBox.options[index].dataset.code);
-                    }
-                });
-
-                let lastIndex = filteredResult.length - 1;
-                let comparisonConfig = App.querySelectorByClass(Configuration.COMPARISONS_FORM_CLASS);
-
-                comparisonConfig.addEventListener('keydown', function(e) {
-                    // 38 is arrowup, 40 is arrowdown
-                    if (e.keyCode == 38 || e.keyCode == 40) {
-                        // use preventDefault to override default integration of up/down arrows with select box
-                        // which causes skipping or bumping of the scroll that does not 
-                        // integrate well with the other customizations/features coded here
-                        // for example, without this override
-                        e.preventDefault();
-                        // ensure focus within select box
-                        selectBox.focus();
-
-                        // on arrowup, decrement index potentially until 0th index
-                        if (e.keyCode == 38) {
-                            if (index > 0) {
-                                index -= 1;
-
-                            } else if (index <= 0) {
-                                // if index is already 0, then user is scrolling up out of the 
-                                // select box into the filter field
-                                filterField.tabIndex = '-1';
-                                selectBox.blur();
-                                filterField.focus()
-                                // for consistency with selectBox.selectedIndex == -1 when no option selected
-                                // make a scroll up from 0 index to be -1 index.  it is possible that user will hit 
-                                // arrow up multiple times at this point, so set index as an assignment and not a decrement here
-                                index = -1;
-                            }
-                        }
-                        // on arrowdown, increment the index and ensure select box focus as long as 
-                        // we ensure we are not incrementing beyond the last index
-                        if (e.keyCode == 40 && index < lastIndex) {
-                            index += 1;
-                            selectBox.focus();
-
-                        }
-                        // update selectedIndex on select box, since we have overridden much default selectbox behavior
-                        // and are manually tracking an index.  
-                        selectBox.selectedIndex = index;
-                    }
-                });
-
-                // always make sure scroll window is presenting at the top of the options list (first item) fully visible at top of element.
-                selectBox.options[0].scrollIntoView();
+                option.classList.add(Configuration.SELECTED_COMPARISON_CLASS);
             }
+
+            option.addEventListener('mouseenter', function(e) {
+
+                if (!document.hasFocus()) {
+                    option.classList.add('Configure-comparisonOption--hovered');
+                    option.selected = 'selected';
+                    option.setAttribute('checked', true);
+
+                } else {
+                    //option.focus();
+                    //option.setAttribute('active', true);
+                    option.classList.remove('Configure-comparisonOption--hovered');
+                    //option.selected = 'selected';
+                    option.setAttribute('checked', true);
+                    option.selected = 'selected';
+                    option.setAttribute('checked', true);
+                }
+                if (option.classList.contains('Configure-selectedComparison')) {
+                    option.classList.add('u-highlightComparison');
+                    //option.selected = 'selected';
+                    //option.setAttribute('checked', true);
+                }
+
+
+                // keep the index up to date with the selectBox selectedIndex
+                index = selectBox.selectedIndex;
+                console.log(index);
+            });
+
+            option.addEventListener('mouseleave', function(e) {
+                option.classList.remove('u-highlightComparison');
+                //option.blur();
+                //option.setAttribute('active', 'false');
+                //option.selected = false;
+                //option.setAttribute('active', 'false');
+                option.selected = false;
+                option.classList.remove('Configure-comparisonOption--hovered');
+                // option.setAttribute('selected', 'false');
+                // option.setAttribute('checked', false);
+                option.setAttribute('selected', 'false');
+                option.setAttribute('checked', false);
+                index = selectBox.selectedIndex;
+
+
+            });
+
+
+
+
+            option.addEventListener('click', function(e) {
+                if (currencyData.convertTo.length == 5) {
+                    App.querySelectorByClass('Header-flashContainer').classList.add('Header-flashMessage')
+                    App.querySelectorByClass('Header-flashMessage').innerHTML = "<p>SELECT NO MORE THAN 5 COMPARISONS.<br>TO DESELECT A SELECTED CHOICE, i.e click it.</p>";
+                }
+                if (currencyData.convertTo.length < 5) {
+                    App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage')
+
+                    option.classList.toggle(Configuration.SELECTED_COMPARISON_CLASS);
+                } else if (option.classList.contains(Configuration.SELECTED_COMPARISON_CLASS)) {
+                    option.classList.remove(Configuration.SELECTED_COMPARISON_CLASS);
+
+                }
+                if (option.classList.contains(Configuration.SELECTED_COMPARISON_CLASS)) {
+                    currencyData.convertTo.push(currency);
+
+                } else if (currencyData.convertTo.indexOf(currency) != -1) {
+                    let ix = currencyData.convertTo.indexOf(currency);
+                    currencyData.convertTo.splice(ix, 1);
+                    App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage')
+
+                }
+
+                App.querySelectorByClass('Header-flashContainer').addEventListener('animationend', () => {
+                    App.querySelectorByClass('Header-flashContainer').innerHTML = '';
+                    App.querySelectorByClass('Header-flashContainer').classList.remove('Header-flashMessage');
+                });
+                App.render();
+            });
+
+
+
+            selectBox.appendChild(option);
+
+
+
+
+
+
+
+            // always make sure scroll window is presenting at the top of the options list (first item) fully visible at top of element.
+
         }
+        selectBox.options[0].scrollIntoView();
+        selectBox.addEventListener('keydown', function(e) {
+
+            // test for enter key and presence of an index value
+            // we update base currency value on enter key press on option just as for mouseclick on option
+            if (e.keyCode == 13 && index > -1) {
+                index = selectBox.selectedIndex;
+                // FIX THIS , make it a function//
+                //alert('things');
+                // Configuration.changeBase(selectBox.options[index].dataset.code);
+            }
+        });
+        comparisonConfig.addEventListener('keydown', function(e) {
+
+            // 38 is arrowup, 40 is arrowdown
+            if (e.keyCode == 38 || e.keyCode == 40) {
+                console.log('index now is: ', index);
+                // use preventDefault to override default integration of up/down arrows with select box
+                // which causes skipping or bumping of the scroll that does not 
+                // integrate well with the other customizations/features coded here
+                // for example, without this override
+                e.preventDefault();
+                // ensure focus within select box
+                selectBox.focus();
+
+                // on arrowup, decrement index potentially until 0th index
+                if (e.keyCode == 38) {
+                    if (index > 0) {
+                        index -= 1;
+
+                    } else if (index <= 0) {
+                        // if index is already 0, then user is scrolling up out of the 
+                        // select box into the filter field
+                        filterField.tabIndex = '-1';
+                        selectBox.blur();
+                        filterField.focus()
+                        // for consistency with selectBox.selectedIndex == -1 when no option selected
+                        // make a scroll up from 0 index to be -1 index.  it is possible that user will hit 
+                        // arrow up multiple times at this point, so set index as an assignment and not a decrement here
+                        index = -1;
+                    }
+                }
+                // on arrowdown, increment the index and ensure select box focus as long as 
+                // we ensure we are not incrementing beyond the last index
+                if (e.keyCode == 40 && index < lastIndex) {
+                    index += 1;
+                    selectBox.focus();
+
+                }
+                // update selectedIndex on select box, since we have overridden much default selectbox behavior
+                // and are manually tracking an index.  
+                selectBox.selectedIndex = index;
+            }
+        });
+
         Configuration.showComparisons();
-
-        /// START HERE ////
-        // let index = -1
-
-        // for (let currency of filteredResult) {
-
-        //     let option = document.createElement('option');
-        //     option.tabIndex = 0;
-        //     // every option in select will display currency code and the currency's full name
-        //     option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}:</span>${currencyData.fullNames[currency]}`;
-        //     // usage of dataset to facilitate transfer of data regarding selected option to other methods
-        //     option.dataset['code'] = currency;
-        //     selectBox.appendChild(option);
-        //     option.classList.add(Configuration.BASE_OPTION_CLASS);
-        //     option.addEventListener('mouseenter', function(e) {
-        //         // a finepoint (!document.hasFocus()), small enhancement for improved appearance on edge case.  on some OS such as linux, if user has multiple programs open in diferent window, 
-        //         // and is using a tiler which splits the screen (as this author does), the select options will lose their styling on hover (if another program is in the foreground, and browser is background),
-        //         // as a result of that the browser will not recognize focus.  !document.hasFocus() improves appearance in this strange edge case
-        //         if (!document.hasFocus()) {
-        //             // a hover class to match the styling for up/down arrow scrolling styling of options
-        //             option.classList.add('Configure-baseOption--hovered');
-        //             option.selected = 'selected';
-        //             option.setAttribute('checked', true);
-        //         } else {
-        //             option.setAttribute('active', true);
-        //             option.classList.remove('Configure-baseOption--hovered');
-        //             option.selected = 'selected';
-        //             option.setAttribute('checked', true);
-        //         }
-        //         // keep the index up to date with the selectBox selectedIndex
-        //         index = selectBox.selectedIndex;
-
-
-        //     });
-        //     option.addEventListener('mouseleave', function(e) {
-        //         option.setAttribute('active', 'false');
-        //         option.selected = false;
-        //         option.classList.remove('Configure-baseOption--hovered');
-        //         option.setAttribute('selected', 'false');
-        //         option.setAttribute('checked', false);
-        //         index = selectBox.selectedIndex;
-
-        //     });
-
-        //     option.addEventListener('click', function(e) {
-        //         Configuration.changeBase(option.dataset['code']);
-        //     });
-        // }
-        // selectBox.addEventListener('keydown', function(e) {
-
-        //     // test for enter key and presence of an index value
-        //     // we update base currency value on enter key press on option just as for mouseclick on option
-        //     if (e.keyCode == 13 && index > -1) {
-        //         index = selectBox.selectedIndex;
-        //         Configuration.changeBase(selectBox.options[index].dataset.code);
-        //     }
-        // });
-
-        // let lastIndex = filteredResult.length - 1;
-        // let baseConfig = App.querySelectorByClass(Configuration.BASE_FORM_CLASS);
-
-        // baseConfig.addEventListener('keydown', function(e) {
-        //     // 38 is arrowup, 40 is arrowdown
-        //     if (e.keyCode == 38 || e.keyCode == 40) {
-        //         // use preventDefault to override default integration of up/down arrows with select box
-        //         // which causes skipping or bumping of the scroll that does not 
-        //         // integrate well with the other customizations/features coded here
-        //         // for example, without this override
-        //         e.preventDefault();
-        //         // ensure focus within select box
-        //         selectBox.focus();
-
-        //         // on arrowup, decrement index potentially until 0th index
-        //         if (e.keyCode == 38) {
-        //             if (index > 0) {
-        //                 index -= 1;
-
-        //             } else if (index <= 0) {
-        //                 // if index is already 0, then user is scrolling up out of the 
-        //                 // select box into the filter field
-        //                 baseFilterField.tabIndex = '-1';
-        //                 selectBox.blur();
-        //                 baseFilterField.focus()
-        //                 // for consistency with selectBox.selectedIndex == -1 when no option selected
-        //                 // make a scroll up from 0 index to be -1 index.  it is possible that user will hit 
-        //                 // arrow up multiple times at this point, so set index as an assignment and not a decrement here
-        //                 index = -1;
-        //             }
-        //         }
-        //         // on arrowdown, increment the index and ensure select box focus as long as 
-        //         // we ensure we are not incrementing beyond the last index
-        //         if (e.keyCode == 40 && index < lastIndex) {
-        //             index += 1;
-        //             selectBox.focus();
-
-        //         }
-        //         // update selectedIndex on select box, since we have overridden much default selectbox behavior
-        //         // and are manually tracking an index.  
-        //         selectBox.selectedIndex = index;
-        //     }
-        // });
-
-        // always make sure scroll window is presenting at the top of the options list (first item) fully visible at top of element.
-        //selectBox.options[0].scrollIntoView();
-        ///  StOP HERE ///
     },
 
 
@@ -864,6 +778,7 @@ const App = {
     // clear contents of the DOM element passed
     clearContents: (elem) => elem.innerHTML = '',
     render: () => {
+        console.log('in render')
         // set up configuration display section of the app and display
         Configuration.makeConfigurationDisplay();
         //each call to render clears html of the barcharts area (.ChartContent)
