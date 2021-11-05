@@ -131,38 +131,49 @@ const Configuration = {
 
 
         // make default baseList
+        // make baselist outside of keyup listener so there is a list without keyup
+
+        Configuration.makeBaseList(filteredResult);
 
         // on each keyup event inside the baseFilterField, we filter the list (filteredResult) to only include currency codes which begin with the string which is the value of baseFilterField
         baseFilterField.addEventListener('keyup', function(e) { //selectBox.focus();
+            // I have listeners on the form itself for 38 and 40 where a possible outcome is 
+            // navigating back up into filterfield using up arrows to scroll up through selectbox options
+            // if (e.which != 38 && e.which != 40) {
+
             let form = App.querySelectorByClass(Configuration.BASE_FORM_CLASS_NAME);
             filteredResult = Object.keys(currencyData.rates).filter(function(elem) {
                 return elem.toLowerCase().startsWith(baseFilterField.value.toLowerCase());
             });
             // if the filterField value becomes an empty string, such as if user deletes characters by backspace, the filteredResult is reset to all currency codes
             if (baseFilterField.value == '') {
+
                 filteredResult = Object.keys(currencyData.rates);
             }
 
             // make baselist with filtered base options
             Configuration.makeBaseList(filteredResult);
-
+            // }
         });
-        // make baselist outside of keyup listener so there is a list without keyup
-        let baseIndex = filteredResult.indexOf(currencyData.convertFrom);
 
-        filteredResult.splice(baseIndex, 1);
-        Configuration.makeBaseList(filteredResult);
         // put top of the options constituting the select box content in view
         selectBox.options[0].scrollIntoView();
 
     },
-    makeBaseList(filtered_result) {
+    makeBaseList(filteredResult) {
+        let baseIndex;
+        if (filteredResult.includes(currencyData.convertFrom)) {
+            baseIndex = filteredResult.indexOf(currencyData.convertFrom);
+            filteredResult.splice(baseIndex, 1);
+        }
+
+
         let selectBox = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS);
         // select box will always be re-rendered to exclude the current selected base currency,
         // as it should not be selected again.   So set innerHtmL to '' each time
         selectBox.innerHTML = ''
-        if (filtered_result.length == 0) {
-            filtered_result = [];
+        if (filteredResult.length == 0) {
+            filteredResult = [];
         }
 
         let baseFilterField = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS);
@@ -176,7 +187,7 @@ const Configuration = {
         });
         let index = -1
 
-        for (let currency of filtered_result) {
+        for (let currency of filteredResult) {
             // if (currency != currencyData.convertFrom) {
             let option = document.createElement('option');
             option.tabIndex = 0;
@@ -198,8 +209,7 @@ const Configuration = {
 
                 }
                 index = selectBox.selectedIndex;
-                console.log("selecedindex ", selectBox.selectedIndex);
-                console.log('index ', index);
+
 
             });
             option.addEventListener('mouseleave', function(e) {
@@ -214,59 +224,38 @@ const Configuration = {
 
             //index = selectBox.selectedIndex;
             option.addEventListener('click', function(e) {
-                console.log('click', option);
 
+                alert(option.dataset['code']);
                 Configuration.changeBase(option.dataset['code']);
             });
-            console.log(filtered_result.length);
 
 
-            selectBox.addEventListener('keydown', function(e) {
 
-                // text for enter key and presence of an index value
-                if (e.keyCode == 13 && index) {
 
-                    //the above conditional will enter once for every option in selectBox on EACH keydown event inside select
-                    // so control below code to only run once instead of for all options
-                    if (index == selectBox.selectedIndex) {
-                        //selectBox.selectedIndex = index;
-                        console.log('index', index, 'selectedIndex', selectBox.selectedIndex);
-                        Configuration.changeBase(selectBox.options[index].dataset.code);
-                    }
-                    //e.stopPropagation();
-                }
-                // e.stopPropagation();
-            });
-            //     let which = e.which;
-            //     console.log(e.target);
-            //     e.preventDefault();
-            //     console.log(e.which);
 
-            //     if (which == 13 && index) {
-            //         let index = selectBox.selectedIndex;
-            //         selectBox.selectedIndex = index;
-            //         console.log('keydown index', index);
-            //         //     console.log('enter key pressed');
-            //         //     //Configuration.changeBase(option.dataset['code']);
-            //         //     let option = selectBox.options[index];
-            //         //     console.log('option', option);
-            //         //     let code = selectBox.options[index].dataset['code'];
-            //         console.log('keydown', selectBox.options[index]);
-            //         selectBox.blur();
-
-            //         Configuration.changeBase(selectBox.options[index].dataset.code);
-
-            //     }
-
-            // });
 
         }
+        selectBox.addEventListener('keydown', function(e) {
 
-        // }
+            // text for enter key and presence of an index value
+
+            if (e.keyCode == 13 && index > -1) {
+
+                index = selectBox.selectedIndex;
+
+
+
+                Configuration.changeBase(selectBox.options[index].dataset.code);
+
+
+            }
+
+        });
+
 
 
         selectBox.options[0].scrollIntoView();
-        let lastIndex = filtered_result.length - 1;
+        let lastIndex = filteredResult.length - 1;
         let baseConfig = App.querySelectorByClass(Configuration.BASE_FORM_CLASS);
 
         baseConfig.addEventListener('keydown', function(e) {
@@ -281,7 +270,7 @@ const Configuration = {
                         index -= 1;
                         selectBox.focus();
                     } else if (index == 0) {
-                        console.log(baseFilterField);
+
                         baseFilterField.tabIndex = '-1';
                         selectBox.blur();
                         baseFilterField.focus()
@@ -297,61 +286,14 @@ const Configuration = {
                 if (index <= lastIndex) {
 
                     selectBox.selectedIndex = index;
+
                 }
 
             }
 
-            // if (e.which == 38 || e.which == 40) {
 
-            //     //e.preventDefault();
-            //     selectBox.focus();
-            //     if (e.which == 38) {
-
-            //         if (index > 0) {
-            //             index -= 1;
-            //             selectBox.focus();
-            //             selectBox.selectedIndex = index;
-            //             // console.log('thisone', selectBox.options[index]);
-            //             // selectBox.options[index].scrollIntoView();
-            //             // } else if (index == 0) {
-            //             //     index = -1
-            //             //     baseFilterField.tabIndex = '-1';
-            //             //     //selectBox.blur();
-            //             //     baseFilterField.focus()
-            //             //     selectBox.blur();
-            //             //     //selectBox.blur();
-            //             // } else if (index < 0) {
-            //             //     baseFilterField.focus();
-            //             //     selectBox.blur();
-            //             // selectBox.options[0].scrollIntoView;
-            //             //selectBox.selectedIndex = -1;
-
-            //         }
-            //         // }
-            //         else if (index == 0) {
-            //             selectBox.focus();
-            //             selectBox.selectedIndex = 0;
-            //             index -= 1;
-            //         }
-            //     } else if (e.which == 40 && index < lastIndex) {
-            //         index += 1;
-
-            //         selectBox.selectedIndex = index;
-            //     }
-
-            //     if (index > -1) {
-
-            //         selectBox.selectedIndex = index;
-            //         let option = selectBox.options[selectBox.selectedIndex];
-            //         option.setAttribute('selected', 'true');
-            //         option.setAttribute('checked', true);
-            //         index = selectBox.selectedIndex;
-            //     }
-
-            // }
         });
-        console.log(index);
-        console.log(selectBox.selectedIndex);
+
         // when select options list is created, ensure view is positioned at start (i.e., first option) instead of prior user scroll position
         if (selectBox.selectedIndex > -1) {
             selectBox.selectedIndex = index;
@@ -516,18 +458,20 @@ const Configuration = {
         let select = App.querySelectorByClass(this.BASE_SELECT_BOX_CLASS);
         App.querySelectorByClass('Configure-headerBaseValue').innerHTML = val;
         currencyData.convertFrom = val;
+        console.log(currencyData.convertFrom);
 
         if (currencyData.convertTo.includes(val)) {
 
             currencyData.convertTo.splice(currencyData.convertTo.indexOf(val), 1);
         }
+        console.log(currencyData.convertTo);
         CurrencyFetch.APIData(baseURL);
         let thing = App.querySelectorByClass('Configure-showConfiguration');
         thing.classList.add('Configure-configurationCurrencyAnimate');
         thing.addEventListener('animationend', () => {
             thing.classList.remove('Configure-configurationCurrencyAnimate');
         });
-        App.render();
+        //App.render();
 
     },
 
