@@ -129,8 +129,6 @@ const Configuration = {
         filteredResult = Object.keys(currencyData.rates);
         let selectBox = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS);
 
-
-        // make default baseList
         // make baselist outside of keyup listener so there is a list without keyup
 
         Configuration.makeBaseList(filteredResult);
@@ -139,25 +137,26 @@ const Configuration = {
         baseFilterField.addEventListener('keyup', function(e) { //selectBox.focus();
             // I have listeners on the form itself for 38 and 40 where a possible outcome is 
             // navigating back up into filterfield using up arrows to scroll up through selectbox options
-            // if (e.which != 38 && e.which != 40) {
+            // avoid unnecessary filtering and the additional call to makeBaseList int he event that it is up/down arrow keys detected
+            if (e.which != 38 && e.which != 40) {
 
-            let form = App.querySelectorByClass(Configuration.BASE_FORM_CLASS_NAME);
-            filteredResult = Object.keys(currencyData.rates).filter(function(elem) {
-                return elem.toLowerCase().startsWith(baseFilterField.value.toLowerCase());
-            });
-            // if the filterField value becomes an empty string, such as if user deletes characters by backspace, the filteredResult is reset to all currency codes
-            if (baseFilterField.value == '') {
+                let form = App.querySelectorByClass(Configuration.BASE_FORM_CLASS_NAME);
+                filteredResult = Object.keys(currencyData.rates).filter(function(elem) {
+                    return elem.toLowerCase().startsWith(baseFilterField.value.toLowerCase());
+                });
+                // if the filterField value becomes an empty string, such as if user deletes characters by backspace, the filteredResult is reset to all currency codes
+                if (baseFilterField.value == '') {
 
-                filteredResult = Object.keys(currencyData.rates);
+                    filteredResult = Object.keys(currencyData.rates);
+                }
+
+                // make baselist with filtered base options
+                Configuration.makeBaseList(filteredResult);
+                // }
             }
-
-            // make baselist with filtered base options
-            Configuration.makeBaseList(filteredResult);
-            // }
         });
 
         // put top of the options constituting the select box content in view
-        selectBox.options[0].scrollIntoView();
 
     },
     makeBaseList(filteredResult) {
@@ -172,12 +171,13 @@ const Configuration = {
         // select box will always be re-rendered to exclude the current selected base currency,
         // as it should not be selected again.   So set innerHtmL to '' each time
         selectBox.innerHTML = ''
-        if (filteredResult.length == 0) {
-            filteredResult = [];
-        }
-
+        //        if (filteredResult.length == 0) {
+        //     filteredResult = [];
+        // }
         let baseFilterField = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS);
-        //select_box.focus();
+
+        // due to much work with design/appearance of option elements and integrating mouseclicks and enter key press, up/down arrow usage in select options list,
+        // where focus and blur are used in other methods to enhance the user interface, explicit usage of focus and blur below maintain the integraity of the intended UI and its responsiveness.
         selectBox.addEventListener('mouseenter', function(e) {
             selectBox.focus();
         });
@@ -185,18 +185,24 @@ const Configuration = {
         selectBox.addEventListener('mouseleave', function(e) {
             selectBox.blur();
         });
+
+        // a helper index to control and maintain the integrity of the intended UI behavior on up/down arrow usage to scroll
         let index = -1
 
         for (let currency of filteredResult) {
-            // if (currency != currencyData.convertFrom) {
+
             let option = document.createElement('option');
             option.tabIndex = 0;
+            // every option in select will display currency code and the currency's full name
             option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}:</span>${currencyData.fullNames[currency]}`;
+            // usage of dataset to facilitate transfer of data regarding selected option to other methods
             option.dataset['code'] = currency;
             selectBox.appendChild(option);
             option.classList.add(Configuration.BASE_OPTION_CLASS);
             option.addEventListener('mouseenter', function(e) {
-
+                // a finepoint, small enhancement for improved appearance on edge case.  on some OS such as linux, if user has multiple programs open in diferent window, 
+                // and is using a tiler which splits the screen (as this author does), the select options will lose their styling on hover (if another program is in the foreground, and browser is background),
+                // as a result of that the browser will not recognize focus.  !document.hasFocus() improves appearance in this strange edge case
                 if (!document.hasFocus()) {
                     option.classList.add('Configure-baseOption--hovered');
                     option.selected = 'selected';
@@ -206,8 +212,9 @@ const Configuration = {
                     option.classList.remove('Configure-baseOption--hovered');
                     option.selected = 'selected';
                     option.setAttribute('checked', true);
-
                 }
+                // }
+                // keep the index up to date with the selectBox selectedIndex
                 index = selectBox.selectedIndex;
 
 
@@ -222,84 +229,68 @@ const Configuration = {
 
             });
 
-            //index = selectBox.selectedIndex;
             option.addEventListener('click', function(e) {
 
                 alert(option.dataset['code']);
                 Configuration.changeBase(option.dataset['code']);
             });
-
-
-
-
-
-
         }
         selectBox.addEventListener('keydown', function(e) {
 
-            // text for enter key and presence of an index value
-
+            // test for enter key and presence of an index value
+            // we update base currency value on enter key press on option just as for mouseclick on option
             if (e.keyCode == 13 && index > -1) {
-
                 index = selectBox.selectedIndex;
-
-
-
                 Configuration.changeBase(selectBox.options[index].dataset.code);
-
-
             }
-
         });
 
-
-
-        selectBox.options[0].scrollIntoView();
         let lastIndex = filteredResult.length - 1;
         let baseConfig = App.querySelectorByClass(Configuration.BASE_FORM_CLASS);
 
         baseConfig.addEventListener('keydown', function(e) {
+            // 38 is arrowup, 40 is arrowdown
+            if (e.keyCode == 38 || e.keyCode == 40) {
+                // use preventDefault to override default integration of up/down arrows with select box
+                // which causes skipping or bumping of the scroll that does not 
+                // integrate well with the other customizations/features coded here
+                // for example, without this override
+                e.preventDefault();
+                // ensure focus within select box
+                selectBox.focus();
 
-            if (e.which == 38 || e.which == 40) {
-
-
-
-                if (e.which == 38) {
-
+                // on arrowup, decrement index potentially until 0th index
+                if (e.keyCode == 38) {
                     if (index > 0) {
                         index -= 1;
-                        selectBox.focus();
-                    } else if (index == 0) {
 
+                    } else if (index <= 0) {
+                        // if index is already 0, then user is scrolling up out of the 
+                        // select box into the filter field
                         baseFilterField.tabIndex = '-1';
                         selectBox.blur();
                         baseFilterField.focus()
+                        // for consistency with selectBox.selectedIndex == -1 when no option selected
+                        // make a scroll up from 0 index to be -1 index.  it is possible that user will hit 
+                        // arrow up multiple times at this point, so set index as an assignment and not a decrement here
+                        index = -1;
                     }
                 }
-                e.preventDefault();
-                if (e.which == 40 && index < lastIndex) {
+                // on arrowdown, increment the index and ensure select box focus as long as 
+                // we ensure we are not incrementing beyond the last index
+                if (e.keyCode == 40 && index < lastIndex) {
                     index += 1;
                     selectBox.focus();
 
                 }
-
-                if (index <= lastIndex) {
-
-                    selectBox.selectedIndex = index;
-
-                }
-
+                // update selectedIndex on select box, since we have overridden much default selectbox behavior
+                // and are manually tracking an index.  
+                selectBox.selectedIndex = index;
             }
-
-
         });
 
-        // when select options list is created, ensure view is positioned at start (i.e., first option) instead of prior user scroll position
-        if (selectBox.selectedIndex > -1) {
-            selectBox.selectedIndex = index;
-            //selectBox.options[selectBox.selectedIndex].scrollIntoView();
-        }
-
+        // always make sure scroll window is presenting at the top of the options list (first item) fully visible at top of element.
+        selectBox.options[0].scrollIntoView();
     },
 
 
@@ -454,25 +445,22 @@ const Configuration = {
         }
     },
     changeBase(val) {
-        console.log('changeBase: ', val);
+
         let select = App.querySelectorByClass(this.BASE_SELECT_BOX_CLASS);
         App.querySelectorByClass('Configure-headerBaseValue').innerHTML = val;
         currencyData.convertFrom = val;
-        console.log(currencyData.convertFrom);
-
-        if (currencyData.convertTo.includes(val)) {
-
-            currencyData.convertTo.splice(currencyData.convertTo.indexOf(val), 1);
+        // when base currency is changed, if the base currency code is present in the list to convertFrom
+        // remove it from convertFrom, so that the base currency is not occupying a comparison slot
+        if (currencyData.convertTo.includes(currencyData.convertFrom)) {
+            currencyData.convertTo.splice(currencyData.convertTo.indexOf(currencyData.convertFrom), 1);
         }
-        console.log(currencyData.convertTo);
         CurrencyFetch.APIData(baseURL);
+
         let thing = App.querySelectorByClass('Configure-showConfiguration');
         thing.classList.add('Configure-configurationCurrencyAnimate');
         thing.addEventListener('animationend', () => {
             thing.classList.remove('Configure-configurationCurrencyAnimate');
         });
-        //App.render();
-
     },
 
 }
