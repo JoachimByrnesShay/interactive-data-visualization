@@ -56,9 +56,7 @@ const CurrencyFetch = {
     }
 }
 
-
-// AppConfiguration object provides organization of methods for presenting configuration options and controlling their behavior and associted behavior of display in configuration section
-
+// Configuration object provides organization of methods for presenting configuration options and controlling their behavior and associted behavior of display in configuration section
 const Configuration = {
 
     makeVariables() {
@@ -68,30 +66,34 @@ const Configuration = {
             BASE_FORM_CLASS: 'Configure-baseForm',
             BASE_FILTER_FIELD_CLASS: 'Configure-baseFilter',
             SELECTED_COMPARISON_CLASS: 'Configure-selectedComparison',
-            SHOW_BASE_CLASS: 'Configure-showBase',
+            SHOW_BASE_CLASS: 'Configure-showBaseContainer',
             SHOW_COMPARISONS_CLASS: 'Configure-showComparisonsContainer',
             COMPARISON_OPTION_CLASS: 'Configure-comparisonOption',
             COMPARISONS_FORM_CLASS: 'Configure-comparisonsForm',
             COMPARISONS_SELECT_BOX_CLASS: 'Configure-comparisonsSelectBox',
             COMPARISONS_FILTER_FIELD_CLASS: 'Configure-comparisonsFilter',
-            CLEAR_CHARTS_BUTTON_CLASS: 'Configure-clearCharts',
+            CLEAR_CHARTS_BUTTON_CLASS: 'Configure-clearChartsButton',
+            CONFIGURATION_HEADER_BASE_VALUE_SPAN_CLASS: 'Configure-headerBaseValue',
+            CONFIGURATION_HEADER_BASE_VALUE_ANIMATE: 'Configure-headerBaseValueAnimate'
         }
         // use App.makeCurrentObjectVariables() to set up the above variables in context of current object Configuration
         App.makeCurrentObjectVariables(this, configurationVariables);
     },
-
+    // make sure forms in configuration section to not submit (no page refresh on enter key)
     stopFormSubmit(form) {
         // equivalent to inline (in html) javascript onSubmit='return false', this function is utilized to stop any from from submitting 
         // if enter key is hit inside of an input field; utilized here to 
         // stop forms in base and comparisons configurations sections from submitting, which affects smoothness of user experience
-        form.onsubmit = () => { console.log('submit'); return false; }
+        form.onsubmit = () => { return false; }
     },
 
     makeConfigurationDisplay() {
+        // dynamically create variables owned by Configuration object from key:value pairs in object inside makeVariables method definitation
         this.makeVariables();
-        // set onclick function on clear comparisons button in configuration section
+        // set onclick function on clear charts/comparison-currencies button in configuration section
         App.querySelectorByClass(this.CLEAR_CHARTS_BUTTON_CLASS).onclick = () => BarChart.Utility.clearCharts();
 
+        // base currency selection section and comparison currencies selection selection
         Configuration.makeBaseSection();
         Configuration.makeComparisonsSection();
     },
@@ -99,58 +101,66 @@ const Configuration = {
     makeBaseSection() {
         // ensure that form for baseCurrency config does not submit, i.e. when enter pressed. 
         // form submits refresh page and this is undesirable and unnecessary for user experience
-        this.stopFormSubmit(App.querySelectorByClass('Configure-baseForm'));
+        this.stopFormSubmit(App.querySelectorByClass(this.BASE_FORM_CLASS));
 
         // headerBaseValue is class for span in h2.Configure-baseHeading and displays, reflects dynamic changes in, and animates in some contexts the configured current base currency value
-        App.querySelectorByClass('Configure-headerBaseValue').innerHTML = currencyData.convertFrom;
+        App.querySelectorByClass(this.CONFIGURATION_HEADER_BASE_VALUE_SPAN_CLASS).innerHTML = currencyData.convertFrom;
         // a custom tooltip is used for the element and the css :hover::after effect employs a dataset attribute rather than title.  this avoids the combo of default behavior occurring alongside of custom behavior with use of title
-        App.querySelectorByClass('Configure-headerBaseValue').dataset.tooltipTitle = currencyData.fullNames[currencyData.convertFrom];
+        App.querySelectorByClass(this.CONFIGURATION_HEADER_BASE_VALUE_SPAN_CLASS).dataset.tooltipTitle = currencyData.fullNames[currencyData.convertFrom];
 
         // animation class flashes element briefly to draw user attention to fact that a base currency value is set
-        App.querySelectorByClass('Configure-headerBaseValue').classList.add('Configure-headerBaseValueAnimate');
+        App.querySelectorByClass(this.CONFIGURATION_HEADER_BASE_VALUE_SPAN_CLASS).classList.add(this.CONFIGURATION_HEADER_BASE_VALUE_ANIMATE);
 
-        App.querySelectorByClass('Configure-headerBaseValue').addEventListener('animationend', () => {
-            App.querySelectorByClass('Configure-headerBaseValue').classList.remove('Configure-headerBaseValueAnimate');
+        App.querySelectorByClass(this.CONFIGURATION_HEADER_BASE_VALUE_SPAN_CLASS).addEventListener('animationend', () => {
+            App.querySelectorByClass(this.CONFIGURATION_HEADER_BASE_VALUE_SPAN_CLASS).classList.remove(this.CONFIGURATION_HEADER_BASE_VALUE_ANIMATE);
         });
         // make and display the filterable (by text input field) list of available base currencies for user to select one base currency
         this.makeFilterableBaseList();
+
     },
     makeFilterableBaseList() {
         let baseFilterField = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS);
         let filteredResult;
+        //ensure filter is always focused on renders, sought after behavior for transition from scrolling back up options list with arrowup above option at index 0, for refresh, and for re-rendering by changing base via mouseclick or enter on a selected/scrolled-to optionarrowup throw list
+        baseFilterField.focus();
         baseFilterField.value = '';
+        // a list of currency rate codes (the keys in currencyData.rates).  
         // without user filter input, on initialization the list will include all currency rates, though makeBaseList will omit the currently selected base currency from the list
         filteredResult = Object.keys(currencyData.rates);
         let selectBox = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS);
 
 
         // make default baseList
-        Configuration.makeBaseList(filteredResult);
 
+        // on each keyup event inside the baseFilterField, we filter the list (filteredResult) to only include currency codes which begin with the string which is the value of baseFilterField
         baseFilterField.addEventListener('keyup', function(e) { //selectBox.focus();
             let form = App.querySelectorByClass(Configuration.BASE_FORM_CLASS_NAME);
             filteredResult = Object.keys(currencyData.rates).filter(function(elem) {
                 return elem.toLowerCase().startsWith(baseFilterField.value.toLowerCase());
             });
-
+            // if the filterField value becomes an empty string, such as if user deletes characters by backspace, the filteredResult is reset to all currency codes
             if (baseFilterField.value == '') {
                 filteredResult = Object.keys(currencyData.rates);
             }
-            // remake baselist with filtered base options
+
+            // make baselist with filtered base options
             Configuration.makeBaseList(filteredResult);
 
-
         });
+        // make baselist outside of keyup listener so there is a list without keyup
+        let baseIndex = filteredResult.indexOf(currencyData.convertFrom);
 
-
-
-
-
+        filteredResult.splice(baseIndex, 1);
+        Configuration.makeBaseList(filteredResult);
+        // put top of the options constituting the select box content in view
+        selectBox.options[0].scrollIntoView();
 
     },
     makeBaseList(filtered_result) {
         let selectBox = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS);
-        selectBox.innerHTML = '';
+        // select box will always be re-rendered to exclude the current selected base currency,
+        // as it should not be selected again.   So set innerHtmL to '' each time
+        selectBox.innerHTML = ''
         if (filtered_result.length == 0) {
             filtered_result = [];
         }
@@ -164,51 +174,109 @@ const Configuration = {
         selectBox.addEventListener('mouseleave', function(e) {
             selectBox.blur();
         });
+        let index = -1
 
         for (let currency of filtered_result) {
-            if (currency != currencyData.convertFrom) {
-                let option = document.createElement('option');
-                option.tabIndex = 0;
-                option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}:</span>${currencyData.fullNames[currency]}`;
-                option.dataset['code'] = currency;
-                selectBox.appendChild(option);
-                option.classList.add(Configuration.BASE_OPTION_CLASS);
-                option.addEventListener('mouseenter', function(e) {
+            // if (currency != currencyData.convertFrom) {
+            let option = document.createElement('option');
+            option.tabIndex = 0;
+            option.innerHTML = `<span style='display:inline-block;width:3em;'>${currency}:</span>${currencyData.fullNames[currency]}`;
+            option.dataset['code'] = currency;
+            selectBox.appendChild(option);
+            option.classList.add(Configuration.BASE_OPTION_CLASS);
+            option.addEventListener('mouseenter', function(e) {
 
-                    if (!document.hasFocus()) {
-                        option.classList.add('Configure-baseOption--hovered');
-                    } else {
-                        option.setAttribute('active', true);
-                        option.classList.remove('Configure-baseOption--hovered');
-                        option.selected = 'selected';
-                    }
-                });
-                option.addEventListener('mouseleave', function(e) {
-                    option.setAttribute('active', 'false');
-                    option.selected = false;
+                if (!document.hasFocus()) {
+                    option.classList.add('Configure-baseOption--hovered');
+                    option.selected = 'selected';
+                    option.setAttribute('checked', true);
+                } else {
+                    option.setAttribute('active', true);
                     option.classList.remove('Configure-baseOption--hovered');
-                    option.setAttribute('selected', 'false');
-                    option.setAttribute('checked', false);
+                    option.selected = 'selected';
+                    option.setAttribute('checked', true);
 
-                });
+                }
+                index = selectBox.selectedIndex;
+                console.log("selecedindex ", selectBox.selectedIndex);
+                console.log('index ', index);
 
-                option.addEventListener('click', function(e) {
+            });
+            option.addEventListener('mouseleave', function(e) {
+                option.setAttribute('active', 'false');
+                option.selected = false;
+                option.classList.remove('Configure-baseOption--hovered');
+                option.setAttribute('selected', 'false');
+                option.setAttribute('checked', false);
+                index = selectBox.selectedIndex;
 
-                    Configuration.changeBase(option.dataset['code']);
-                });
-            }
+            });
+
+            //index = selectBox.selectedIndex;
+            option.addEventListener('click', function(e) {
+                console.log('click', option);
+
+                Configuration.changeBase(option.dataset['code']);
+            });
+            console.log(filtered_result.length);
+
+
+            selectBox.addEventListener('keydown', function(e) {
+
+                // text for enter key and presence of an index value
+                if (e.keyCode == 13 && index) {
+
+                    //the above conditional will enter once for every option in selectBox on EACH keydown event inside select
+                    // so control below code to only run once instead of for all options
+                    if (index == selectBox.selectedIndex) {
+                        //selectBox.selectedIndex = index;
+                        console.log('index', index, 'selectedIndex', selectBox.selectedIndex);
+                        Configuration.changeBase(selectBox.options[index].dataset.code);
+                    }
+                    //e.stopPropagation();
+                }
+                // e.stopPropagation();
+            });
+            //     let which = e.which;
+            //     console.log(e.target);
+            //     e.preventDefault();
+            //     console.log(e.which);
+
+            //     if (which == 13 && index) {
+            //         let index = selectBox.selectedIndex;
+            //         selectBox.selectedIndex = index;
+            //         console.log('keydown index', index);
+            //         //     console.log('enter key pressed');
+            //         //     //Configuration.changeBase(option.dataset['code']);
+            //         //     let option = selectBox.options[index];
+            //         //     console.log('option', option);
+            //         //     let code = selectBox.options[index].dataset['code'];
+            //         console.log('keydown', selectBox.options[index]);
+            //         selectBox.blur();
+
+            //         Configuration.changeBase(selectBox.options[index].dataset.code);
+
+            //     }
+
+            // });
+
         }
-        let index = -1
-        let lastIndex = filtered_result.length - 1;
 
-        document.addEventListener('keydown', function(e) {
+        // }
+
+
+        selectBox.options[0].scrollIntoView();
+        let lastIndex = filtered_result.length - 1;
+        let baseConfig = App.querySelectorByClass(Configuration.BASE_FORM_CLASS);
+
+        baseConfig.addEventListener('keydown', function(e) {
 
             if (e.which == 38 || e.which == 40) {
 
 
 
                 if (e.which == 38) {
-                    console.log('38')
+
                     if (index > 0) {
                         index -= 1;
                         selectBox.focus();
@@ -232,19 +300,64 @@ const Configuration = {
                 }
 
             }
+
             // if (e.which == 38 || e.which == 40) {
-            //     e.preventDefault();
-            //     //alert(e.keyDown)
+
+            //     //e.preventDefault();
             //     selectBox.focus();
-            //     //let changeevent = new Event('change');
-            //     selectBox.selectedIndex = 0;
+            //     if (e.which == 38) {
 
-            //     selectBox.dispatchEvent(changeevent);
+            //         if (index > 0) {
+            //             index -= 1;
+            //             selectBox.focus();
+            //             selectBox.selectedIndex = index;
+            //             // console.log('thisone', selectBox.options[index]);
+            //             // selectBox.options[index].scrollIntoView();
+            //             // } else if (index == 0) {
+            //             //     index = -1
+            //             //     baseFilterField.tabIndex = '-1';
+            //             //     //selectBox.blur();
+            //             //     baseFilterField.focus()
+            //             //     selectBox.blur();
+            //             //     //selectBox.blur();
+            //             // } else if (index < 0) {
+            //             //     baseFilterField.focus();
+            //             //     selectBox.blur();
+            //             // selectBox.options[0].scrollIntoView;
+            //             //selectBox.selectedIndex = -1;
 
+            //         }
+            //         // }
+            //         else if (index == 0) {
+            //             selectBox.focus();
+            //             selectBox.selectedIndex = 0;
+            //             index -= 1;
+            //         }
+            //     } else if (e.which == 40 && index < lastIndex) {
+            //         index += 1;
 
-            //alert(e.onkeydown)
+            //         selectBox.selectedIndex = index;
+            //     }
 
+            //     if (index > -1) {
+
+            //         selectBox.selectedIndex = index;
+            //         let option = selectBox.options[selectBox.selectedIndex];
+            //         option.setAttribute('selected', 'true');
+            //         option.setAttribute('checked', true);
+            //         index = selectBox.selectedIndex;
+            //     }
+
+            // }
         });
+        console.log(index);
+        console.log(selectBox.selectedIndex);
+        // when select options list is created, ensure view is positioned at start (i.e., first option) instead of prior user scroll position
+        if (selectBox.selectedIndex > -1) {
+            selectBox.selectedIndex = index;
+            //selectBox.options[selectBox.selectedIndex].scrollIntoView();
+        }
+
     },
 
 
@@ -261,7 +374,7 @@ const Configuration = {
         this.makeComparisonsList(filtered_result);
         filter_field.addEventListener('click', function(e) {
 
-            // select_box.focus();
+            select_box.focus();
         });
         filter_field.addEventListener('keyup', function(e) {
             this.focus();
@@ -281,6 +394,8 @@ const Configuration = {
     makeComparisonsList(filtered_result) {
 
         let select_box = App.querySelectorByClass(Configuration.COMPARISONS_SELECT_BOX_CLASS);
+
+
         select_box.innerHTML = '';
         if (filtered_result.length == 0) {
             filtered_result = [];
@@ -308,16 +423,18 @@ const Configuration = {
 
                     if (!document.hasFocus()) {
                         option.classList.add('Configure-comparisonOption--hovered');
+
                     } else {
                         option.focus();
                         //option.setAttribute('active', true);
                         option.classList.remove('Configure-comparisonOption--hovered');
-                        option.selected = 'selected';
+                        //option.selected = 'selected';
                         option.setAttribute('checked', true);
                     }
                     if (option.classList.contains('Configure-selectedComparison')) {
                         option.classList.add('u-highlightComparison');
-                        option.selected = 'selected';
+                        //option.selected = 'selected';
+                        option.setAttribute('checked', true);
                     }
                 });
                 option.addEventListener('mouseleave', function(e) {
@@ -326,7 +443,7 @@ const Configuration = {
                     //option.setAttribute('active', 'false');
                     //option.selected = false;
                     option.classList.remove('Configure-comparisonOption--hovered');
-                    option.setAttribute('selected', 'false');
+                    // option.setAttribute('selected', 'false');
                     option.setAttribute('checked', false);
 
 
@@ -384,7 +501,8 @@ const Configuration = {
         div = document.querySelector('.Configure-showComparisons');
 
         App.querySelectorByClass('Configure-showComparisons').innerHTML = '';
-
+        // sort conversion currencies by alpha order.  previously are in order 
+        currencyData.convertTo.sort();
         for (let currency of currencyData.convertTo) {
             let p = document.createElement('p');
             p.textContent = currency;
@@ -394,6 +512,7 @@ const Configuration = {
         }
     },
     changeBase(val) {
+        console.log('changeBase: ', val);
         let select = App.querySelectorByClass(this.BASE_SELECT_BOX_CLASS);
         App.querySelectorByClass('Configure-headerBaseValue').innerHTML = val;
         currencyData.convertFrom = val;
@@ -435,7 +554,7 @@ const BarChart = {
 
     makeAllBarChartDisplay() {
         this.makeVariables();
-        console.log('main-content', this.MAIN_CONTENT_CLASS);
+
         let container = App.querySelectorByClass(this.MAIN_CONTENT_CLASS);
 
         if (currencyData.convertTo.length) {
@@ -490,14 +609,15 @@ BarChart.Utility = {
     MAIN_CONTENT_CLASS: 'ChartContent',
     getSizeRatio() {
         let max = 0;
-        // convertFrom rate will be 1
+        // convertFrom rate will be 1, all convertTo rates will be proportional to convertFrom, 
+        // convertFrom and convertTo currencies are combined in array to find the highest proportional rate of this group
         let arr = [...currencyData.convertTo, currencyData.convertFrom]
-        console.log(arr);
+        // find the max rate value.
         for (let key of arr) {
-            console.log(key, ': ', currencyData.rates[key]);
+
             if (currencyData.rates[key] > max) max = currencyData.rates[key]
         }
-        console.log('ratio', 100 / max);
+        // get the ration of 100% (height) to max, utilized to size charts
         return 100 / max;
     },
     offsetTitle(barChart, size) {
@@ -520,10 +640,11 @@ BarChart.Utility = {
     },
     setInitialSize(barChart, currencyCode) {
         let ratio = BarChart.Utility.getSizeRatio();
+        // chart with highest rate value * ration will equal 100% (height)
+        // all others will appear proportional to this
         let chartSize = `${currencyData.rates[currencyCode] * ratio}%`;
         if (window.innerWidth > 950) {
             barChart.style.height = chartSize;
-
 
         } else barChart.style.width = chartSize;
 
@@ -561,7 +682,7 @@ BarChart.Utility = {
             let size = barChart.dataset.size;
             if (window.innerWidth <= 950) {
                 barChart.style.width = size;
-                barChart.style.height = '70%';
+                barChart.style.height = '90%';
             } else {
                 barChart.style.height = size;
                 barChart.style.width = '7em';
@@ -626,9 +747,6 @@ const App = {
         BarChart.makeAllBarChartDisplay();
         //on resized window, barcharts will be resized form vertical to horizontal- conditionally
         window.onresize = BarChart.Utility.resizeAll;
-
-
-
     },
     // make variables within the called currentObject context from the variable name/variable value pairs in the variables object
     // this is called in Configuration. and BarChart. to help the visual encapsulation of the many variables in each, specifically those used to point to html/css classes

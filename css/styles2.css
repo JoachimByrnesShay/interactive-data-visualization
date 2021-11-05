@@ -13,6 +13,15 @@
   --Header-textColor: beige;
   --Modal-textColor: white;
   --section-config-height: 9em;
+  --section-config-height: 10vh;
+}
+
+.Configure-clearChartsButton {
+  background: orange;
+  padding: 0.5em;
+  border-radius: .6em;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .u-bold {
@@ -109,13 +118,14 @@ html {
   min-width: 320px;
 }
 
-body {
-  max-height: 100vh;
+body {/* max-height: 100vh;
+ */
 }
 
 .Page {
   background: var(--Page-backgroundColor);
-  height: 100vh;
+  /* //height: 100vh;
+ */
   font-family: 'Nunito', sans-serif;
   font-weight: 400;
   color: var(--Page-textColor);
@@ -127,7 +137,7 @@ body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1;
-  grid-template-rows: 3fr 5fr 25fr 1fr;
+  grid-template-rows: 3fr 5fr 40fr 1fr;
 }
 
 .Header {
@@ -191,8 +201,11 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(20em,1fr));
   justify-content: space-around;
-  grid-column-gap: .5em;
+  /* grid-column-gap: 2em;
+ */
   align-content: top;
+  /* padding-left: .5em;padding-right: .5em;align-items: center;
+ */
 }
 
 .Configure-comparisonsSelectBox:hover, .Configure-baseSelectBox:hover {
@@ -213,7 +226,10 @@ body {
 }
 
 .Configure-comparisonsSelectBox, .Configure-baseSelectBox {
-  height: 5em;
+  margin-top: .8em;
+  /* height: 5em;height: 10vh;
+ *//* height: 10vh;
+ */
   border: 2px solid black;
   border-radius: 5px;
   /* overflow-y: scroll;scroll-behavior: smooth;
@@ -221,6 +237,8 @@ body {
   overflow-y: scroll;
   scroll-behavior: smooth;
   width: 20em;
+  width: 90%;
+  justify-self: center;
   list-style-type: none;
   background: lightyellow;
   color: black;
@@ -238,10 +256,6 @@ body {
 
 .Configure-comparisonsSelectBox:hover {
   cursor: default;
-}
-
-.Configure-baseSelectBox {
-  appearance: none;
 }
 
 .Configure-baseSelectBox:focus .Configure-baseOption:checked,
@@ -283,9 +297,8 @@ body {
   background: blue !important;
 }
 
-/* .Configure-baseOption:hover + .Configure-baseOption:not(:hover) {
-  background: linear-gradient(beige, beige);
-  color: black !important;
+/* .Configure-baseOption:hover + .Configure-baseOption:not(:hover) {background: linear-gradient(beige, beige);color: black !important;
+
 }*/
 
 .Configure-baseForm {
@@ -296,8 +309,8 @@ body {
   padding: 3px 0 3px 0;
   border: 1px solid transparent;
   list-style-type: none;
-  border-top: 1px solid black;
-  height: 1.7em;
+  border-top: 1px solid black; /* height: 1.7em;height: 3vh;*/
+  */height: 1.7em;
   box-sizing: border-box;
   margin-bottom: 3px;
 }
@@ -403,7 +416,9 @@ body {
   justify-content: space-between;
   padding: 0 15% .5em 0;
   align-self: baseline;
-  height: 6.5em;
+  /* height: 6.5em;height: 10vh;
+ */
+  height: 4.5em;
 }
 
 .ChartContent {
@@ -415,6 +430,7 @@ body {
   justify-content: space-around;
   align-content: flex-end;
   border: .5em solid var(--ChartContent-borderColor);
+  border-radius: .5em;
 }
 
 .ChartContent-barChartContainer {
@@ -555,13 +571,15 @@ body {
     width: 100%;
     height: inherit;
     height: 5em;
+    /* height: 5em;height: 10vh;
+ */
   }
 
   .Configure-showConfiguration {
   }
 
-  .ChartContent-barChart {/* since ChartContent-barCharts have INLINE hardcoded styling of height in html for default vertical charts, use !important to change height for this class in css stylesheet */
-    height: 60%;
+  .ChartContent-barChart {/* since ChartContent-barCharts have INLINE hardcoded styling of height in html for default vertical charts, use !important to change height for this class in css stylesheet *//* height: 60%;height: 5vh;
+ */
     justify-self: flex-end;
     align-self: center;
     border-radius: 0 .3em .3em 0;
@@ -571,6 +589,7 @@ body {
     align-items: center;
     padding-left: .5em;
     padding-top: 0;
+    height: 90%;
   }/*modal is absolutely positioned to ChartContent-container, whose height and width have been changed on small screens*/
 
   .Modal {
@@ -587,8 +606,8 @@ body {
 /* make acceptably responsive for extremely small-width screen devices */
 
 @media only screen and (max-width:  330px) {
-  .ChartContent-barChart {
-    height: 70% !important;
+  .ChartContent-barChart {/* height: 70% !important;height: 7vh !important;
+ */
     align-items: center;
     font-size: .9em;
     padding-top: 9%;
