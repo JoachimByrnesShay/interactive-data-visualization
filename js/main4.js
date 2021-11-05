@@ -201,35 +201,34 @@ const Configuration = {
             selectBox.appendChild(option);
             option.classList.add(Configuration.BASE_OPTION_CLASS);
             option.addEventListener('mouseenter', function(e) {
-                // a finepoint (!document.hasFocus()), small enhancement for improved appearance on edge case.  on some OS such as linux, if user has multiple programs open in diferent window, 
-                // and is using a tiler which splits the screen (as this author does), the select options will lose their styling on hover (if another program is in the foreground, and browser is background),
-                // as a result of that the browser will not recognize focus.  !document.hasFocus() improves appearance in this strange edge case
-                if (!document.hasFocus()) {
-                    // a hover class to match the styling for up/down arrow scrolling styling of options
-                    option.classList.add('Configure-baseOption--hovered');
-                    option.selected = 'selected';
-                    option.setAttribute('checked', true);
-                } else {
-                    option.setAttribute('active', true);
-                    option.classList.remove('Configure-baseOption--hovered');
-                    option.selected = 'selected';
-                    option.setAttribute('checked', true);
-                }
-                // keep the index up to date with the selectBox selectedIndex
-                index = selectBox.selectedIndex;
+    // a finepoint (!document.hasFocus()), small enhancement for improved appearance on edge case.  on some OS such as linux, if user has multiple programs open in diferent window, 
+    // and is using a tiler which splits the screen (as this author does), the select options will lose their styling on hover (if another program is in the foreground, and browser is background),
+    // as a result of that the browser will not recognize focus.  !document.hasFocus() improves appearance in this strange edge case
+    if (!document.hasFocus()) {
+        // a hover class to match the styling for up/down arrow scrolling styling of options
+        option.classList.add('Configure-baseOption--hovered');
+        option.selected = 'selected';
+        option.setAttribute('checked', true);
+    } else {
+        option.setAttribute('active', true);
+        option.classList.remove('Configure-baseOption--hovered');
+        option.selected = 'selected';
+        option.setAttribute('checked', true);
+    }
+    // keep the index up to date with the selectBox selectedIndex
+    index = selectBox.selectedIndex;
 
 
-            });
-            option.addEventListener('mouseleave', function(e) {
-                option.setAttribute('active', 'false');
-                option.selected = false;
-                option.classList.remove('Configure-baseOption--hovered');
-                option.setAttribute('selected', 'false');
-                option.setAttribute('checked', false);
-                index = selectBox.selectedIndex;
+});
+option.addEventListener('mouseleave', function(e) {
+    option.setAttribute('active', 'false');
+    option.selected = false;
+    option.classList.remove('Configure-baseOption--hovered');
+    option.setAttribute('selected', 'false');
+    option.setAttribute('checked', false);
+    index = selectBox.selectedIndex;
 
-            });
-
+});
             option.addEventListener('click', function(e) {
                 Configuration.changeBase(option.dataset['code']);
             });
@@ -248,46 +247,6 @@ const Configuration = {
         let baseConfig = App.querySelectorByClass(Configuration.BASE_FORM_CLASS);
 
         Configuration.makeSelectArrowKeyListener(baseConfig, { filterField: baseFilterField, selectBox: selectBox, index: index, lastIndex: lastIndex });
-        // baseConfig.addEventListener('keydown', function(e) {
-        //     // 38 is arrowup, 40 is arrowdown
-        //     if (e.keyCode == 38 || e.keyCode == 40) {
-        //         // use preventDefault to override default integration of up/down arrows with select box
-        //         // which causes skipping or bumping of the scroll that does not 
-        //         // integrate well with the other customizations/features coded here
-        //         // for example, without this override
-        //         e.preventDefault();
-        //         // ensure focus within select box
-        //         selectBox.focus();
-
-        //         // on arrowup, decrement index potentially until 0th index
-        //         if (e.keyCode == 38) {
-        //             if (index > 0) {
-        //                 index -= 1;
-
-        //             } else if (index <= 0) {
-        //                 // if index is already 0, then user is scrolling up out of the 
-        //                 // select box into the filter field
-        //                 baseFilterField.tabIndex = '-1';
-        //                 selectBox.blur();
-        //                 baseFilterField.focus()
-        //                 // for consistency with selectBox.selectedIndex == -1 when no option selected
-        //                 // make a scroll up from 0 index to be -1 index.  it is possible that user will hit 
-        //                 // arrow up multiple times at this point, so set index as an assignment and not a decrement here
-        //                 index = -1;
-        //             }
-        //         }
-        //         // on arrowdown, increment the index and ensure select box focus as long as 
-        //         // we ensure we are not incrementing beyond the last index
-        //         if (e.keyCode == 40 && index < lastIndex) {
-        //             index += 1;
-        //             selectBox.focus();
-
-        //         }
-        //         // update selectedIndex on select box, since we have overridden much default selectbox behavior
-        //         // and are manually tracking an index.  
-        //         selectBox.selectedIndex = index;
-        //     }
-        // });
 
         // always make sure scroll window is presenting at the top of the options list (first item) fully visible at top of element.
         selectBox.options[0].scrollIntoView();
@@ -458,48 +417,6 @@ const Configuration = {
             }
         });
         Configuration.makeSelectArrowKeyListener(comparisonConfig, { filterField: filterField, selectBox: selectBox, index: index, lastIndex: lastIndex });
-        // comparisonConfig.addEventListener('keydown', function(e) {
-        //     console.log('comparisonconfig');
-        //     // 38 is arrowup, 40 is arrowdown
-        //     if (e.keyCode == 38 || e.keyCode == 40) {
-        //         console.log('index now is: ', index);
-        //         // use preventDefault to override default integration of up/down arrows with select box
-        //         // which causes skipping or bumping of the scroll that does not 
-        //         // integrate well with the other customizations/features coded here
-        //         // for example, without this override
-        //         e.preventDefault();
-        //         // ensure focus within select box
-        //         selectBox.focus();
-
-        //         // on arrowup, decrement index potentially until 0th index
-        //         if (e.keyCode == 38) {
-        //             if (index > 0) {
-        //                 index -= 1;
-
-        //             } else if (index <= 0) {
-        //                 // if index is already 0, then user is scrolling up out of the 
-        //                 // select box into the filter field
-        //                 filterField.tabIndex = '-1';
-        //                 selectBox.blur();
-        //                 filterField.focus()
-        //                 // for consistency with selectBox.selectedIndex == -1 when no option selected
-        //                 // make a scroll up from 0 index to be -1 index.  it is possible that user will hit 
-        //                 // arrow up multiple times at this point, so set index as an assignment and not a decrement here
-        //                 index = -1;
-        //             }
-        //         }
-        //         // on arrowdown, increment the index and ensure select box focus as long as 
-        //         // we ensure we are not incrementing beyond the last index
-        //         if (e.keyCode == 40 && index < lastIndex) {
-        //             index += 1;
-        //             selectBox.focus();
-
-        //         }
-        //         // update selectedIndex on select box, since we have overridden much default selectbox behavior
-        //         // and are manually tracking an index.  
-        //         selectBox.selectedIndex = index;
-        //     }
-        // });
 
         Configuration.showComparisons();
     },

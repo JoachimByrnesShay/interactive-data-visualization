@@ -145,7 +145,7 @@ body {/* max-height: 100vh;
   align-items: stretch;
   padding: .3em;
   display: grid;
-  grid-template-columns: 3fr 5fr;
+  grid-template-columns: 3fr 4fr 1fr;
 }
 
 .Header-title {
@@ -539,6 +539,14 @@ body {/* max-height: 100vh;
 
 @media only screen and (max-width: 950px) {/*change orientetion of .ChartContent flex items on smaller screens, i.e. vertical to horizontal barCharts */
 
+  .Header-title {
+    color: transparent;
+  }
+
+  .Header {
+    grid-template-columns: 1fr;
+  }
+
   .ChartContent-indicateBase {
     position: absolute;
     color: black;
@@ -589,17 +597,6 @@ body {/* max-height: 100vh;
     opacity: 1;
   }/*
    set width of barCharts to height (the originally hardcoded inline value), i.e. for switch from vertical to horizontal charts */
-}
-
-@media only screen and (max-width: 640px) {
-  .Header {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-  }
-
-  .Header-title {
-    color: transparent;
-  }
 }
 
 /* make acceptably responsive for extremely small-width screen devices */
