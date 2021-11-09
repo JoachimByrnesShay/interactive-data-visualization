@@ -257,10 +257,10 @@ body {/* max-height: 100vh;
 .Configure-comparisonsSelectBox:hover {
   cursor: default;
 }
-
-.Configure-baseSelectBox:focus .Configure-baseOption:checked,
-.Configure-baseOption--hovered {/* background: linear-gradient(pink, black);
+/* 
  */
+.Configure-baseSelectBox:focus .Configure-baseOption:checked
+{
   color: white !important;
   position: relative;
   box-shadow: 0px 0px 10px 10px #e1358f inset, 9px 7px 5px 2px grey;
@@ -303,8 +303,9 @@ body {/* max-height: 100vh;
   margin-bottom: 3px;
 }
 
-.Configure-comparisonOption:not(.Configure-selectedComparison):checked,
-.Configure-comparisonOption--hovered:not(.Configure-selectedComparison) {
+.Configure-comparisonOption:not(.Configure-selectedComparison):checked
+/* .Configure-comparisonOption--hovered: not(.Configure-selectedComparison)
+ */{
   color: white !important;
   position: relative;
   box-shadow: 0px 0px 10px 10px #e1358f inset, 9px 7px 5px 2px grey;
