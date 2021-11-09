@@ -257,13 +257,15 @@ body {/* max-height: 100vh;
 .Configure-comparisonsSelectBox:hover {
   cursor: default;
 }
+
 /* 
  */
-.Configure-baseSelectBox:focus .Configure-baseOption:checked
-{
+
+.Configure-baseSelectBox:focus .Configure-baseOption:checked {
   color: white !important;
   position: relative;
   box-shadow: 0px 0px 10px 10px #e1358f inset, 9px 7px 5px 2px grey;
+  box-shadow: 0px 0px 10px 10px #e1358f inset;
   /* background-image: radial-gradient(hsl(240,85%,80%) 10%, hsl(150,75%,46%) 90%) repeat;
  */
   background-color: red;
@@ -303,12 +305,11 @@ body {/* max-height: 100vh;
   margin-bottom: 3px;
 }
 
-.Configure-comparisonOption:not(.Configure-selectedComparison):checked
-/* .Configure-comparisonOption--hovered: not(.Configure-selectedComparison)
- */{
+.Configure-comparisonOption:not(.Configure-selectedComparison):checked {
   color: white !important;
   position: relative;
   box-shadow: 0px 0px 10px 10px #e1358f inset, 9px 7px 5px 2px grey;
+  box-shadow: 0px 0px 10px 10px #e1358f inset;
   /* background-image: radial-gradient(hsl(240,85%,80%) 10%, hsl(150,75%,46%) 90%) repeat;
  */
   background-color: red;
@@ -514,7 +515,8 @@ body {/* max-height: 100vh;
   width: 230px;
   height: 110px;
   margin: 0;
-  box-shadow: 2px 3px 1px var(--Page-boxShadowColor);
+  box-
+: 2px 3px 1px var(--Page-boxShadowColor);
   z-index: 30;
 }
 
