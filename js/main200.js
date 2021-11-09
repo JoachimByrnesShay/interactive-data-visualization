@@ -82,6 +82,13 @@ const Configuration = {
         // use App.makeCurrentObjectVariables() to set up the above variables in context of current object Configuration
         App.makeCurrentObjectVariables(this, configurationVariables);
     },
+    getIndexFromContext(indexContext) {
+        if (indexContext == 'BASE') {
+            return ['BASE.index', 'BASE.lastIndex']
+        } else {
+            return ['Configuration.COMPARISON.index', 'Configuration.COMPARISON.lastIndex'];
+        }
+    },
     // make sure forms in configuration section to not submit (no page refresh on enter key)
     stopFormSubmit(form) {
         // equivalent to inline (in html) javascript onSubmit='return false', this function is utilized to stop any from from submitting 
@@ -152,7 +159,7 @@ const Configuration = {
         let baseFormConfig = App.querySelectorByClass(Configuration.BASE_FORM_CLASS);
         Configuration.makeEnterOnSelectBoxListener({ form: baseFormConfig, filterField: filterField, selectBox: selectBox })
         // put top of the options constituting the select box content in view
-        Configuration.makeSelectArrowKeyListener({ form: baseFormConfig, filterField: filterField, selectBox: selectBox });
+        Configuration.makeSelectArrowKeyListener({ form: baseFormConfig, filterField: filterField, selectBox: selectBox }, 'BASE');
 
     },
     makeSelectFilter(filterField, formClass, filteredResult, listChangeFunction) {
@@ -331,22 +338,23 @@ const Configuration = {
 
     },
 
-    makeSelectArrowKeyListener(elemContainer) {
+    makeSelectArrowKeyListener(elemContainer, indexContext) {
+
         console.log('index container: ')
         let elem = elemContainer.form;
         let selectBox = elemContainer.selectBox;
         let filterField = elemContainer.filterField;
         elem.addEventListener('keydown', function(e) {
             e.target.focus();
-            console.log(Configuration.BASE.lastIndex)
+            console.log(Configuration[indexContext].index);
 
-            console.log('index: ', Configuration.BASE.index)
+            console.log('index: ', Configuration[indexContext].lastIndex)
             // 38 is arrowup, 40 is arrowdown
 
 
             if (e.keyCode == 38 || e.keyCode == 40) {
                 if (selectBox.selectedIndex > -1) {
-                    Configuration.BASE.index = selectBox.selectedIndex;
+                    Configuration[indexContext].index = selectBox.selectedIndex;
 
                 }
 
@@ -374,10 +382,10 @@ const Configuration = {
                     //     indexContainer.index = selectBox.selectedIndex;
 
                     // }
-                    if (Configuration.BASE.index > 0) {
-                        Configuration.BASE.index -= 1;
+                    if (Configuration[indexContext].index > 0) {
+                        Configuration[indexContext].index -= 1;
 
-                    } else if (Configuration.BASE.index <= 0) {
+                    } else if (Configuration[indexContext].index <= 0) {
                         // if index is already 0, then user is scrolling up out of the 
                         // select box into the filter field
                         // filterField.tabIndex = '-1';
@@ -386,14 +394,14 @@ const Configuration = {
                         // for consistency with selectBox.selectedIndex == -1 when no option selected
                         // make a scroll up from 0 index to be -1 index.  it is possible that user will hit 
                         // arrow up multiple times at this point, so set index as an assignment and not a decrement here
-                        Configuration.BASE.index = -1;
+                        Configuration[indexContext].index = -1;
                     }
 
                 }
                 // on arrowdown, increment the index and ensure select box focus as long as 
                 // we ensure we are not incrementing beyond the last index
 
-                if (e.keyCode == 40 && Configuration.BASE.index < Configuration.BASE.lastIndex) {
+                if (e.keyCode == 40 && Configuration[indexContext].index < Configuration[indexContext].lastIndex) {
                     // if (selectBox.selectedIndex > -1) {
                     //     
                     //e.preventDefault();
@@ -402,19 +410,19 @@ const Configuration = {
                     // 
                     selectBox.focus();
 
-                    Configuration.BASE.index += 1;
+                    Configuration[indexContext].index += 1;
 
 
                 } else if (e.keyCode == 40) {
                     //e.preventDefault();
 
-                    Configuration.BASE.index = Configuration.BASE.lastIndex;
+                    Configuration[indexContext].index = Configuration[indexContext].lastIndex
                     selectBox.focus();
                 }
                 // update selectedIndex on select box, since we have overridden much default selectbox behavior
                 // and are manually tracking an index.  
 
-                selectBox.selectedIndex = Configuration.BASE.index;
+                selectBox.selectedIndex = Configuration[indexContext].index;
                 console.log('in arrow listner, selectedIndex ', selectBox.selectedIndex);
 
             }
