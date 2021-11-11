@@ -1,12 +1,22 @@
-function include(files) {
-    for (let file of files) {
-        var script = document.createElement('script');
-        script.src = 'js/' + file;
-        script.type = 'text/javascript';
-        script.defer = true;
-        document.querySelector('.Page').appendChild(script);
-    }
-}
+import { App } from './app.js';
+import { baseURL, baseSubURLfullNames, baseSubURLRates, currencyData, CurrencyFetch } from './currencyfetch.js';
+import { BarChart } from './barchart.js';
+import { Modal } from './modal.js';
+import { Configuration } from './configuration.js';
 
-const scripts = ['app.js', 'barchart.js', 'main400.js', 'configuration.js', 'modal.js'];
-include(scripts);
+
+
+// //https://stackoverflow.com/questions/62456451/handling-dependencies-in-es6-module-intended-for-node-and-browser
+window.App = App;
+
+window.Configuration = Configuration;
+window.Modal = Modal;
+window.BarChart = BarChart;
+window.currencyData = currencyData;
+window.baseURL = baseURL;
+window.CurrencyFetch = CurrencyFetch;
+window.baseSubURLfullNames = baseSubURLfullNames;
+window.baseSubURLRates = baseSubURLRates;
+
+
+CurrencyFetch.APIData(baseURL);

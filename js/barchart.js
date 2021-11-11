@@ -84,6 +84,7 @@ BarChart.Utility = {
         return 100 / max;
     },
     offsetTitle(barChart, size) {
+        let context;
         let title = App.querySelectorByClass('ChartContent-barChartTitle', context = barChart);
         title.classList.add('u-offset');
 
@@ -141,7 +142,7 @@ BarChart.Utility = {
 
         let charts = App.querySelectorAllByClass(BarChart.CHART_CLASS);
 
-        for (barChart of charts) {
+        for (let barChart of charts) {
             let size = barChart.dataset.size;
             if (window.innerWidth <= 950) {
                 barChart.style.width = size;
@@ -156,3 +157,5 @@ BarChart.Utility = {
         }
     }
 }
+
+export { BarChart };

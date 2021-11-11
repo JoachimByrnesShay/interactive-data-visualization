@@ -18,7 +18,7 @@ const App = {
     // make variables within the called currentObject context from the variable name/variable value pairs in the variables object
     // this is called in Configuration. and BarChart. to help the visual encapsulation of the many variables in each, specifically those used to point to html/css classes
     makeCurrentObjectVariables: (currentObject, variables) => {
-        for (varName of Object.keys(variables)) {
+        for (let varName of Object.keys(variables)) {
             // varName is scoped within currentObject and is called as this.varName inside of the methods of currentObject, e.g. Configuration.SHOW_BASE_CLASS or BarChart.CHART_CLASS
             currentObject[varName] = variables[varName];
         }
@@ -35,3 +35,5 @@ const App = {
         return context.querySelectorAll('.' + elemClassName);
     }
 }
+
+export { App };

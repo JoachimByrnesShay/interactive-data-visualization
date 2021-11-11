@@ -19,6 +19,7 @@ const Modal = {
     /** show modal, call via onClick in html **/
     activateModal(elem) {
         /* select the modal within the ChartContent-barChart element (elem, passed as 'this') which has been clicked */
+        let context;
         let modal = App.querySelectorByClass(this.MODAL_CLASS, context = elem)
         // by default, the MODAL_CLASS, unactivated via activateModal has display set to none 
         modal.classList.add(this.MODAL_IS_DISPLAYED_CLASS);
@@ -34,3 +35,5 @@ const Modal = {
         });
     }
 }
+
+export { Modal };

@@ -115,7 +115,7 @@ const Configuration = {
                 }
 
                 let form = App.querySelectorByClass(formClass);
-                newlyFilteredResult = Object.keys(currencyData.rates).filter(function(elem) {
+                let newlyFilteredResult = Object.keys(currencyData.rates).filter(function(elem) {
                     return elem.toLowerCase().startsWith(filterField.value.toLowerCase());
 
                 });
@@ -160,8 +160,7 @@ const Configuration = {
         selectBox.selectedIndex = -1;
         //let filterField = querySelectorByClass('BASE_FILTER_FIELD_CLASS');
         filterField.tabIndex = -1;
-        filterField.focus();
-        filterField.select();
+
         //document.querySelectorAll('.Configure-baseSelectBox option')[0].scrollIntoView();
         //Configuration.makeFormAndSelectListeners(baseFormConfig, { index: Configuration.BASE.index, lastIndex: Configuration.BASE.lastIndex }, filterField, selectBox);
 
@@ -374,7 +373,7 @@ const Configuration = {
         this.stopFormSubmit(App.querySelectorByClass(this.COMPARISONS_FORM_CLASS));
         //let filterField = App.querySelectorByClass(this.COMPARISONS_FILTER_FIELD_CLASS);
         let filterField = App.querySelectorByClass('Configure-comparisonsFilter');
-
+        let form = App.querySelectorByClass(this.COMPARISONS_FORM_CLASS);
         let filteredResult;
         filterField.value = '';
         filteredResult = Object.keys(currencyData.rates);
@@ -382,7 +381,8 @@ const Configuration = {
 
         this.makeComparisonsList(filteredResult);
 
-        Configuration.makeSelectFilter(filterField, Configuration.COMPARISONS_FORM_CLASS, filteredResult, Configuration.makeComparisonsList)
+        Configuration.makeSelectFilter(filterField, Configuration.COMPARISONS_FORM_CLASS, filteredResult, Configuration.makeComparisonsList);
+        Configuration.makeSelectArrowKeyListener({ form: form, filterField: filterField, selectBox: selectBox }, 'COMPARISON');
     },
 
     makeComparisonsList(filteredResult) {
@@ -528,3 +528,5 @@ Configuration.ComparisonSection = {
 Configuration.BaseSection = {
 
 }
+
+export { Configuration };

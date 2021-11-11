@@ -65,7 +65,7 @@ const CurrencyFetch = {
 
 
 
+export { baseURL, baseSubURLfullNames, baseSubURLRates, currencyData, CurrencyFetch };
 
 
-
-CurrencyFetch.APIData(baseURL);
+//CurrencyFetch.APIData(baseURL);
