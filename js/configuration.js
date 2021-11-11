@@ -1,61 +1,3 @@
-// openexchangerates.org/api 
-
-let baseURL;
-// ...fullNames and ...Rates 
-let baseSubURLfullNames;
-let baseSubURLRates;
-// currencyData = container for the base currency, any selected currencies to convert to, rate data for available currencies,
-// full currency name for all available currencies (as fullNames), e.g. United States dollar vs USD 
-const currencyData = {
-    convertFrom: 'USD',
-    convertTo: ['EUR', 'GBP', 'CNY', 'BGN', 'AED'],
-    rates: {},
-    fullNames: {},
-}
-
-baseURL = 'https://openexchangerates.org/api/'
-
-
-// all method definitions have been organized inside of objects which provide a sensible context for their usage
-// use CurrencyFetch object to organize methods for fetching and storing text descriptions 
-// of currency codes, fetching and storing rates of currencies, and the APIData method
-// which calls both of these and then calls App.render() function
-const CurrencyFetch = {
-    APP_ID: `8453c33b4a3743769490d2c4fabcf120`,
-    // append to baseURL to access json object providing full names of each currency per currency code
-    baseSubURLfullNames: 'currencies.json',
-    // formulate subURL to get currency rates vs base currency, call baseSubURLRates as a method due to that currencyData.convertFrom (the user's selected base currency may change throughout app usage
-    baseSubURLRates: (app_id) => `latest.json?app_id=${app_id}&base='${currencyData.convertFrom}'`,
-    // get and store the full descriptive name of each currency, with key == the ISO 3166 international standard currency code
-    fullNames(url) {
-        let fullNamesURL = url + this.baseSubURLfullNames;
-        return fetch(fullNamesURL).then(response => response.json())
-            .then(data => {
-                for ([currencyCode, fullName] of Object.entries(data)) {
-                    currencyData.fullNames[currencyCode] = fullName;
-                }
-            });
-    },
-    // get and store the latest rate of each currency in relation to the base currency (convertFrom)
-    rates(url) {
-        let ratesURL = url + this.baseSubURLRates(this.APP_ID);
-        return fetch(ratesURL).then((response) => response.json())
-            .then(data => {
-                for (let currency of Object.keys(data.rates)) {
-                    currencyData.rates[currency] = data.rates[currency];
-                }
-            })
-    },
-    APIData(url) {
-        this.fullNames(url).then(() => {
-            this.rates(url).then(() => {
-                // call render when fullNames() and rates() are completed
-                App.render();
-            });
-        });
-    }
-}
-
 // Configuration object provides organization of methods for presenting configuration options and controlling their behavior and associted behavior of display in configuration section
 const Configuration = {
 
@@ -320,12 +262,18 @@ const Configuration = {
             // test for enter key and presence of an index value
             // we update base currency value on enter key press on option just as for mouseclick on option
             if (e.keyCode == 13 && elemContainer.selectBox.selectedIndex > -1) {
+                Configuration[indexContext].index = elemContainer['selectBox'].selectedIndex;
+                if (indexContext == 'COMPARISON') {
+                    Configuration.changeComparisonSelections(elemContainer.selectBox.options[Configuration[indexContext].index]);
+                } else {
+                    Configuration.changeBase(elemContainer.selectBox.options[Configuration[indexContext].index]);
+                }
                 //lert(indexContainer.index);
                 //console.log('configuration base index is: ', Configuration.BASE.index);
 
-                Configuration[indexContext].index = elemContainer['selectBox'].selectedIndex;
 
-                Configuration.changeBase(elemContainer.selectBox.options[Configuration[indexContext].index])
+
+
             }
             // }
         });
@@ -481,7 +429,7 @@ const Configuration = {
             // always make sure scroll window is presenting at the top of the options list (first item) fully visible at top of element.
         }
         // selectBox.options[0].scrollIntoView();
-        Configuration.makeEnterOnSelectBoxListener({ form: comparisonConfig, filterField: filterField, selectBox: selectBox }, { index: Configuration.COMPARISON.index, lastIndex: Configuration.COMPARISON.lastIndex });
+        Configuration.makeEnterOnSelectBoxListener({ form: comparisonConfig, filterField: filterField, selectBox: selectBox }, 'COMPARISON');
 
         Configuration.showComparisons();
     },
@@ -580,241 +528,3 @@ Configuration.ComparisonSection = {
 Configuration.BaseSection = {
 
 }
-
-
-// BarChart object provides organization of methods for creating, clearing, and resizing (responsive) barcharts, and associated utility methods
-const BarChart = {
-    makeVariables() {
-
-        let barChartVariables = {
-            // variablize the usage of classes necessary in calling barchart methods
-            MAIN_CONTENT_CLASS: 'ChartContent',
-            CHART_CONTAINER_CLASS: 'ChartContent-barChartContainer',
-            CHART_CLASS: 'ChartContent-barChart',
-            CLEAR_ALL_GRAPHS_CLASS: 'ChartContent--clearCharts',
-            INDICATE_BASE_TEXT_ON_BASE_CLASS_CHART: 'ChartContent-indicateBase',
-            CHART_CONTAINER_IS_BASE_CLASS: 'is-forBaseChart',
-        }
-
-        App.makeCurrentObjectVariables(this, barChartVariables);
-    },
-
-    makeAllBarChartDisplay() {
-        this.makeVariables();
-
-        let container = App.querySelectorByClass(this.MAIN_CONTENT_CLASS);
-
-        if (currencyData.convertTo.length) {
-            for (let currency of [currencyData.convertFrom, ...currencyData.convertTo]) {
-                let chartContainer = document.createElement('div');
-                chartContainer.classList.add(this.CHART_CONTAINER_CLASS);
-                this.visuallyIndicateChartIsBase(currency, chartContainer);
-                let barChart = this.makeBarChart(currency);
-                chartContainer.appendChild(barChart);
-                container.appendChild(chartContainer);
-            }
-        }
-    },
-    visuallyIndicateChartIsBase(currency, chartContainer) {
-        if (currency == currencyData.convertFrom) {
-
-            let div = document.createElement('div');
-            div.classList.add(this.INDICATE_BASE_TEXT_ON_BASE_CLASS_CHART);
-
-            chartContainer.classList.add(this.CHART_CONTAINER_IS_BASE_CLASS);
-            div.textContent = 'BASE CURRENCY';
-            chartContainer.appendChild(div);
-
-        }
-
-    },
-    makeBarChart(currencyCode) {
-
-        let barChart = document.createElement('div');
-        barChart.classList.add(this.CHART_CLASS);
-
-        let title = document.createElement('p');
-        title.textContent = currencyCode;
-        title.classList.add('ChartContent-barChartTitle');
-        title.classList.add('u-bold');
-        let modal = Modal.makeModal(currencyCode);
-
-        barChart.append(title, modal);
-        barChart.append(modal);
-        this.Utility.setInitialSize(barChart, currencyCode);
-        let size = parseInt(barChart.dataset.size);
-        barChart.onclick = (e) => {
-            e.preventDefault();
-            Modal.activateModal(barChart);
-        }
-        return barChart;
-    }
-
-}
-
-BarChart.Utility = {
-    MAIN_CONTENT_CLASS: 'ChartContent',
-    getSizeRatio() {
-        let max = 0;
-        // convertFrom rate will be 1, all convertTo rates will be proportional to convertFrom, 
-        // convertFrom and convertTo currencies are combined in array to find the highest proportional rate of this group
-        let arr = [...currencyData.convertTo, currencyData.convertFrom]
-        // find the max rate value.
-        for (let key of arr) {
-
-            if (currencyData.rates[key] > max) max = currencyData.rates[key]
-        }
-        // get the ration of 100% (height) to max, utilized to size charts
-        return 100 / max;
-    },
-    offsetTitle(barChart, size) {
-        let title = App.querySelectorByClass('ChartContent-barChartTitle', context = barChart);
-        title.classList.add('u-offset');
-
-        let titleOffset = `calc(${size} + 1em)`;
-
-        title.style.position = 'absolute';
-        title.classList.add('U-blackText');
-        if (window.innerWidth > 950) {
-            title.style.bottom = titleOffset
-
-            title.style.left = 'unset';
-
-        } else {
-            title.style.left = titleOffset;
-            title.style.bottom = 'unset';
-        }
-    },
-    setInitialSize(barChart, currencyCode) {
-        let ratio = BarChart.Utility.getSizeRatio();
-        // chart with highest rate value * ration will equal 100% (height)
-        // all others will appear proportional to this
-        let chartSize = `${currencyData.rates[currencyCode] * ratio}%`;
-        if (window.innerWidth > 950) {
-            barChart.style.height = chartSize;
-
-        } else barChart.style.width = chartSize;
-
-        barChart.setAttribute('data-size', chartSize);
-        if (parseInt(chartSize) < 8) {
-            this.offsetTitle(barChart, chartSize);
-        }
-
-    },
-    getMainContent(main = this.MAIN_CONTENT_CLASS) {
-
-        let content = App.querySelectorByClass(main);
-        return content;
-    },
-
-    clearConvertToDataValues() {
-        currencyData.convertTo = []
-    },
-    clearCharts() {
-        let main = this.getMainContent();
-        this.clearConvertToDataValues();
-        Configuration.makeComparisonsSection();
-        main.classList.add(BarChart.CLEAR_ALL_GRAPHS_CLASS);
-        main.addEventListener('animationend', function(e) {
-            main.classList.remove(BarChart.CLEAR_ALL_GRAPHS_CLASS);
-            App.clearContents(main);
-            App.render();
-        });
-    },
-    resizeAll() {
-
-        let charts = App.querySelectorAllByClass(BarChart.CHART_CLASS);
-
-        for (barChart of charts) {
-            let size = barChart.dataset.size;
-            if (window.innerWidth <= 950) {
-                barChart.style.width = size;
-                barChart.style.height = '90%';
-            } else {
-                barChart.style.height = size;
-                barChart.style.width = '7em';
-            }
-            if (parseInt(size) < 8) {
-                BarChart.Utility.offsetTitle(barChart, size);
-            }
-        }
-    }
-}
-
-// Modal object provides organization of methods for creating modal elements and displaying modals and controlling animation (set and removed by classes)
-const Modal = {
-    MODAL_CLASS: 'Modal',
-    MODAL_IS_DISPLAYED_CLASS: 'is-displayed',
-    makeModal(currencyCode) {
-        let modal = document.createElement('div');
-        // modal by default when created with makeModal have display set to none, for individual modals this will change with activateModal(modal);
-        modal.classList.add(this.MODAL_CLASS);
-        let descriptionTextParagraph = document.createElement('p');
-        let comparisonTextParagraph = document.createElement('p');
-        // description text is full name of the current comparison currency for this modal
-        descriptionTextParagraph.textContent = currencyData.fullNames[currencyCode];
-        // set comparisonTextParagraph content to show comparision of 1 unit of base currency vs the ratioed current comparison currency
-        comparisonTextParagraph.textContent = `1${currencyData.convertFrom}==${currencyData.rates[currencyCode]}${currencyCode}`;
-        modal.append(descriptionTextParagraph, comparisonTextParagraph);
-        return modal;
-    },
-
-    /** show modal, call via onClick in html **/
-    activateModal(elem) {
-        /* select the modal within the ChartContent-barChart element (elem, passed as 'this') which has been clicked */
-        let modal = App.querySelectorByClass(this.MODAL_CLASS, context = elem)
-        // by default, the MODAL_CLASS, unactivated via activateModal has display set to none 
-        modal.classList.add(this.MODAL_IS_DISPLAYED_CLASS);
-
-        /* cleanly remove is-displayed state class from modal when animation ends */
-        modal.addEventListener("animationend", () => {
-            modal.classList.remove(this.MODAL_IS_DISPLAYED_CLASS);
-        });
-
-        /* smoothen user experience when animation is not finished and user moves cursor back to bar too quickly (mousing back on too quickly after mousing off after click)*/
-        modal.addEventListener('animationcancel', () => {
-            modal.classList.remove(this.MODAL_IS_DISPLAYED_CLASS);
-        });
-    }
-}
-
-
-// main app 
-const App = {
-    // render the application 
-    // TAKE A SECOND LOOK AT THIS!!!!  makeBase and makeComparisons in render?????
-    // clear contents of the DOM element passed
-    clearContents: (elem) => elem.innerHTML = '',
-    render: () => {
-
-        // set up configuration display section of the app and display
-        Configuration.makeConfigurationDisplay();
-        //each call to render clears html of the barcharts area (.ChartContent)
-        App.clearContents(BarChart.Utility.getMainContent());
-        // create all bar charts and display
-        BarChart.makeAllBarChartDisplay();
-        //on resized window, barcharts will be resized form vertical to horizontal- conditionally
-        window.onresize = BarChart.Utility.resizeAll;
-    },
-    // make variables within the called currentObject context from the variable name/variable value pairs in the variables object
-    // this is called in Configuration. and BarChart. to help the visual encapsulation of the many variables in each, specifically those used to point to html/css classes
-    makeCurrentObjectVariables: (currentObject, variables) => {
-        for (varName of Object.keys(variables)) {
-            // varName is scoped within currentObject and is called as this.varName inside of the methods of currentObject, e.g. Configuration.SHOW_BASE_CLASS or BarChart.CHART_CLASS
-            currentObject[varName] = variables[varName];
-        }
-    },
-
-    // standardizes get element by querySelector without needing to pass '.', useful as classnames are variablized and used both in querySelectors 
-    // which requre '.' in the classstring and classlist add and remove which require no usage of '.' in classstring
-    // pass a context in to allow to get element with a certain class inside of any DOM element, not only document (which is default)
-    querySelectorByClass: (elemClassName, context = document) => {
-        return context.querySelector('.' + elemClassName);
-    },
-    // same usage as above SelectorByClass, but for All
-    querySelectorAllByClass: (elemClassName, context = document) => {
-        return context.querySelectorAll('.' + elemClassName);
-    }
-}
-
-CurrencyFetch.APIData(baseURL);
