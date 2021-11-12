@@ -9,10 +9,10 @@ import { ConfigurationComparisonSection } from './configurationComparisons.js';
 
 
 
-//by explicitly setting all the above imports onto window object as below, it is ensured they all are seen at the window object level for web browser usage, 
-// elsewise they're are undefined issues when functions within one object call functions in another objects
-//inspiration to use this as solution to imports not being seen as defined is taken from stackoverflow source below
-//https://stackoverflow.com/questions/62456451/handling-dependencies-in-es6-module-intended-for-node-and-browser
+// by explicitly setting all the above imports onto window object as below, it is ensured they all are seen at the window object level for web browser usage, 
+// elsewise there are undefined issues when functions within one object call functions in another objects
+// inspiration to use this as solution to imports not being seen as defined is taken from stackoverflow source below
+// https://stackoverflow.com/questions/62456451/handling-dependencies-in-es6-module-intended-for-node-and-browser
 
 window.App = App;
 
