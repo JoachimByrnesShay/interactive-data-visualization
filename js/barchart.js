@@ -20,18 +20,32 @@ const BarChart = {
 
         let container = App.querySelectorByClass(this.MAIN_CONTENT_CLASS);
 
-        if (currencyData.convertTo.length) {
-            for (let currency of [currencyData.convertFrom, ...currencyData.convertTo]) {
-                let chartContainer = document.createElement('div');
-                chartContainer.classList.add(this.CHART_CONTAINER_CLASS);
-                this.visuallyIndicateChartIsBase(currency, chartContainer);
-                let barChart = this.makeBarChart(currency);
-                chartContainer.appendChild(barChart);
-                container.appendChild(chartContainer);
-            }
+        //if (currencyData.convertTo.length) {
+        for (let currency of [currencyData.convertFrom, ...currencyData.convertTo]) {
+            let chartContainer = document.createElement('div');
+            chartContainer.classList.add(this.CHART_CONTAINER_CLASS);
+            this.visuallyIndicateChartIsBase(currency, chartContainer);
+            let barChart = this.makeBarChart(currency);
+            chartContainer.appendChild(barChart);
+            container.appendChild(chartContainer);
         }
+        // if (currencyData.convertTo.length == 0) {
+        //     container.style.display = 'block'
+        // }
+        //}
+        if (currencyData.convertTo.length == 0) {
+            container.classList.add('justOneGuy');
+            // container.style.justifyContent = 'flex-start'
+            // container.style.paddingLeft = '3.5em'
+        } else {
+            // container.style.justifyContent = 'unset';
+            // container.style.paddingLeft = 'unset';
+            container.classList.remove('justOneGuy');
+        }
+
     },
     visuallyIndicateChartIsBase(currency, chartContainer) {
+        let left;
         if (currency == currencyData.convertFrom) {
 
             let div = document.createElement('div');
@@ -40,8 +54,13 @@ const BarChart = {
             chartContainer.classList.add(this.CHART_CONTAINER_IS_BASE_CLASS);
             div.textContent = 'BASE CURRENCY';
             chartContainer.appendChild(div);
+            left = chartContainer.offsetLeft;
+            console.log('left ', left);
 
         }
+        // if (currencyData.convertTo.length == 0) {
+        // container.style.justifyContent = 'flex-start';
+        // }
 
     },
     makeBarChart(currencyCode) {
@@ -130,7 +149,8 @@ BarChart.Utility = {
     clearCharts() {
         let main = this.getMainContent();
         this.clearConvertToDataValues();
-        Configuration.makeComparisonsSection();
+        //Configuration.makeComparisonsSection();
+        Configuration.makeConfigurationDisplay();
         main.classList.add(BarChart.CLEAR_ALL_GRAPHS_CLASS);
         main.addEventListener('animationend', function(e) {
             main.classList.remove(BarChart.CLEAR_ALL_GRAPHS_CLASS);

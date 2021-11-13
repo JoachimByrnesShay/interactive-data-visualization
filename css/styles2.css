@@ -208,8 +208,9 @@ body {/* max-height: 100vh;
  */
 }
 
-.Configure-comparisonsSelectBox:hover, .Configure-baseSelectBox:hover {
+/* .Configure-comparisonsSelectBox:hover, .Configure-baseSelectBox:hover {
 }
+ */
 
 .Configure-comparisonsForm {
   display: grid;
@@ -244,7 +245,7 @@ body {/* max-height: 100vh;
   color: black;
 }
 
-.Configure-baseSelectBox, .Configure-baseSelectBox:active,
+/* .Configure-baseSelectBox, .Configure-baseSelectBox:active,
 .Configure-baseOption:active, .Configure-baseOption {
 }
 
@@ -253,10 +254,12 @@ body {/* max-height: 100vh;
 
 .Configure-baseOption:focus {
 }
+ */
 
-.Configure-comparisonsSelectBox:hover {
+/* .Configure-comparisonsSelectBox:hover {
   cursor: default;
 }
+ */
 
 /* 
  */
@@ -488,7 +491,12 @@ body {/* max-height: 100vh;
   opacity: .5;
 }
 
-.ChartContent--clearCharts .ChartContent-barChartContainer {
+.justOneGuy {
+  justify-content: flex-start;
+  padding-left: 3.5em;
+}
+
+.ChartContent--clearCharts .ChartContent-barChartContainer:not(.is-forBaseChart) {
   animation: clearCharts 2s normal forwards;
   animation-iteration-count: 1;
 }

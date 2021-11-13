@@ -4,6 +4,9 @@ const App = {
     // TAKE A SECOND LOOK AT THIS!!!!  makeBase and makeComparisons in render?????
     // clear contents of the DOM element passed
     clearContents: (elem) => elem.innerHTML = '',
+
+
+
     render: () => {
 
         // set up configuration display section of the app and display
