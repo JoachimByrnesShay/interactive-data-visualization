@@ -367,10 +367,10 @@ body {/* max-height: 100vh;
 .Configure-headerBaseValue:hover::after {
   content: attr(data-tooltip-title);
   position: absolute;
-  top: 50%;
+  top: -60%;
   left: 7%;
   width: content;
-  background: slateblue;
+  background: purple;
   color: white;
   font-style: bold;
   white-space: nowrap;
@@ -515,8 +515,7 @@ body {/* max-height: 100vh;
   width: 230px;
   height: 110px;
   margin: 0;
-  box-
-: 2px 3px 1px var(--Page-boxShadowColor);
+  box-: 2px 3px 1px var(--Page-boxShadowColor);
   z-index: 30;
 }
 

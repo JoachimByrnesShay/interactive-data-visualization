@@ -28,7 +28,7 @@ const Configuration = {
         if (indexContext == 'BASE') {
             return ['BASE.index', 'BASE.lastIndex']
         } else {
-            return ['Configuration.COMPARISON.index', 'Configuration.COMPARISON.lastIndex'];
+            return ['Configuration.COMPARISONS.index', 'Configuration.COMPARISONS.lastIndex'];
         }
     },
     // make sure forms in configuration section to not submit (no page refresh on enter key)
@@ -49,8 +49,15 @@ const Configuration = {
         Configuration.makeBaseSection();
 
         Configuration.makeComparisonsSection();
+        Configuration.showSelectedOptions();
     },
+    removeBaseCurrencyFromList(list) {
+        if (list.includes(currencyData.convertFrom)) {
+            let baseIndex = list.indexOf(currencyData.convertFrom);
+            list.splice(baseIndex, 1);
+        }
 
+    },
 
     makeSelectFilter(filterField, formClass, filteredResult, listChangeFunction) {
         filterField.addEventListener('keyup', function(e) {
@@ -82,19 +89,20 @@ const Configuration = {
         });
     },
 
-    makeOptionListeners(hoverClass, elemContainer, indexContext) {
 
-        Configuration.makeMouseInListener(hoverClass, elemContainer, indexContext);
-        Configuration.makeMouseOutListener(hoverClass, elemContainer, indexContext);
+    makeOptionListeners(elemContainer, indexContext, changeSelection) {
+        console.log(changeSelection);
+        Configuration.makeMouseInOptionListener(elemContainer, indexContext);
+        Configuration.makeMouseOutOptionListener(elemContainer, indexContext);
         // Configuration.makeMouseInAndOutListeners(hoverClass, elemContainer, indexContainer);
-        elemContainer['option'].addEventListener('click', function(e) {
-            Configuration.changeBase(elemContainer['option']);
+        elemContainer.option.addEventListener('click', function(e) {
+            console.log('on this option')
+            changeSelection(elemContainer.option);
         });
 
     },
 
-
-    makeMouseInListener(hoverClass, elemContainer, indexContext) {
+    makeMouseInOptionListener(elemContainer, indexContext) {
 
         let option = elemContainer.option;
         let selectBox = elemContainer.selectBox;
@@ -119,17 +127,17 @@ const Configuration = {
                 option.selected = 'selected';
                 option.setAttribute('checked', true);
             }
-            console.log('indexcontexnt is ', Configuration[indexContext]['index'])
+
             // keep the index up to date with the selectBox selectedIndex
             Configuration[indexContext]['index'] = selectBox.selectedIndex;
-
+            console.log('indexcontexnt is ', Configuration[indexContext]['index'])
 
         });
 
 
 
     },
-    makeMouseOutListener(hoverClass, elemContainer, indexContext) {
+    makeMouseOutOptionListener(elemContainer, indexContext) {
         let option = elemContainer.option;
         let selectBox = elemContainer.selectBox;
 
@@ -146,7 +154,7 @@ const Configuration = {
     },
 
 
-    makeEnterOnSelectBoxListener(elemContainer, indexContext) {
+    makeEnterOnSelectBoxListener(elemContainer, indexContext, changer) {
         elemContainer.selectBox.addEventListener('keydown', function(e) {
 
 
@@ -155,11 +163,13 @@ const Configuration = {
             // we update base currency value on enter key press on option just as for mouseclick on option
             if (e.keyCode == 13 && elemContainer.selectBox.selectedIndex > -1) {
                 Configuration[indexContext].index = elemContainer['selectBox'].selectedIndex;
-                if (indexContext == 'COMPARISON') {
-                    Configuration.changeComparisonSelections(elemContainer.selectBox.options[Configuration[indexContext].index]);
-                } else {
-                    Configuration.changeBase(elemContainer.selectBox.options[Configuration[indexContext].index]);
-                }
+                let option = elemContainer.selectBox.options[Configuration[indexContext].index];
+                changer(option);
+                // if (indexContext == 'COMPARISON') {
+                //     Configuration.changeComparisons(elemContainer.selectBox.options[Configuration[indexContext].index]);
+                // } else {
+                //     Configuration.changeBase(elemContainer.selectBox.options[Configuration[indexContext].index]);
+                // }
                 //lert(indexContainer.index);
                 //console.log('configuration base index is: ', Configuration.BASE.index);
 
@@ -177,10 +187,10 @@ const Configuration = {
     makeSelectArrowKeyListener(elemContainer, indexContext) {
 
         console.log('index container: ')
-        let elem = elemContainer.form;
+        let form = elemContainer.form;
         let selectBox = elemContainer.selectBox;
         let filterField = elemContainer.filterField;
-        elem.addEventListener('keydown', function(e) {
+        form.addEventListener('keydown', function(e) {
             e.target.focus();
             console.log(Configuration[indexContext].index);
 
@@ -255,6 +265,32 @@ const Configuration = {
 
 
 
+    },
+    showSelectedOptions() {
+        let div1 = App.querySelectorByClass(Configuration.SHOW_BASE_CLASS);
+        let alreadyP;
+        if (alreadyP = div1.querySelector('p')) {
+            div1.removeChild(alreadyP);
+        }
+        let showBaseP = document.createElement('p');
+        showBaseP.textContent = currencyData.convertFrom;
+
+        showBaseP.dataset.tooltipTitle = currencyData.fullNames[currencyData.convertFrom];
+        showBaseP.classList.add('Configure-baseParagraph')
+        div1.appendChild(showBaseP);
+        let div = App.querySelectorByClass(Configuration.SHOW_COMPARISONS_CLASS);
+        div = document.querySelector('.Configure-showComparisons');
+
+        App.querySelectorByClass('Configure-showComparisons').innerHTML = '';
+        // sort conversion currencies by alpha order.  previously are in order 
+        currencyData.convertTo.sort();
+        for (let currency of currencyData.convertTo) {
+            let p = document.createElement('p');
+            p.textContent = currency;
+            p.classList.add('Configure-comparisonParagraph')
+            p.dataset.tooltipTitle = currencyData.fullNames[currency];
+            div.appendChild(p);
+        }
     },
 
 

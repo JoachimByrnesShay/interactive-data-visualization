@@ -18,7 +18,15 @@ const ConfigurationBaseSection = {
         // make and display the filterable (by text input field) list of available base currencies for user to select one base currency
         this.makeFilterableBaseList();
         let selectBox = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS);
+        let filterField = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS);
+
+        //let selectBox = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS);
+        let baseForm = App.querySelectorByClass(Configuration.BASE_FORM_CLASS);
+        Configuration.makeEnterOnSelectBoxListener({ form: baseForm, filterField: filterField, selectBox: selectBox }, 'BASE', Configuration.changeBase);
+        // put top of the options constituting the select box content in view
+        Configuration.makeSelectArrowKeyListener({ form: baseForm, filterField: filterField, selectBox: selectBox }, 'BASE');
     },
+
     makeFilterableBaseList() {
         let filterField = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS);
         let filteredResult;
@@ -34,23 +42,19 @@ const ConfigurationBaseSection = {
 
         Configuration.makeBaseList(filteredResult);
 
-        console.log(Configuration.BASE.index)
+
         // make baselist outside of keyup listener so there is a list without keyup
         Configuration.makeSelectFilter(filterField, Configuration.BASE_FORM_CLASS_NAME, filteredResult, Configuration.makeBaseList);
 
         // on each keyup event inside the baseFilterField, we filter the list (filteredResult) to only include currency codes which begin with the string which is the value of baseFilterField
-        let baseFormConfig = App.querySelectorByClass(Configuration.BASE_FORM_CLASS);
-        Configuration.makeEnterOnSelectBoxListener({ form: baseFormConfig, filterField: filterField, selectBox: selectBox }, 'BASE');
-        // put top of the options constituting the select box content in view
-        Configuration.makeSelectArrowKeyListener({ form: baseFormConfig, filterField: filterField, selectBox: selectBox }, 'BASE');
+
 
     },
+
     makeBaseList(filteredResult) {
-        let baseIndex;
-        if (filteredResult.includes(currencyData.convertFrom)) {
-            baseIndex = filteredResult.indexOf(currencyData.convertFrom);
-            filteredResult.splice(baseIndex, 1);
-        }
+        //let baseIndex;
+        //let filteredResult = Object.keys(currencyData.rates);
+        Configuration.removeBaseCurrencyFromList(filteredResult);
 
 
         let selectBox = App.querySelectorByClass(Configuration.BASE_SELECT_BOX_CLASS);
@@ -60,22 +64,21 @@ const ConfigurationBaseSection = {
         //        if (filteredResult.length == 0) {
         //     filteredResult = [];
         // }
-        let filterField = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS);
+        // let filterField = App.querySelectorByClass(Configuration.BASE_FILTER_FIELD_CLASS);
 
 
 
         // a helper index to control and maintain the integrity of the intended UI behavior on up/down arrow usage to scroll select options
         //Configuration['BASE'].index = -1;
 
-        Configuration.BASE.lastIndex = filteredResult.length - 1;
+
         Configuration.constructBaseSelectOptions(filteredResult, selectBox);
         //selectBox.options[0].scrollIntoView();
         selectBox.scroll({ top: 0, behavior: 'smooth' });
 
-        Configuration.BASE.index = -1;
-        selectBox.selectedIndex = -1;
+
         //let filterField = querySelectorByClass('BASE_FILTER_FIELD_CLASS');
-        filterField.tabIndex = -1;
+        //filterField.tabIndex = -1;
 
         //document.querySelectorAll('.Configure-baseSelectBox option')[0].scrollIntoView();
         //Configuration.makeFormAndSelectListeners(baseFormConfig, { index: Configuration.BASE.index, lastIndex: Configuration.BASE.lastIndex }, filterField, selectBox);
@@ -84,7 +87,10 @@ const ConfigurationBaseSection = {
 
     },
     constructBaseSelectOptions(filteredResult, selectBox) {
-        console.log('baseselectoptions length', filteredResult.length)
+        Configuration.BASE.index = -1;
+        selectBox.selectedIndex = -1;
+        //Configuration.BASE.lastIndex = filteredResult.length - 1;
+        // console.log('baseselectoptions length', filteredResult.length)
         Configuration.BASE.lastIndex = filteredResult.length - 1;
         for (let currency of filteredResult) {
 
@@ -98,32 +104,35 @@ const ConfigurationBaseSection = {
 
             option.classList.add(Configuration.BASE_OPTION_CLASS);
             //Configuration.BASE.index = -1;
-            Configuration.makeOptionListeners('Configure-baseOption--hovered', { 'option': option, selectBox: selectBox }, 'BASE');
+            Configuration.makeOptionListeners({ 'option': option, selectBox: selectBox }, 'BASE', Configuration.changeBase);
 
 
         }
 
 
     },
-    changeBase(option) {
-        console.log(option);
-        let val = option.dataset.code;
-
-        let select = App.querySelectorByClass(this.BASE_SELECT_BOX_CLASS);
-        App.querySelectorByClass('Configure-headerBaseValue').innerHTML = val;
-        currencyData.convertFrom = val;
-        // when base currency is changed, if the base currency code is present in the list to convertFrom
-        // remove it from convertFrom, so that the base currency is not occupying a comparison slot
-        if (currencyData.convertTo.includes(currencyData.convertFrom)) {
-            currencyData.convertTo.splice(currencyData.convertTo.indexOf(currencyData.convertFrom), 1);
-        }
-        CurrencyFetch.APIData(baseURL);
-
+    flashNewBaseChanges() {
         let thing = App.querySelectorByClass('Configure-showConfiguration');
         thing.classList.add('Configure-configurationCurrencyAnimate');
         thing.addEventListener('animationend', () => {
             thing.classList.remove('Configure-configurationCurrencyAnimate');
         });
+    },
+    changeBase(option) {
+
+        let currency = option.dataset.code;
+
+
+        App.querySelectorByClass('Configure-headerBaseValue').innerHTML = currency;
+        currencyData.convertFrom = currency;
+        // when base currency is changed, if the base currency code is present in the list to convertFrom
+        // remove it from convertFrom, so that the base currency is not occupying a comparison slot
+        Configuration.removeBaseCurrencyFromList(currencyData.convertTo);
+
+        CurrencyFetch.APIData(baseURL);
+        //App.render();
+        //Configuration.flashNewBaseChanges();
+
     },
 }
 
