@@ -76,8 +76,8 @@ const Configuration = {
         this.stopFormSubmit(App.querySelectorByClass(sectionContext.form));
 
         // headerBaseValue is class for span in h2.Configure-baseHeading and displays, reflects dynamic changes in, and animates in some contexts the configured current base currency value
-        if (sectionContext.indexContext == 'BASE') {
-            baseHeadingDynamicControl();
+        if (indexContext == 'BASE') {
+            Configuration.baseHeadingDynamicControl();
         }
         //console.log('in make section, sectioncontext is: ', sectionContext)
         this.makeFilterableList(sectionContext, indexContext, scroll);

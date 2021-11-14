@@ -370,7 +370,7 @@ body {/* max-height: 100vh;
 .Configure-headerBaseValue:hover::after {
   content: attr(data-tooltip-title);
   position: absolute;
-  top: -60%;
+  top: 60%;
   left: 7%;
   width: content;
   background: purple;
