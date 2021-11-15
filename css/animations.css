@@ -21,8 +21,6 @@
 
   50% {
     background-color: red;
-   /* box-shadow: 1em 1em .3em rgba(200,200,0,.5) ,-1em -1em .3em rgba(255,255,0,.5);
- */
   }
 
   100% {
@@ -32,7 +30,9 @@
 
 /* */
 
-@keyframes timeFlashHeader {
+/* flash message animation */
+
+@keyframes flashMessageInHeader {
   0% {
     display: flex;
     background: orange;

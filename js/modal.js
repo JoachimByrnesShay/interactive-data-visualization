@@ -11,7 +11,7 @@ const Modal = {
         // description text is full name of the current comparison currency for this modal
         descriptionTextParagraph.textContent = currencyData.fullNames[currencyCode];
         // set comparisonTextParagraph content to show comparision of 1 unit of base currency vs the ratioed current comparison currency
-        comparisonTextParagraph.textContent = `1${currencyData.convertFrom}==${currencyData.rates[currencyCode]}${currencyCode}`;
+        comparisonTextParagraph.textContent = `1 ${currencyData.convertFrom}==${currencyData.rates[currencyCode]} ${currencyCode}`;
         modal.append(descriptionTextParagraph, comparisonTextParagraph);
         return modal;
     },

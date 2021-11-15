@@ -25,7 +25,9 @@ const Configuration = {
             CURRENT_BASE_CONFIG_SHOW_CLASS: 'Configure-showBaseContainer',
             CURRENT_COMPARISONS_CONFIG_SHOW_CLASS: 'Configure-showComparisonsContainer',
             CURRENT_CHARTS_CLEAR_CLASS: 'Configure-clearChartsButton',
+            CURRENT_CHARTS_CLEAR_PRESSED_CLASS: 'Configure-clearChartsButton--pressed',
         }
+
         // these manually track index of select list on list scroll behavior
         const indexConfigVars = {
             COMPARISON: { index: -1, lastIndex: -1 },
@@ -47,8 +49,14 @@ const Configuration = {
         // dynamically create variables owned by Configuration object from key:value pairs in object inside makeVariables method definitation
         this.makeVariables();
         // set onclick function on clear charts/comparison-currencies button in configuration section
-        App.querySelectorByClass(this.CURRENT_CHARTS_CLEAR_CLASS).onclick = () => BarChart.Utility.clearCharts();
-
+        let button = App.querySelectorByClass(this.CURRENT_CHARTS_CLEAR_CLASS);
+        button.onclick = () => {
+            button.classList.add(Configuration.CURRENT_CHARTS_CLEAR_PRESSED_CLASS);
+            BarChart.Utility.clearCharts();
+            button.addEventListener('animationend', () => {
+                button.classList.remove(Configuration.CURRENT_CHARTS_CLEAR_PRESSED_CLASS);
+            });
+        }
         // make separate contexts for base section and comparisons section, which will be passed as arguments on separate calls to makeSection to create the respective sections
         let baseContext = {
             form: this.BASE_FORM_CLASS,
