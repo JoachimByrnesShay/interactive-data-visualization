@@ -6,9 +6,6 @@ import { Configuration } from './configuration.js';
 import { ConfigurationBaseSection } from './configurationBase.js';
 import { ConfigurationComparisonSection } from './configurationComparisons.js';
 
-
-
-
 // by explicitly setting all the above imports onto window object as below, it is ensured they all are seen at the window object level for web browser usage, 
 // elsewise there are undefined issues when functions within one object call functions in another objects
 // inspiration to use this as solution to imports not being seen as defined is taken from stackoverflow source below

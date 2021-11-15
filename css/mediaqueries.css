@@ -1,0 +1,92 @@
+@media only screen and (max-width: 950px) {/*change orientetion of .ChartContent flex items on smaller screens, i.e. vertical to horizontal barCharts */
+
+  .ChartContent-indicateBase {
+    position: absolute;
+    color: black;
+    color: transparent;
+    top: 30%;
+    left: 60%;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    text-shadow: 3px 5px 3px black;
+  }
+
+  .ChartContent {
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .ChartContent-barChartContainer {
+    width: 100%;
+    height: inherit;
+    height: 5em;
+    /* height: 5em;height: 10vh;
+ */
+  }
+
+  .Configure-showConfiguration {
+  }
+
+  .ChartContent-barChart {/* since ChartContent-barCharts have INLINE hardcoded styling of height in html for default vertical charts, use !important to change height for this class in css stylesheet *//* height: 60%;height: 5vh;
+ */
+    justify-self: flex-end;
+    align-self: center;
+    border-radius: 0 .3em .3em 0;
+    border-width: 2px 7px 2px 0px;
+    font-size: 95%;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: .5em;
+    padding-top: 0;
+    height: 90%;
+  }/*modal is absolutely positioned to ChartContent-container, whose height and width have been changed on small screens*/
+
+  .Modal {
+    top: 0;
+    left: 10%;
+    height: 100%;
+    width: 12em;
+    align-items: center;
+    opacity: 1;
+  }/*
+   set width of barCharts to height (the originally hardcoded inline value), i.e. for switch from vertical to horizontal charts */
+}
+
+@media only screen and (max-width: 640px) {
+  .Header {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .Header-title {
+    color: transparent;
+  }
+}
+
+/* make acceptably responsive for extremely small-width screen devices */
+
+@media only screen and (max-width:  330px) {
+  .ChartContent-barChart {/* height: 70% !important;height: 7vh !important;
+ */
+    align-items: center;
+    font-size: .9em;
+    padding-top: 9%;
+    padding-bottom: 5%;
+  }
+
+  .Footer, .Header-title {
+    font-size: 70%;
+  }
+
+  .Configure-showConfiguration {
+    display: hidden;
+  }
+
+  .Header-flashMessage.Header-flashContainer {
+    font-size: .4em !important;
+  }
+
+  .Configure-showConfiguration {
+    display: none;
+  }
+}

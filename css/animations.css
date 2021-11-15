@@ -1,0 +1,64 @@
+/* animations */
+
+/* employed for a more pleasing transition of disappearance of all barChartContainers on clearcharts button click */
+
+@keyframes clearCharts {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* employed to call users attention to initial or result of changes in user configuration status- i.e. selected base and selected comparison currencies */
+
+@keyframes flashConfiguration {
+  0% {
+    background-color: beige ;
+  }
+
+  50% {
+    background-color: red;
+    box-shadow: 1em 1em .3em rgba(200,200,0,.5) ,-1em -1em .3em rgba(255,255,0,.5);
+  }
+
+  100% {
+    background-color: beige;
+  }
+}
+
+/* */
+
+@keyframes timeFlashHeader {
+  0% {
+    display: flex;
+    background: orange;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    background: orange;
+    opacity: 0;
+  }
+}
+
+/* rotate modal while shrinking it and throwing a small shadow, used on mouse-off after clicking bar to make modal appear */
+
+@keyframes disappearModal {
+  0% {
+    box-shadow: 5px 5px 5px grey;
+  }
+
+  100% {
+    transform: rotate(380deg);
+    height: 7%;
+    width: 4%;
+    font-size: 3px;
+    box-shadow: 15px 15px 15px black;
+  }
+}

@@ -34,6 +34,7 @@ const App = {
         return context.querySelector('.' + elemClassName);
     },
     // same usage as above SelectorByClass, but for All
+    // context argument if exists allows to select descendants of a specific DOM node other than document
     querySelectorAllByClass: (elemClassName, context = document) => {
         return context.querySelectorAll('.' + elemClassName);
     }

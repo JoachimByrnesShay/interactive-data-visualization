@@ -1,0 +1,119 @@
+:root {/*CSS variables for element background, border, default boxShadow colors */
+  --Page-backgroundColor: #cddeee;
+  --Header-backgroundColor: #38598b;
+  --Footer-backgroundColor: rgb(51, 66, 87);
+  --ChartContent-barChart--odd-backgroundColor: #9f4b7a;
+  --ChartContent-barChart--even-backgroundColor: #aeddcd;
+  --Modal-backgroundColor: #28282b;
+  --ChartContent-borderColor: black;
+  --Page-boxShadowColor: black;
+  --ChartContent-barChart-boxShadowColor: grey;
+  /* for text colors */
+  --Page-textColor: white;
+  --Header-textColor: beige;
+  --Modal-textColor: white;
+  --section-config-height: 9em;
+  --section-config-height: 10vh;
+  --Header-flashContainer-textColor: black;
+}
+
+/* .U-blackText {
+  color: black;
+}
+ */
+.u-bold {
+  font-style: bold;
+}
+
+* {
+  outline: none;
+}
+
+*, *:before, *:after, li, select, option, datalist option {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  min-width: 320px;
+}
+
+body {/* max-height: 100vh;
+ */
+}
+
+.Page {
+  background: var(--Page-backgroundColor);
+  /* //height: 100vh;
+ */
+  font-family: 'Nunito', sans-serif;
+  font-weight: 400;
+  color: var(--Page-textColor);
+}
+
+.Page-container {
+  width: 80%;
+  height: 100vh;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1;
+  grid-template-rows: 3fr 5fr 40fr 1fr;
+}
+
+.Header {
+  background: var(--Header-backgroundColor);
+  align-items: stretch;
+  padding: .3em;
+  display: grid;
+  grid-template-columns: 3fr 5fr;
+}
+
+.Header-title {
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--Header-textColor);
+  text-transform: uppercase;
+  justify-self: flex-start;
+  padding-left: .5em;
+  display: flex;
+  align-items: center;
+}
+
+.Header-flashContainer {
+  color: var(--Header-flashContainer-textColor);
+  font-weight: bold;
+  display: none;
+  padding: 0;
+}
+
+.Header-flashMessage {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  border-radius: 7px;
+  justify-items: center;
+  align-items: center;
+  font-size: 90%;
+}
+
+.Header-flashContainer p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.Header-flashMessage.Header-flashContainer {
+  animation: timeFlashHeader 7000ms normal forwards;
+  animation-iteration-count: 1;
+}
+
+.Footer {
+  padding-left: .5em;
+  background: var(--Footer-backgroundColor);
+  display: flex;
+}
+
+.Footer-copywrite {
+  align-self: center;
+}

@@ -1,0 +1,195 @@
+.Configure-clearChartsButton {
+  background: orange;
+  padding: 0.5em;
+  border-radius: .6em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/******/
+
+/* MAIN PAGE/CONTAINER STyLES */
+
+/* set margins and padding to default 0 and set box-sizing to border-box */
+
+.Configure * {
+  font-size: 1em;
+}
+
+.Configure {
+  font-size: 1em;
+  background-image: linear-gradient(to left, #ebf1f6 0%,#abd3ee 20%,#2ec3eb 71%,#d5ebfb 100%);
+  color: black;
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(20em,1fr));
+  justify-content: space-around;
+  align-content: top;
+}
+
+.Configure-comparisonsForm {
+  display: grid;
+}
+
+.Configure-baseFilter, .Configure-comparisonsFilter {
+  max-width: 4em;
+}
+
+.Configure-clearChartsContainer {
+  background: beige;
+  display: grid;
+  margin-bottom: 1em;
+}
+
+.Configure-comparisonsSelectBox, .Configure-baseSelectBox {
+  margin-top: .8em;
+  border: 2px solid black;
+  border-radius: 5px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  width: 20em;
+  width: 90%;
+  justify-self: center;
+  list-style-type: none;
+  background: lightyellow;
+  color: black;
+}
+
+.Configure-baseSelectBox:focus .Configure-baseOption:checked {
+  color: white !important;
+  position: relative;
+  box-shadow: 0px 0px 10px 10px #e1358f inset, 9px 7px 5px 2px grey;
+  box-shadow: 0px 0px 10px 10px #e1358f inset;
+  background-color: red;
+  font-style: italic;
+  background: lightblue;
+}
+
+.Configure-baseSelectBox:blur .Configure-baseOption:checked,
+.COnfigure-baseSelectBox:blur .Configure-baseOption:not(:checked),
+.Configure-baseSelectBox:blur .Configure-baseOption:focus, .Configure-baseOption,
+.Configure-baseSelectBox:not(:focus) .Configure-baseOption,
+.Configure-baseSelectBox .Configure-baseOption:not(:checked) {
+  outline: none !important;
+  color: black !important;
+  position: relative;
+  box-shadow: 0 0 10px 9px beige inset !important;
+  background: blue !important;
+}
+
+.Configure-baseForm {
+  display: grid;
+}
+
+.Configure-comparisonOption, .Configure-baseOption {
+  padding: 3px 0 3px 0;
+  border: 1px solid transparent;
+  list-style-type: none;
+  border-top: 1px solid black;
+  /* //height: 1.7em;
+ */
+  box-sizing: border-box;
+  margin-bottom: 3px;
+}
+
+.Configure-comparisonOption:not(.is-selectedComparison):checked {
+  color: white !important;
+  position: relative;
+  box-shadow: 0px 0px 10px 10px #e1358f inset, 9px 7px 5px 2px grey;
+  box-shadow: 0px 0px 10px 10px #e1358f inset;
+  /* background-image: radial-gradient(hsl(240,85%,80%) 10%, hsl(150,75%,46%) 90%) repeat;
+ */
+  background-color: red;
+  font-style: italic;
+  background: lightblue;
+}
+
+.Configure-comparisonOption.is-selectedComparison {
+  background: lightblue;
+  background: radial-gradient(hsl(240,85%,80%) 10%, hsl(225,75%,46%) 90%);
+  border-top: 1px solid black;
+  color: white;
+  font-weight: 9;
+}
+
+.Configure-comparisonOption.is-selectedComparison:checked {
+  box-shadow: 10px 5px 4px 10px grey, 5px 2px 3px gold;
+  /* text-shadow: 5px 5px 5px red;
+ */
+}
+
+.Configure-sbowComparisons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.Configure-showConfiguration p:hover, .Configure-baseHeadingValue {
+  cursor: help;
+}
+
+.Configure-comparisonParagraph, .Configure-baseParagraph,
+.Configure-baseHeadingValue {
+  background: white;
+  align-self: baseline;
+  margin: 2px;
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 3px;
+  position: relative;
+  display: inline-block;
+}
+
+.Configure-baseHeadingValue {
+  position: relative;
+  display: inline-block;
+}
+
+.Configure-baseParagraph {
+  padding: .1em .3em .1em .3em;
+}
+
+.Configure-comparisonParagraph[data-tooltip-title]:hover::after,
+.Configure-baseParagraph[data-tooltip-title]:hover::after,
+.Configure-baseHeadingValue:hover::after {
+  content: attr(data-tooltip-title);
+  position: absolute;
+  top: 60%;
+  left: 7%;
+  width: content;
+  background: purple;
+  color: white;
+  font-style: bold;
+  white-space: nowrap;
+  font-size: .8em;
+  text-align: left;
+  z-index: 10;
+  border-radius: 2px;
+  padding: .2em 1em;
+  box-shadow: -3px -4px 7px grey;
+}
+
+.Configure-showConfiguration, .Configure-clearChartsContainer {
+  background: beige;
+  border-radius: 5px;
+  min-width: 10em;
+  max-width: 22em;
+  margin-top: 1.2em;
+  align-self: baseline;
+}
+
+.Configure-clearChartsContainer {
+  width: fit-content;
+  text-align: center;
+}
+
+.Configure-baseHeadingValueAnimate, .Configure-configurationCurrencyAnimate p {
+  animation: flashConfiguration 500ms normal forwards;
+  animation-iteration-count: 3;
+}
+
+.Configure-showConfiguration {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15% .5em 0;
+  align-self: baseline;
+  *height: 4.5em;
+}

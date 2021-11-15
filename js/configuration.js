@@ -2,34 +2,33 @@
 const Configuration = {
 
     makeVariables() {
-        let configurationVariables = {
+        const baseConfigVars = {
             BASE_SELECT_BOX_CLASS: 'Configure-baseSelectBox',
             BASE_OPTION_CLASS: 'Configure-baseOption',
             BASE_FORM_CLASS: 'Configure-baseForm',
             BASE_FILTER_FIELD_CLASS: 'Configure-baseFilter',
-            SELECTED_COMPARISON_CLASS: 'Configure-selectedComparison',
-            SHOW_BASE_CLASS: 'Configure-showBaseContainer',
-            SHOW_COMPARISONS_CLASS: 'Configure-showComparisonsContainer',
-            COMPARISON_OPTION_CLASS: 'Configure-comparisonOption',
+            BASE_HEADER_SPAN_CONFIG_VAL: 'Configure-baseHeadingValue',
+            BASE_HEADER_SPAN_CONFIG_VAL_ANIMATE: 'Configure-baseHeadingValueAnimate',
+        }
+        const comparisonsConfigVars = {
+            COMPARISONS_OPTION_SELECTED_CLASS: 'is-selectedComparison',
+            COMPARISONS_OPTION_CLASS: 'Configure-comparisonOption',
             COMPARISONS_FORM_CLASS: 'Configure-comparisonsForm',
             COMPARISONS_SELECT_BOX_CLASS: 'Configure-comparisonsSelectBox',
             COMPARISONS_FILTER_FIELD_CLASS: 'Configure-comparisonsFilter',
-            CLEAR_CHARTS_BUTTON_CLASS: 'Configure-clearChartsButton',
-            CONFIGURATION_HEADER_BASE_VALUE_SPAN_CLASS: 'Configure-headerBaseValue',
-            CONFIGURATION_HEADER_BASE_VALUE_ANIMATE: 'Configure-headerBaseValueAnimate',
+        }
+        const currentSettingsVars = {
+            CURRENT_BASE_CONFIG_SHOW_CLASS: 'Configure-showBaseContainer',
+            CURRENT_COMPARISONS_CONFIG_SHOW_CLASS: 'Configure-showComparisonsContainer',
+            CURRENT_CHARTS_CLEAR_CLASS: 'Configure-clearChartsButton',
+        }
+        const indexConfigVars = {
             COMPARISON: { index: -1, lastIndex: -1 },
             BASE: { index: -1, lastIndex: -1 }
-
         }
-        // use App.makeCurrentObjectVariables() to set up the above variables in context of current object Configuration
-        App.makeCurrentObjectVariables(this, configurationVariables);
-    },
-    getIndexFromContext(indexContext) {
-        if (indexContext == 'BASE') {
-            return ['BASE.index', 'BASE.lastIndex']
-        } else {
-            return ['Configuration.COMPARISONS.index', 'Configuration.COMPARISONS.lastIndex'];
-        }
+        let configVars = Object.assign(baseConfigVars, comparisonsConfigVars, currentSettingsVars, indexConfigVars);
+        // use App.makeCurrentObjectVariables() to set up the above variables as variables belonging to current object context, i.e. Configuration
+        App.makeCurrentObjectVariables(this, configVars);
     },
     // make sure forms in configuration section to not submit (no page refresh on enter key)
     stopFormSubmit(form) {
@@ -43,7 +42,7 @@ const Configuration = {
         // dynamically create variables owned by Configuration object from key:value pairs in object inside makeVariables method definitation
         this.makeVariables();
         // set onclick function on clear charts/comparison-currencies button in configuration section
-        App.querySelectorByClass(this.CLEAR_CHARTS_BUTTON_CLASS).onclick = () => BarChart.Utility.clearCharts();
+        App.querySelectorByClass(this.CURRENT_CHARTS_CLEAR_CLASS).onclick = () => BarChart.Utility.clearCharts();
 
         // base currency selection section and comparison currencies selection selection
         //Configuration.makeBaseSection();
@@ -73,13 +72,14 @@ const Configuration = {
         Configuration.showSelectedOptions();
     },
     makeSection(sectionContext, indexContext, changeFunction, scroll) {
+        //     // ensure that form for baseCurrency config does not submit, i.e. when enter pressed. 
+        //     // form submits refresh page and this is undesirable and unnecessary for user experience
         this.stopFormSubmit(App.querySelectorByClass(sectionContext.form));
 
         // headerBaseValue is class for span in h2.Configure-baseHeading and displays, reflects dynamic changes in, and animates in some contexts the configured current base currency value
         if (indexContext == 'BASE') {
             Configuration.baseHeadingDynamicControl();
         }
-        //console.log('in make section, sectioncontext is: ', sectionContext)
         this.makeFilterableList(sectionContext, indexContext, scroll);
         // make and display the filterable (by text input field) list of available base currencies for user to select one base currency
         //this.makeFilterableBaseList();
@@ -98,14 +98,20 @@ const Configuration = {
         let filterField = App.querySelectorByClass(sectionContext.filterField);
         let filteredResult;
         //ensure filter is always focused on renders, sought after behavior for transition from scrolling back up options list with arrowup above option at index 0, for refresh, and for re-rendering by changing base via mouseclick or enter on a selected/scrolled-to optionarrowup throw list
-        filterField.focus();
+        // filterField.focus();
         filterField.value = '';
+        // a list of currency rate codes (the keys in currencyData.rates).  
+        //     // without user filter input, on initialization the list will include all currency rates, though makeBaseList will omit the currently selected base currency from the list
         filteredResult = Object.keys(currencyData.rates);
         let selectBox = App.querySelectorByClass(sectionContext.selectBoxClass)
         let selectListContext = { selectBoxClass: sectionContext.selectBoxClass, indexContext: indexContext, scroll: scroll };
-        // console.log('in filterable list, selectbox class is ', selectListContext);
+        // make baselist outside of keyup listener so there is a list without keyup
         Configuration.makeSelectList(filteredResult, selectListContext);
-        Configuration.makeSelectFilter(filterField, Configuration.BASE_FORM_CLASS_NAME, filteredResult, Configuration.makeSelectList, selectListContext);
+        // on each keyup event inside the baseFilterField, we filter the list (filteredResult) to only include currency codes which begin with the string which is the value of baseFilterField
+        Configuration.makeSelectFilter(filterField, Configuration.BASE_FORM_CLASS_NAME, filteredResult, selectListContext);
+        // due to much work with design/appearance of option elements and integrating mouseclicks and enter key press, up/down arrow usage in select options list,
+        //     // where focus and blur are used in other methods to enhance the user interface, explicit usage of focus and blur below maintain the integraity of the intended UI and its responsiveness.
+
     },
     removeBaseCurrencyFromList(list) {
         if (list.includes(currencyData.convertFrom)) {
@@ -116,23 +122,18 @@ const Configuration = {
     },
     makeSelectList(filteredResult, context) {
         const { selectBoxClass, indexContext, scroll } = context;
-        //console.log('in makeselectlist, context is ', context);
         Configuration.removeBaseCurrencyFromList(filteredResult);
-        // console.log('in make select list, selectbox is: ', selectBoxClass, '  and indexContext is ', context.indexContext);
         let selectBox = App.querySelectorByClass(selectBoxClass);
-        // console.log(selectBox);
         selectBox.innerHTML = ''
         Configuration.constructSelectOptions(filteredResult, selectBoxClass, indexContext);
         if (scroll) {
-            selectBox.scroll({ top: 0, behavior: 'smooth' });
+            //selectBox.scroll({ top: 0, behavior: 'smooth' });
         }
     },
     constructSelectOptions(filteredResult, selectBoxClass, indexContext) {
         let selectBox = App.querySelectorByClass(selectBoxClass);
         Configuration[indexContext].index = -1;
         selectBox.selectedIndex = -1;
-        //Configuration.BASE.lastIndex = filteredResult.length - 1;
-        // console.log('baseselectoptions length', filteredResult.length)
         Configuration[indexContext].lastIndex = filteredResult.length - 1;
         for (let currency of filteredResult) {
 
@@ -149,23 +150,21 @@ const Configuration = {
                 option.classList.add(Configuration.BASE_OPTION_CLASS);
                 setChangeFunction = Configuration.changeBase;
             } else {
-                option.classList.add(Configuration.COMPARISON_OPTION_CLASS);
+                option.classList.add(Configuration.COMPARISONS_OPTION_CLASS);
                 if (currencyData.convertTo.includes(currency)) {
 
-                    option.classList.add(Configuration.SELECTED_COMPARISON_CLASS);
+                    option.classList.add(Configuration.COMPARISONS_OPTION_SELECTED_CLASS);
                 }
                 setChangeFunction = Configuration.changeComparisons;
             }
 
-            //Configuration.BASE.index = -1;
             Configuration.makeOptionListeners({ option: option, selectBox: selectBox }, indexContext, setChangeFunction);
         }
 
 
     },
 
-    makeSelectFilter(filterField, formClass, filteredResult, listChangeFunction, listChangeFunctionContext) {
-        // console.log('list change function is: ', listChangeFunction);
+    makeSelectFilter(filterField, formClass, filteredResult, selectListContext) {
         filterField.addEventListener('keyup', function(e) {
 
             //selectBox.focus(); //
@@ -189,7 +188,7 @@ const Configuration = {
 
 
                 // make baselist with filtered base options
-                listChangeFunction(newlyFilteredResult, listChangeFunctionContext);
+                Configuration.makeSelectList(newlyFilteredResult, selectListContext);
                 // }
             }
         });
@@ -197,16 +196,17 @@ const Configuration = {
 
 
     makeOptionListeners(elemContainer, indexContext, changeSelection) {
-        //console.log(changeSelection);
 
         Configuration.makeMouseInOptionListener(elemContainer, indexContext);
         Configuration.makeMouseOutOptionListener(elemContainer, indexContext);
         // Configuration.makeMouseInAndOutListeners(hoverClass, elemContainer, indexContainer);
         elemContainer.option.addEventListener('click', function(e) {
             // console.log('on this option')
-            console.log('in makeoptionlistejners, here is changeSelection function: ', changeSelection)
-            console.log('here is optoinr ', elemContainer.option);
+            // pass method and its argument without calling it as argument to callChangeMethodWithRender 
             changeSelection(elemContainer.option);
+            App.render();
+            /// changeSelection(elemContainer.option);
+
         });
 
     },
@@ -239,8 +239,6 @@ const Configuration = {
 
             // keep the index up to date with the selectBox selectedIndex
             Configuration[indexContext]['index'] = selectBox.selectedIndex;
-            // console.log('indexcontexnt is ', Configuration[indexContext]['index'])
-
         });
 
 
@@ -253,7 +251,6 @@ const Configuration = {
         option.addEventListener('mouseleave', function(e) {
             option.setAttribute('active', 'false');
             option.selected = false;
-            //option.classList.remove('Configure-baseOption--hovered');
             option.setAttribute('selected', 'false');
             option.setAttribute('checked', false);
             Configuration[indexContext]['index'] = selectBox.selectedIndex;
@@ -261,7 +258,10 @@ const Configuration = {
         });
 
     },
-
+    callRenderAfterMethod(method) {
+        method();
+        App.render();
+    },
 
     makeEnterOnSelectBoxListener(elemContainer, indexContext, changer) {
 
@@ -274,30 +274,11 @@ const Configuration = {
             // test for enter key and presence of an index value
             // we update base currency value on enter key press on option just as for mouseclick on option
             if (e.keyCode == 13 && selectBox.selectedIndex > -1) {
-
-                console.log('changer is ', changer);
                 Configuration[indexContext].index = selectBox.selectedIndex;
                 let option = selectBox.options[Configuration[indexContext].index];
-                console.log('index is ', Configuration[indexContext].index);
-                console.log('option is ', option);
-                changer(option);
-                // if (indexContext == 'COMPARISON') {
-                //     Configuration.changeComparisons(elemContainer.selectBox.options[Configuration[indexContext].index]);
-                // } else {
-                //     Configuration.changeBase(elemContainer.selectBox.options[Configuration[indexContext].index]);
-                // }
-                //lert(indexContainer.index);
-                //console.log('configuration base index is: ', Configuration.BASE.index);
-
-
-
-                //App.render();
+                Configuration.callRenderAfterMethod(changer.bind(this, option));
             }
-            // }
         });
-
-
-
     },
 
     makeSelectArrowKeyListener(elemContainer, indexContext) {
@@ -383,7 +364,7 @@ const Configuration = {
 
     },
     showSelectedOptions() {
-        let div1 = App.querySelectorByClass(Configuration.SHOW_BASE_CLASS);
+        let div1 = App.querySelectorByClass(Configuration.CURRENT_BASE_CONFIG_SHOW_CLASS);
         let alreadyP;
         if (alreadyP = div1.querySelector('p')) {
             div1.removeChild(alreadyP);
@@ -394,7 +375,7 @@ const Configuration = {
         showBaseP.dataset.tooltipTitle = currencyData.fullNames[currencyData.convertFrom];
         showBaseP.classList.add('Configure-baseParagraph')
         div1.appendChild(showBaseP);
-        let div = App.querySelectorByClass(Configuration.SHOW_COMPARISONS_CLASS);
+        let div = App.querySelectorByClass(Configuration.CURRENT_COMPARISONS_CONFIG_SHOW_CLASS);
         div = document.querySelector('.Configure-showComparisons');
 
         App.querySelectorByClass('Configure-showComparisons').innerHTML = '';

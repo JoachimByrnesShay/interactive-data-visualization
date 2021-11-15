@@ -34,7 +34,6 @@ const CurrencyFetch = {
         let fullNamesURL = url + this.baseSubURLfullNames;
         return fetch(fullNamesURL).then(response => response.json())
             .then(data => {
-                console.log(data);
                 let currencyCode;
                 let fullName;
                 for ([currencyCode, fullName] of Object.entries(data)) {
@@ -66,6 +65,3 @@ const CurrencyFetch = {
 
 
 export { baseURL, baseSubURLfullNames, baseSubURLRates, currencyData, CurrencyFetch };
-
-
-//CurrencyFetch.APIData(baseURL);
