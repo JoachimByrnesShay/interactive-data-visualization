@@ -45,9 +45,8 @@
     top: 0;
     left: 10%;
     height: 100%;
-    width: 12em;
     align-items: center;
-    opacity: 1;
+    align-self: unsafe center;
   }/*
    set width of barCharts to height (the originally hardcoded inline value), i.e. for switch from vertical to horizontal charts */
 }

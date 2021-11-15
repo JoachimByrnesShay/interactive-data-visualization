@@ -60,7 +60,7 @@ const BarChart = {
         //let size = parseInt(barChart.dataset.size);
         // each charts modal is only displayed on chart click
         barChart.onclick = (e) => {
-            e.preventDefault();
+            // e.preventDefault();
             Modal.activateModal(barChart);
         }
         return barChart;
