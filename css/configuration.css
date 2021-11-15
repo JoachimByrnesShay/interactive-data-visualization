@@ -167,7 +167,7 @@
   box-shadow: -3px -4px 7px grey;
 }
 
-.Configure-showConfiguration, .Configure-clearChartsContainer {
+.Configure-showCurrentConfiguration, .Configure-clearChartsContainer {
   background: beige;
   border-radius: 5px;
   min-width: 10em;
@@ -181,12 +181,12 @@
   text-align: center;
 }
 
-.Configure-baseHeadingValueAnimate, .Configure-configurationCurrencyAnimate p {
-  animation: flashConfiguration 500ms normal forwards;
-  animation-iteration-count: 3;
+.Configure-baseHeadingValueAnimate, .Configure-showCurrentConfigurationAnimate p {
+  animation: flashConfiguration 1500ms normal forwards;
+  animation-iteration-count: 1;
 }
 
-.Configure-showConfiguration {
+.Configure-showCurrentConfiguration {
   display: flex;
   justify-content: space-between;
   padding: 0 15% .5em 0;

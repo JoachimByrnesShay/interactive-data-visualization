@@ -28,6 +28,10 @@ const ConfigurationComparisonSection = {
             App.querySelectorByClass(Configuration.HEADER_FLASH_CONTAINER).innerHTML = '';
             App.querySelectorByClass(Configuration.HEADER_FLASH_CONTAINER).classList.remove(Configuration.HEADER_FLASH_MESSAGE);
         });
+
+
+
+        Configuration.flashNewSelectionChanges();
         CurrencyFetch.APIData(baseURL);
     }
 }
