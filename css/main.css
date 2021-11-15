@@ -21,6 +21,7 @@
   color: black;
 }
  */
+
 .u-bold {
   font-style: bold;
 }
@@ -104,7 +105,7 @@ body {/* max-height: 100vh;
 }
 
 .Header-flashMessage.Header-flashContainer {
-  animation: timeFlashHeader 7000ms normal forwards;
+  animation: timeFlashHeader 5000ms normal forwards;
   animation-iteration-count: 1;
 }
 
