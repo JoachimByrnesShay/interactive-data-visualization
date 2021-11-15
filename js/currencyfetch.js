@@ -1,8 +1,4 @@
-// openexchangerates.org/api 
-
-//const { Configuration } = require('configuration.js');
-let baseURL;
-// ...fullNames and ...Rates 
+// baseSubURLfullNames and baseSubURLRates are defined in CurrencyFetch methods and are subURl path and query which will be appended to baseURL accordingly
 let baseSubURLfullNames;
 let baseSubURLRates;
 // currencyData = container for the base currency, any selected currencies to convert to, rate data for available currencies,
@@ -14,7 +10,8 @@ const currencyData = {
     fullNames: {},
 }
 
-baseURL = 'https://openexchangerates.org/api/'
+// source for all exchange rates
+let baseURL = 'https://openexchangerates.org/api/'
 
 
 
