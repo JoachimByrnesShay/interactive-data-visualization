@@ -1,21 +1,16 @@
 // main app 
 const App = {
-    // render the application 
-    // TAKE A SECOND LOOK AT THIS!!!!  makeBase and makeComparisons in render?????
     // clear contents of the DOM element passed
     clearContents: (elem) => elem.innerHTML = '',
 
-
-
     render: () => {
-
         // set up configuration display section of the app and display
         Configuration.makeConfigurationDisplay();
-        //each call to render clears html of the barcharts area (.ChartContent)
+        // each call to render clears html of the barcharts area (by default on .ChartContent)
         App.clearContents(BarChart.Utility.getMainContent());
         // create all bar charts and display
         BarChart.makeAllBarChartDisplay();
-        //on resized window, barcharts will be resized form vertical to horizontal- conditionally
+        // on resized window, barcharts will be resized form vertical to horizontal- conditionally
         window.onresize = BarChart.Utility.resizeAll;
     },
     // make variables within the called currentObject context from the variable name/variable value pairs in the variables object
