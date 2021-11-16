@@ -21,7 +21,7 @@
             <div class='Configure-base'>
                 <h2 class='Configure-baseHeading'>Change your base currency from <span class='Configure-baseHeadingValue'> </span></h2>
                 <form class='Configure-baseForm'>
-                    <label for='Configure-baseFilter' for='Configure-baseFilter'>FILTER
+                    <label for='Configure-baseFilter' class='Configure-baseFilterLabel'>FILTER
                         <input type='text' id='Configure-baseFilter' class='Configure-baseFilter' name='Configure-baseFilter' autofocus>
                     </label>
                     <!-- base currency options populate in Configure-baseSelectBox -->
@@ -32,7 +32,7 @@
             <div class='Configure-comparisons'>
                 <h2 class='Configure-comparisonHeading'>Select &lt;= 5 currencies to compare</h2>
                 <form class='Configure-comparisonsForm'>
-                    <label for='Configure-comparisonsFilter'>FILTER
+                    <label for='Configure-comparisonsFilter' class='Configure-comparisonsFilterLabel'>FILTER
                         <input type='text' id='Configure-comparisonsFilter' class='Configure-comparisonsFilter' name='Configure-comparisonsFilter'>
                     </label>
                     <!-- comparison currency options populate in Configure-comparisonsSelectBox -->
@@ -40,15 +40,17 @@
                     </select>
                 </form>
             </div>
-            <div class='Configure-showCurrentConfiguration'>
-                <div class='Configure-showBaseContainer'>
-                    <h3>Base:</h3>
-                    <!-- selected base currency displays here -->
-                </div>
-                <div class='Configure-showComparisonsContainer'>
-                    <h3>Comparisons:</h3>
-                    <!-- selected comparison currencies display in Configure-showComparisons div -->
-                    <div class='Configure-showComparisons'></div>
+            <div class='Configure-showCurrentConfigurationContainer'>
+                <div class='Configure-showCurrentConfiguration'>
+                    <div class='Configure-showBaseContainer'>
+                        <h3>Base:</h3>
+                        <!-- selected base currency displays here -->
+                    </div>
+                    <div class='Configure-showComparisonsContainer'>
+                        <h3>Comparisons:</h3>
+                        <!-- selected comparison currencies display in Configure-showComparisons div -->
+                        <div class='Configure-showComparisons'></div>
+                    </div>
                 </div>
             </div>
             <div class='Configure-clearChartsContainer'>

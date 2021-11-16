@@ -16,22 +16,6 @@
   animation-iteration-count: 1;
 }
 
-@keyframes pressIn {
-  0% {
-    box-shadow: 15px 15px 20px gray;
-  }
-
-  90% {
-    box-shadow: 1px 1px 1px grey;
-    display: none;
-  }
-
-  100% {
-    box-shadow: 15px 15px 20px gray;
-    display: block;
-  }
-}
-
 /******/
 
 /* MAIN PAGE/CONTAINER STyLES */
@@ -48,23 +32,46 @@
   color: black;
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(20em,1fr));
-  justify-content: space-around;
+  justify-content: space-between;
   align-content: top;
+  padding-bottom: 1em;
 }
 
 .Configure-comparisonsForm {
   display: grid;
 }
 
+/* .Configure-base {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: space-around;
+}
+ */
+
+.Configure-baseHeading, .Configure-comparisonHeading {
+  margin-left: 5%;
+  margin-bottom: 2%;
+  margin-top: 1%;
+  text-transform: uppercase;
+  font-size: .9em;
+}
+
 .Configure-baseFilter, .Configure-comparisonsFilter {
   max-width: 4em;
 }
 
-.Configure-clearChartsContainer {
+.Configure-baseFilterLabel, .Configure-comparisonsFilterLabel {
+  margin-left: 5%;
+  font-weight: bold;
+  text-shadow: 1px 2px 1px grey;
+}
+
+/* .Configure-clearChartsContainer {
   background: beige;
   display: grid;
   margin-bottom: 1em;
 }
+ */
 
 .Configure-comparisonsSelectBox, .Configure-baseSelectBox {
   margin-top: .8em;
@@ -76,8 +83,10 @@
   width: 90%;
   justify-self: center;
   list-style-type: none;
-  background: lightyellow;
+  background-color: #f1dfd1;
+  background-image: linear-gradient(315deg, #f1dfd1 0%, #f6f0ea 74%);
   color: black;
+  text-shadow: 1px 1px 1px grey;
 }
 
 .Configure-baseSelectBox:focus .Configure-baseOption:checked {
@@ -99,7 +108,8 @@
   color: black !important;
   position: relative;
   box-shadow: 0 0 10px 9px beige inset !important;
-  background: blue !important;
+  /* box-shadow: 0 0 10px 9px green inset !important;background: blue !important;
+ */
 }
 
 .Configure-baseForm {
@@ -115,6 +125,8 @@
  */
   box-sizing: border-box;
   margin-bottom: 3px;
+  /* text-shadow: .02em .05em .04em black;
+ */
 }
 
 .Configure-comparisonOption:not(.is-selectedComparison):checked {
@@ -152,20 +164,31 @@
   cursor: help;
 }
 
-.Configure-comparisonParagraph, .Configure-baseParagraph,
-.Configure-baseHeadingValue {
-  background: white;
-  align-self: baseline;
-  margin: 2px;
-  text-align: center;
-  border: 1px solid black;
-  border-radius: 3px;
-  position: relative;
+.Configure-baseHeading, .Configure-comparisonHeading {
   display: inline-block;
 }
 
-.Configure-baseHeadingValue {
+.Configure-comparisonParagraph, .Configure-baseParagraph,
+.Configure-baseHeadingValue {/* 
+  //color: rgb(50,100,205);
+ *//* background: #E8FCF6;background-image: linear-gradient(250deg, rgb(55,82,195)0%,  #E8FCF6 14%);
+ */
+  background: linear-gradient(-40deg, grey 0%, black 70%);
+  align-self: baseline;
+  margin: 2px;
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 5px;
   position: relative;
+  display: inline-block;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 0px white,10px 1px 9px white;
+  padding: 2px;
+}
+
+.Configure-baseHeadingValue {
+  position: absolute;
   display: inline-block;
 }
 
@@ -188,34 +211,42 @@
   font-size: .8em;
   text-align: left;
   z-index: 10;
-  border-radius: 2px;
+  border-radius: 5px;
   padding: .2em 1em;
   box-shadow: -3px -4px 7px grey;
+  text-transform: initial;
+  text-shadow: initial;
 }
 
-.Configure-showCurrentConfiguration, .Configure-clearChartsContainer {
+.Configure-showCurrentConfigurationContainer {
+}
+
+.Configure-showCurrentConfigurationContainer, .Configure-clearChartsContainer {
   background: beige;
   border-radius: 5px;
   min-width: 10em;
-  max-width: 22em;
+  width: 22em;
   margin-top: 1.2em;
-  align-self: baseline;
+  margin-left: 5%;
+  display: grid;
+  align-self: center;
+  width: fit-content;
+  justify-content: space-between;
 }
 
-.Configure-clearChartsContainer {
-  width: fit-content;
-  text-align: center;
+.Configure-clearChartsContainer {/* width: fit-content;
+ *//* text-align: center; */
 }
 
 .Configure-baseHeadingValueAnimate, .Configure-showCurrentConfigurationAnimate p {
-  animation: flashConfiguration 1500ms normal forwards;
+  animation: flashConfiguration 4200ms ease-out forwards;
   animation-iteration-count: 1;
 }
 
 .Configure-showCurrentConfiguration {
   display: flex;
+  align-self: center;
   justify-content: space-between;
-  padding: 0 15% .5em 0;
-  align-self: baseline;
-  *height: 4.5em;
+  width: 19em;
+  margin: 0 .5em 0 .5em;
 }

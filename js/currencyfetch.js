@@ -13,9 +13,6 @@ const currencyData = {
 // source for all exchange rates
 let baseURL = 'https://openexchangerates.org/api/'
 
-
-
-
 // all method definitions have been organized inside of objects which provide a sensible context for their usage
 // use CurrencyFetch object to organize methods for fetching and storing text descriptions 
 // of currency codes, fetching and storing rates of currencies, and the APIData method
@@ -57,8 +54,5 @@ const CurrencyFetch = {
         });
     }
 }
-
-
-
 
 export { baseURL, baseSubURLfullNames, baseSubURLRates, currencyData, CurrencyFetch };

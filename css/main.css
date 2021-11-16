@@ -77,13 +77,16 @@ body {/* max-height: 100vh;
   color: var(--Header-textColor);
   text-transform: uppercase;
   justify-self: flex-start;
-  padding-left: .5em;
+  /* padding-left: .5em;
+ */
   display: flex;
   align-items: center;
+  margin-left: 5%;
 }
 
 .Header-flashContainer {
   color: var(--Header-flashContainer-textColor);
+  text-shadow: 2px 3px 6px black;
   font-weight: bold;
   display: none;
   padding: 0;

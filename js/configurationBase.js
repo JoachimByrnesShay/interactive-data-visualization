@@ -20,7 +20,7 @@ const ConfigurationBaseSection = {
     // called on both base header span and the display of both convertTo and convertFrom selections in showcomparisonscontainer on any update to selecctions
     flashNewSelectionChanges() {
         let thing = App.querySelectorByClass(Configuration.CURRENT_ALL_CONFIG_SHOW_CLASS);
-        thing.classList.add('Configure-showCurrentConfigurationAnimate');
+        thing.classList.add(Configuration.CURRENT_ALL_CONFIG_SHOW_ANIMATE_CLASS);
         thing.addEventListener('animationend', () => {
             thing.classList.remove(Configuration.CURRENT_ALL_CONFIG_SHOW_ANIMATE_CLASS);
         });
@@ -28,10 +28,8 @@ const ConfigurationBaseSection = {
     changeBase(option) {
 
         // retrieve the currency code from the dataset code value of the currently selected option in the base currency select list
-
         let currency = option.dataset.code;
-
-        // uupdate the base currency code value in the base\config h2
+        // update the base currency code value in the base\config h2
         App.querySelectorByClass(Configuration.BASE_HEADER_SPAN_CONFIG_VAL).innerHTML = currency;
         // change the convertFrom value to the currency code of the currently selected option
         currencyData.convertFrom = currency;
@@ -42,10 +40,7 @@ const ConfigurationBaseSection = {
         Configuration.flashNewSelectionChanges();
 
         CurrencyFetch.APIData(baseURL);
-
-
     }
 }
-
 
 export { ConfigurationBaseSection };

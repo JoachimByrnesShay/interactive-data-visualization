@@ -60,6 +60,9 @@
   .Header-title {
     color: transparent;
   }
+
+  .Configure-comparisonsSelectBox, .Configure-baseSelectBox {
+  }
 }
 
 /* make acceptably responsive for extremely small-width screen devices */

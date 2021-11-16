@@ -1,8 +1,37 @@
 
-#### Interactive Data Visualization
+##### Interactive Data Visualization
 
-#### Joachim Byrnes-Shay
+##### Joachim Byrnes-Shay
  
-#### 11/5/21
+##### 11/16/21
 
+##### github repository ---
+
+https://github.com/JoachimByrnesShay/interactive-data-visualization
+
+##### Deployed at github pages, per link below---  
+
+https://joachimbyrnesshay.github.io/interactive-data-visualization/
+
+##### Screen shot of page working
+
+[Screenshot-barchart-visualization.png](https://postimg.cc/qhgyDYkW)
+
+##### Project
+
+An interactive comparison of world currency values using pure javascript, generating barcharts with data taken from 'https://openexchangerates.org/'
+
+##### notes on project
+
+
+notes to be inserted here
+
+
+
+##### Credit 
+all data taken from to 'https://openexchangerates.org/'
+data consists of standardized currency codes and conversion rates.
+
+##### API Docs
+are found here: https://docs.openexchangerates.org/
 

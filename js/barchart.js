@@ -1,7 +1,7 @@
 // BarChart object provides organization of methods for creating, clearing, and resizing (responsive) barcharts, and associated utility methods
 const BarChart = {
-    makeVariables() {
 
+    makeVariables() {
         let barChartVariables = {
             // variablize the usage of classes necessary in calling barchart methods
             MAIN_CONTENT_CLASS: 'ChartContent',
@@ -13,13 +13,12 @@ const BarChart = {
             INDICATE_BASE_TEXT_ON_BASE_CLASS_CHART: 'ChartContent-indicateBase',
             CHART_CONTAINER_IS_BASE_CLASS: 'is-baseChart',
         }
-
         App.makeCurrentObjectVariables(this, barChartVariables);
     },
 
     makeAllBarChartDisplay() {
-        this.makeVariables();
 
+        this.makeVariables();
         let container = App.querySelectorByClass(this.MAIN_CONTENT_CLASS);
         // combine base currency with selection of comparison currencies and create displayable charts for all
         for (let currency of [currencyData.convertFrom, ...currencyData.convertTo]) {
@@ -69,8 +68,8 @@ const BarChart = {
 }
 
 BarChart.Utility = {
-    MAIN_CONTENT_CLASS: 'ChartContent',
 
+    MAIN_CONTENT_CLASS: 'ChartContent',
     // use all charts to find max and get the ratio of 100% (height) to max; this will be utilized to size all charts in proportion to eachother
     getSizeRatio() {
         let max = 0;
@@ -82,6 +81,7 @@ BarChart.Utility = {
         return 100 / max;
     },
     offsetTitle(barChart, size) {
+
         let context;
         // pass context in order to select the chart_title for the current barchart
         let title = App.querySelectorByClass(BarChart.CHART_TITLE_CLASS, context = barChart);
@@ -106,6 +106,7 @@ BarChart.Utility = {
         }
     },
     setInitialSize(barChart, currencyCode) {
+
         let ratio = BarChart.Utility.getSizeRatio();
         // chart with highest rate value * ratio will equal 100% (height)
         // using the chartSize calculation below, this barChart will appear proportional to largest, 1 to 1 if it itself is the largest chart
@@ -127,14 +128,17 @@ BarChart.Utility = {
     },
     // by default, main is the entire barchart display area (the main element has .ChartContent class)
     getMainContent(main = this.MAIN_CONTENT_CLASS) {
+
         let content = App.querySelectorByClass(main);
         return content;
     },
 
     clearConvertToDataValues() {
+
         currencyData.convertTo = []
     },
     clearCharts() {
+
         let main = this.getMainContent();
         this.clearConvertToDataValues();
         // immediately remake configuration section so that the show comparisons options immediately reflects that there are no comparisons.
