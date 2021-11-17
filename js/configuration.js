@@ -13,6 +13,7 @@ const Configuration = {
             BASE_FILTER_FIELD_CLASS: 'Configure-baseFilter',
             BASE_HEADER_SPAN_CONFIG_VAL: 'Configure-baseHeadingValue',
             BASE_HEADER_SPAN_CONFIG_VAL_ANIMATE: 'Configure-baseHeadingValueAnimate',
+            BASE_SCROLL_LIST_TO_TOP_CLASS: 'Configure-baseListScrollTopIntoView'
         }
         const comparisonsConfigVars = {
             COMPARISONS_OPTION_SELECTED_CLASS: 'is-selectedComparison',
@@ -20,10 +21,13 @@ const Configuration = {
             COMPARISONS_FORM_CLASS: 'Configure-comparisonsForm',
             COMPARISONS_SELECT_BOX_CLASS: 'Configure-comparisonsSelectBox',
             COMPARISONS_FILTER_FIELD_CLASS: 'Configure-comparisonsFilter',
+            COMPARISONS_SCROLL_LIST_TO_TOP_CLASS: 'Configure-comparisonsListScrollTopIntoView'
         }
         const currentSettingsVars = {
-            CURRENT_BASE_CONFIG_SHOW_CLASS: 'Configure-showBaseContainer',
-            CURRENT_COMPARISONS_CONFIG_SHOW_CLASS: 'Configure-showComparisonsContainer',
+            CURRENT_BASE_CONFIG_SHOW_CLASS: 'Configure-showBase',
+            CURRENT_COMPARISONS_CONFIG_SHOW_CLASS: 'Configure-showComparisons',
+            CURRENT_BASE_SHOW_VALUE: 'Configure-baseValue',
+            CURRENT_COMPARISON_SHOW_VALUE: 'Configure-comparisonValue',
             CURRENT_CHARTS_CLEAR_CLASS: 'Configure-clearChartsButton',
             CURRENT_CHARTS_CLEAR_PRESSED_CLASS: 'Configure-clearChartsButton--pressed',
         }
@@ -61,13 +65,16 @@ const Configuration = {
         let baseContext = {
             form: this.BASE_FORM_CLASS,
             selectBoxClass: Configuration.BASE_SELECT_BOX_CLASS,
-            filterField: Configuration.BASE_FILTER_FIELD_CLASS
+            filterField: Configuration.BASE_FILTER_FIELD_CLASS,
+            scrollClass: Configuration.BASE_SCROLL_LIST_TO_TOP_CLASS
+
 
         };
         let comparisonsContext = {
             form: this.COMPARISONS_FORM_CLASS,
             selectBoxClass: Configuration.COMPARISONS_SELECT_BOX_CLASS,
-            filterField: Configuration.COMPARISONS_FILTER_FIELD_CLASS
+            filterField: Configuration.COMPARISONS_FILTER_FIELD_CLASS,
+            scrollClass: Configuration.COMPARISONS_SCROLL_LIST_TO_TOP_CLASS
         };
         let indexContext;
         Configuration.makeSection(baseContext, 'BASE', Configuration.changeBase, true);
@@ -93,9 +100,12 @@ const Configuration = {
 
         // get the selectBox, filterField, and form for the context (section) required
         let selectBox = App.querySelectorByClass(sectionContext.selectBoxClass);
-
+        console.log(selectBox);
         let filterField = App.querySelectorByClass(sectionContext.filterField);
         let form = App.querySelectorByClass(sectionContext.form);
+        let scrollButton = App.querySelectorByClass(sectionContext.scrollClass);
+
+        scrollButton.addEventListener('click', (e) => selectBox.scroll({ top: 0, behavior: 'smooth' }));
 
         // make enter key and down/up arrow listeners for the select box, pass whichever function necessary as changeFunction to call when hit enter key on select option
         Configuration.makeEnterOnSelectBoxListener(sectionContext, indexContext, changeFunction);
@@ -154,7 +164,6 @@ const Configuration = {
     makeSelectList(filteredResult, context) {
         // deconstruct class values from context
         const { selectBoxClass, indexContext, scroll } = context;
-        console.log('this is selectBoxClass ', selectBoxClass);
         Configuration.removeBaseCurrencyFromList(filteredResult);
         let selectBox = App.querySelectorByClass(selectBoxClass);
         // reset selectbox innerHTML to empty before rebuilding
@@ -344,29 +353,27 @@ const Configuration = {
 
     },
     showSelectedOptions() {
-        let div1 = App.querySelectorByClass(Configuration.CURRENT_BASE_CONFIG_SHOW_CLASS);
-        let alreadyP;
-        if (alreadyP = div1.querySelector('p')) {
-            div1.removeChild(alreadyP);
-        }
-        let showBaseP = document.createElement('p');
-        showBaseP.textContent = currencyData.convertFrom;
+        let showcaseBase = App.querySelectorByClass(Configuration.CURRENT_BASE_CONFIG_SHOW_CLASS);
+        let baseDisplayExists = showcaseBase.querySelector('p');
+        if (baseDisplayExists) showcaseBase.removeChild(baseDisplayExists);
 
-        showBaseP.dataset.tooltipTitle = currencyData.fullNames[currencyData.convertFrom];
-        showBaseP.classList.add('Configure-baseParagraph')
-        div1.appendChild(showBaseP);
-        let div = App.querySelectorByClass(Configuration.CURRENT_COMPARISONS_CONFIG_SHOW_CLASS);
-        div = document.querySelector('.Configure-showComparisons');
+        let baseValue = document.createElement('p');
+        baseValue.textContent = currencyData.convertFrom;
 
-        App.querySelectorByClass('Configure-showComparisons').innerHTML = '';
+        baseValue.dataset.tooltipTitle = currencyData.fullNames[currencyData.convertFrom];
+        baseValue.classList.add(Configuration.CURRENT_BASE_SHOW_VALUE)
+        showcaseBase.appendChild(baseValue);
+        let showcaseComparisons = App.querySelectorByClass(Configuration.CURRENT_COMPARISONS_CONFIG_SHOW_CLASS);
+
+        showcaseComparisons.innerHTML = '';
         // sort conversion currencies by alpha order.  previously are in order 
         currencyData.convertTo.sort();
         for (let currency of currencyData.convertTo) {
-            let p = document.createElement('p');
-            p.textContent = currency;
-            p.classList.add('Configure-comparisonParagraph')
-            p.dataset.tooltipTitle = currencyData.fullNames[currency];
-            div.appendChild(p);
+            let comparison = document.createElement('p');
+            comparison.textContent = currency;
+            comparison.classList.add(Configuration.CURRENT_COMPARISON_SHOW_VALUE)
+            comparison.dataset.tooltipTitle = currencyData.fullNames[currency];
+            showcaseComparisons.appendChild(comparison);
         }
     },
 

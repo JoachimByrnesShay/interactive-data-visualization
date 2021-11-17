@@ -1,4 +1,4 @@
-// main app 
+// general app methods
 const App = {
     // clear contents of the DOM element passed
     clearContents: (elem) => elem.innerHTML = '',

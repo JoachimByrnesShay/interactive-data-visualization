@@ -102,8 +102,7 @@
   cursor: help;
 }
 
-.Configure-comparisonParagraph, .Configure-baseParagraph,
-.Configure-baseHeadingValue {
+.Configure-comparisonValue, .Configure-baseValue, .Configure-baseHeadingValue {
   background: linear-gradient(-40deg, grey 0%, black 70%);
   align-self: baseline;
   margin: 2px;
@@ -123,12 +122,13 @@
   display: inline-block;
 }
 
-.Configure-baseParagraph {
+.Configure-baseValue {
   padding: .1em .3em .1em .3em;
 }
 
-.Configure-comparisonParagraph[data-tooltip-title]:hover::after,
-.Configure-baseParagraph[data-tooltip-title]:hover::after,
+.Configure-com
+isonValue[data-tooltip-title]:hover::after,
+.Configure-baseValue[data-tooltip-title]:hover::after,
 .Configure-baseHeadingValue:hover::after {
   content: attr(data-tooltip-title);
   position: absolute;
