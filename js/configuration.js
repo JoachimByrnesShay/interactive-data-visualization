@@ -255,8 +255,9 @@ const Configuration = {
             if (e.keyCode == 13 && selectBox.selectedIndex > -1) {
 
                 Configuration[indexContext].index = selectBox.selectedIndex;
-                let option = selectBox.options[selectBox.selectedIndex];
+                let option = selectBox.options[Configuration[indexContext].index];
                 changer(option);
+                App.render();
             }
         });
     },
