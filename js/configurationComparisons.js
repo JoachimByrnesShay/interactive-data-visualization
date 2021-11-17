@@ -11,7 +11,11 @@ const ConfigurationComparisonSection = {
         // toggling the COMPARISONS_OPTION_SELECTED_CLASS is not necessary because CurrencyFetch.APIData() will be called, which will re-render() and re-set necessary classes at that time
         if (option.classList.contains(Configuration.COMPARISONS_OPTION_SELECTED_CLASS)) {
             let ix = currencyData.convertTo.indexOf(currency);
-            currencyData.convertTo.splice(ix, 1);
+
+            if (ix != -1) {
+                currencyData.convertTo.splice(ix, 1);
+            }
+
             App.querySelectorByClass(Configuration.HEADER_FLASH_CONTAINER).classList.remove(Configuration.HEADER_FLASH_MESSAGE)
 
         } else if (currencyData.convertTo.length == 5) {
@@ -29,7 +33,7 @@ const ConfigurationComparisonSection = {
             App.querySelectorByClass(Configuration.HEADER_FLASH_CONTAINER).innerHTML = '';
             App.querySelectorByClass(Configuration.HEADER_FLASH_CONTAINER).classList.remove(Configuration.HEADER_FLASH_MESSAGE);
         });
-
+        console.log('in change comparisons, currency.convertto is: ', currencyData.convertTo);
         Configuration.alertToSelections();
 
         // do a new currency fetch when comparisons are changed
