@@ -1,3 +1,4 @@
+// specialized methods relating to base selection 
 const ConfigurationBaseSection = {
     CURRENT_ALL_CONFIG_SHOW_CLASS: 'Configure-showCurrentConfiguration',
     CURRENT_ALL_CONFIG_SHOW_ANIMATE_CLASS: 'Configure-showCurrentConfigurationAnimate',
@@ -25,6 +26,7 @@ const ConfigurationBaseSection = {
             thing.classList.remove(Configuration.CURRENT_ALL_CONFIG_SHOW_ANIMATE_CLASS);
         });
     },
+
     changeBase(option) {
 
         // retrieve the currency code from the dataset code value of the currently selected option in the base currency select list

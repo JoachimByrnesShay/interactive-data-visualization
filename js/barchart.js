@@ -40,9 +40,9 @@ const BarChart = {
             chartContainer.classList.add(this.CHART_CONTAINER_IS_BASE_CLASS);
             div.textContent = 'BASE CURRENCY';
             chartContainer.appendChild(div);
-
         }
     },
+
     makeBarChart(currencyCode) {
 
         let barChart = document.createElement('div');
@@ -56,15 +56,13 @@ const BarChart = {
         barChart.append(title, modal);
         // each chart will be given an initial size ratioed vs its peers on a 100% scale with largest currency given 100%, size will be height for wide screens, axis will change to width on small screens
         this.Utility.setInitialSize(barChart, currencyCode);
-        //let size = parseInt(barChart.dataset.size);
+
         // each charts modal is only displayed on chart click
         barChart.onclick = (e) => {
-            // e.preventDefault();
             Modal.activateModal(barChart);
         }
         return barChart;
     }
-
 }
 
 BarChart.Utility = {
@@ -80,6 +78,7 @@ BarChart.Utility = {
         for (let key of arr) { if (currencyData.rates[key] > max) max = currencyData.rates[key] }
         return 100 / max;
     },
+
     offsetTitle(barChart, size) {
 
         let context;
@@ -101,10 +100,11 @@ BarChart.Utility = {
             // on small screens, where we change to horizontal charts, the title will be offset from the left edge of the chart, i.e. it will be 1em to the right of rightmost edge of chart
         } else {
             title.style.left = titleOffset;
-            // unset bottom value if it has already been set, because otherwise it will continue toaffect our positioning
+            // unset bottom value if it has already been set, because otherwise it will continue to affect our positioning
             title.style.bottom = 'unset';
         }
     },
+
     setInitialSize(barChart, currencyCode) {
 
         let ratio = BarChart.Utility.getSizeRatio();
@@ -132,11 +132,12 @@ BarChart.Utility = {
         let content = App.querySelectorByClass(main);
         return content;
     },
-
+    // reset currencyData.convertTo to empty array (no comparisons selected)
     clearConvertToDataValues() {
 
         currencyData.convertTo = []
     },
+
     clearCharts() {
 
         let main = this.getMainContent();

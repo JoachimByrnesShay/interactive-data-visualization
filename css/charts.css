@@ -1,3 +1,5 @@
+/* barchart and associated modal specific styles */
+
 .ChartContent {
   background: #ebf5f9;
   /* intended background for .CharContent */
@@ -18,7 +20,7 @@
 }
 
 .ChartContent-barChartContainer.is-baseChart {
-  background: rgba(175,100,55,.4);
+  background: var(--ChartContent-barChartContainer--is-baseChartColor);
 }
 
 .ChartContent-barChart {
@@ -61,9 +63,10 @@
   background: var(--ChartContent-barChart--odd-backgroundColor);
 }
 
+/* style container which displays the "base currency" label for the chart which represents the base currency */
+
 .ChartContent-indicateBase {
   position: absolute;
-  color: black;
   color: transparent;
   top: 5em;
   left: 60%;
@@ -72,14 +75,9 @@
   display: inline-block;
   margin: 0 auto;
   text-shadow: 3px 5px 3px black;
-  /* opacity: 1;
- */
 }
 
-.justOneGuy {
-  justify-content: flex-start;
-  padding-left: 3.5em;
-}
+/* clear all charts other than base currency chart when the --clearCharts class is added */
 
 .ChartContent--clearCharts .ChartContent-barChartContainer:not(.is-baseChart) {
   animation: clearCharts 2s normal forwards;
@@ -99,8 +97,6 @@
   color: var(--Modal-textColor);
   display: none;
   background-color: var(--Modal-backgroundColor);
-  /* background: var(--Modal-backgroundColor);background-image: var(--Modal-backgroundColor);
- */
   border-radius: .6em;
   position: absolute;
   margin: 0 auto;

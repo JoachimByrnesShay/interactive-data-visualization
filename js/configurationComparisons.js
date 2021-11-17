@@ -1,3 +1,4 @@
+// specialized method relating to comparison section only
 const ConfigurationComparisonSection = {
     // classes for container for flash messages displayed in header and for the add animation class for the flashmessage
     HEADER_FLASH_CONTAINER: 'Header-flashContainer',

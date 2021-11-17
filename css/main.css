@@ -1,33 +1,31 @@
+/* general, page, header, and footer elements */
+
 :root {/*CSS variables for element background, border, default boxShadow colors */
   --Page-backgroundColor: #cddeee;
   --Header-backgroundColor: #38598b;
   --Footer-backgroundColor: rgb(51, 66, 87);
+  --ChartContent-borderColor: black;
+  --ChartContent-barChart-boxShadowColor: grey;
   --ChartContent-barChart--odd-backgroundColor: #9f4b7a;
   --ChartContent-barChart--even-backgroundColor: #aeddcd;
+  --ChartContent-barChartContainer--is-baseChartColor: rgba(175,100,55,.4);
   --Modal-backgroundColor: #28282b;
-  --ChartContent-borderColor: black;
   --Page-boxShadowColor: black;
-  --ChartContent-barChart-boxShadowColor: grey;
+  --Header-flashMessageColor: orange;
   /* for text colors */
   --Page-textColor: white;
   --Header-textColor: beige;
-  --Modal-textColor: white;
-  --section-config-height: 9em;
-  --section-config-height: 10vh;
   --Header-flashContainer-textColor: black;
+  --Modal-textColor: white;
 }
-
-/* .U-blackText {
-  color: black;
-}
- */
 
 .u-bold {
-  font-style: bold;
+  font-weight: bold;
 }
 
-* {
-  outline: none;
+html {
+  box-sizing: border-box;
+  min-width: 320px;
 }
 
 *, *:before, *:after, li, select, option, datalist option {
@@ -36,19 +34,8 @@
   box-sizing: inherit;
 }
 
-html {
-  box-sizing: border-box;
-  min-width: 320px;
-}
-
-body {/* max-height: 100vh;
- */
-}
-
 .Page {
   background: var(--Page-backgroundColor);
-  /* //height: 100vh;
- */
   font-family: 'Nunito', sans-serif;
   font-weight: 400;
   color: var(--Page-textColor);
@@ -59,7 +46,7 @@ body {/* max-height: 100vh;
   height: 100vh;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1;
+  grid-template-columns: 1fr;
   grid-template-rows: 3fr 5fr 40fr 1fr;
 }
 
@@ -77,8 +64,6 @@ body {/* max-height: 100vh;
   color: var(--Header-textColor);
   text-transform: uppercase;
   justify-self: flex-start;
-  /* padding-left: .5em;
- */
   display: flex;
   align-items: center;
   margin-left: 5%;

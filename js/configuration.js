@@ -225,10 +225,6 @@ const Configuration = {
         let selectBox = elemContainer.selectBox;
 
         option.addEventListener('mouseenter', function(e) {
-
-
-
-            //e.preventDefault();
             // a finepoint (!document.hasFocus()), small enhancement for improved appearance on edge case.  on some OS such as linux, if user has multiple programs open in diferent window, 
             // and is using a tiler which splits the screen (as this author does), the select options will lose their styling on hover (if another program is in the foreground, and browser is background),
             // as a result of that the browser will not recognize focus.  !document.hasFocus() improves appearance in this strange edge case
@@ -374,21 +370,6 @@ const Configuration = {
         }
     },
 
-
-
-
-
 }
-
-Configuration.Listeners = {
-
-}
-
-Configuration.ComparisonSection = {
-
-}
-
-
-
 
 export { Configuration };

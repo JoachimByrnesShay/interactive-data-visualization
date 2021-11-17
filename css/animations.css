@@ -12,7 +12,61 @@
   }
 }
 
-/* employed to call users attention to initial or result of changes in user configuration status- i.e. selected base and selected comparison currencies */
+/* animate button press visual effect for clear charts button */
+
+@keyframes pressInClearButton {
+  0% {
+    box-shadow: 15px 15px 20px gray;
+  }
+
+  90% {
+    box-shadow: 1px 1px 1px grey;
+    display: none;
+  }
+
+  100% {
+    box-shadow: 15px 15px 20px gray;
+    display: block;
+  }
+}
+
+/* flash message animation, controls displayed flash message when user tries to select a 6th comparison currency */
+
+@keyframes flashMessageInHeader {
+  0% {
+    display: flex;
+    background: var(--Header-flashMessageColor);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    background: var(--Header-flashMessageColor);
+    opacity: 0;
+  }
+}
+
+/* rotate modal while shrinking it and throwing a small shadow, used on mouse-off after clicking bar to make modal appear */
+
+@keyframes disappearModal {
+  0% {
+    box-shadow: 5px 5px 5px grey;
+  }
+
+  100% {
+    transform: rotate(380deg);
+    height: 7%;
+    width: 4%;
+    font-size: 3px;
+    box-shadow: 15px 15px 15px black;
+  }
+}
+
+/* employed to call users attention to initial or result of changes in user configuration status- i.e. selected base and selected comparison currencies
+ due to no direct animation possible in transition from gradient to gradient using keyframes, there is a shift to solid backgrounds between gradient settings so that
+user experiences a more pleasing gradual transition--  as solid backgrounds do transition with keyframes  */
 
 @keyframes flashConfiguration {
   0% {
@@ -39,12 +93,8 @@
     background: black;
   }
 
-  15% {/* background: linear-gradient(250deg ,red 0%, red 23%);
- */
+  15% {
     background: red;
-  }
-
-  50% {
   }
 
   75% {
@@ -69,57 +119,5 @@
 
   99% {
     background: linear-gradient(-40deg, black 70%, grey 100%);
-  }
-}
-
-@keyframes pressIn {
-  0% {
-    box-shadow: 15px 15px 20px gray;
-  }
-
-  90% {
-    box-shadow: 1px 1px 1px grey;
-    display: none;
-  }
-
-  100% {
-    box-shadow: 15px 15px 20px gray;
-    display: block;
-  }
-}
-
-/* */
-
-/* flash message animation */
-
-@keyframes flashMessageInHeader {
-  0% {
-    display: flex;
-    background: orange;
-  }
-
-  80% {
-    opacity: 1;
-  }
-
-  100% {
-    background: orange;
-    opacity: 0;
-  }
-}
-
-/* rotate modal while shrinking it and throwing a small shadow, used on mouse-off after clicking bar to make modal appear */
-
-@keyframes disappearModal {
-  0% {
-    box-shadow: 5px 5px 5px grey;
-  }
-
-  100% {
-    transform: rotate(380deg);
-    height: 7%;
-    width: 4%;
-    font-size: 3px;
-    box-shadow: 15px 15px 15px black;
   }
 }
