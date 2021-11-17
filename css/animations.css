@@ -1,6 +1,6 @@
 /* animations */
 
-/* employed for a more pleasing transition of disappearance of all barChartContainers on clearcharts button click */
+/* for a more pleasing transition of disappearance of all barChartContainers on clearcharts button click */
 
 @keyframes clearCharts {
   0% {
@@ -12,7 +12,7 @@
   }
 }
 
-/* animate button press visual effect for clear charts button */
+/* visual button press effect for clear charts button */
 
 @keyframes pressInClearButton {
   0% {
@@ -30,7 +30,7 @@
   }
 }
 
-/* flash message animation, controls displayed flash message when user tries to select a 6th comparison currency */
+/* controls displayed flash message when user tries to select a 6th comparison currency */
 
 @keyframes flashMessageInHeader {
   0% {
@@ -64,9 +64,8 @@
   }
 }
 
-/* employed to call users attention to initial or result of changes in user configuration status- i.e. selected base and selected comparison currencies
- due to no direct animation possible in transition from gradient to gradient using keyframes, there is a shift to solid backgrounds between gradient settings so that
-user experiences a more pleasing gradual transition--  as solid backgrounds do transition with keyframes  */
+/* call users attention to initial or result of changes in user configuration status- i.e. selected base and selected comparison currencies
+due to issues transitioning gradients using keyframes, there is a shift to solid backgrounds between gradient settings for a more pleasing transition experience */
 
 @keyframes flashConfiguration {
   0% {

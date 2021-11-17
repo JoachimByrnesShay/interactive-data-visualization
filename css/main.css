@@ -4,6 +4,7 @@
   --Page-backgroundColor: #cddeee;
   --Header-backgroundColor: #38598b;
   --Footer-backgroundColor: rgb(51, 66, 87);
+  --ChartContent-linearGradientBackground: linear-gradient(to bottom, #ebf1f6 0%,#abd3ee 50%,#2ec3eb 51%,#d5ebfb 100%);
   --ChartContent-borderColor: black;
   --ChartContent-barChart-boxShadowColor: grey;
   --ChartContent-barChart--odd-backgroundColor: #9f4b7a;

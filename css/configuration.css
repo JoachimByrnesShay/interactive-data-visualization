@@ -133,8 +133,7 @@
   padding: .1em .3em .1em .3em;
 }
 
-.Configure-com
-isonValue[data-tooltip-title]:hover::after,
+.Configure-comparisonValue[data-tooltip-title]:hover::after,
 .Configure-baseValue[data-tooltip-title]:hover::after,
 .Configure-baseHeadingValue:hover::after {
   content: attr(data-tooltip-title);
