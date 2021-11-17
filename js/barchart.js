@@ -50,7 +50,7 @@ const BarChart = {
         // all bar charts have an associated title consisting of currency code which displays either inside the chart boundaries or offset the end of the chart depending on chart size
         let title = document.createElement('p');
         title.textContent = currencyCode;
-        title.classList.add(BarChart.CHART_TITLE_CLASS);
+        title.classList.add(this.CHART_TITLE_CLASS);
         let modal = Modal.makeModal(currencyCode);
 
         barChart.append(title, modal);

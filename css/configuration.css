@@ -69,7 +69,7 @@
   margin-bottom: 3px;
 }
 
-.Configure-baseOption:checked, .Configure-baseOption:hover,
+.Configure-baseOption:checked,
 .Configure-comparisonOption:not(.is-selectedComparison):checked {
   color: white !important;
   position: relative;

@@ -30,7 +30,9 @@ const ConfigurationComparisonSection = {
             App.querySelectorByClass(Configuration.HEADER_FLASH_CONTAINER).classList.remove(Configuration.HEADER_FLASH_MESSAGE);
         });
 
-        Configuration.flashNewSelectionChanges();
+        Configuration.alertToSelections();
+
+        // do a new currency fetch when comparisons are changed
         CurrencyFetch.APIData(baseURL);
     }
 }

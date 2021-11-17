@@ -52,10 +52,11 @@ const Configuration = {
     makeConfigurationDisplay() {
         // dynamically create variables owned by Configuration object from key:value pairs in object inside makeVariables method definitation
         this.makeVariables();
-        // set onclick function on clear charts/comparison-currencies button in configuration section
+
         let button = App.querySelectorByClass(this.CURRENT_CHARTS_CLEAR_CLASS);
+        // set onclick function on clear charts/comparison-currencies button in configuration section
         button.onclick = () => {
-            button.classList.add(Configuration.CURRENT_CHARTS_CLEAR_PRESSED_CLASS);
+            button.classList.add(this.CURRENT_CHARTS_CLEAR_PRESSED_CLASS);
             BarChart.Utility.clearCharts();
             button.addEventListener('animationend', () => {
                 button.classList.remove(Configuration.CURRENT_CHARTS_CLEAR_PRESSED_CLASS);
@@ -67,44 +68,43 @@ const Configuration = {
             selectBoxClass: Configuration.BASE_SELECT_BOX_CLASS,
             filterField: Configuration.BASE_FILTER_FIELD_CLASS,
             scrollClass: Configuration.BASE_SCROLL_LIST_TO_TOP_CLASS
-
-
         };
+
         let comparisonsContext = {
             form: this.COMPARISONS_FORM_CLASS,
             selectBoxClass: Configuration.COMPARISONS_SELECT_BOX_CLASS,
             filterField: Configuration.COMPARISONS_FILTER_FIELD_CLASS,
             scrollClass: Configuration.COMPARISONS_SCROLL_LIST_TO_TOP_CLASS
         };
-        let indexContext;
-        Configuration.makeSection(baseContext, 'BASE', Configuration.changeBase, true);
-        Configuration.makeSection(comparisonsContext, 'COMPARISON', Configuration.changeComparisons, false);
-        // displays current selections
+
+        Configuration.makeSection(baseContext, 'BASE', Configuration.changeBase);
+        Configuration.makeSection(comparisonsContext, 'COMPARISON', Configuration.changeComparisons);
+        // displays current selected configurations
         Configuration.showSelectedOptions();
     },
     // based upon arguments, will make base configuration section or comparisons configuration section
-    makeSection(sectionContext, indexContext, changeFunction, scroll) {
+    makeSection(sectionContext, indexContext, changeFunction) {
         // ensure that form for baseCurrency config does not submit, i.e. when enter pressed. 
         // form submits refresh page and this is undesirable and unnecessary for user experience
         this.stopFormSubmit(App.querySelectorByClass(sectionContext.form));
 
-        // headerBaseValue is class for span in h2.Configure-baseHeading and displays, reflects dynamic changes in, and animates in some contexts the configured current base currency value
+        // headerBaseValue is class for span in h2.Configure-baseHeading and reflects dynamic changes in the configured current base currency value
         if (indexContext == 'BASE') {
             Configuration.baseHeadingDynamicControl();
         }
 
         // make and display the filterable (by text input field) list of available currencies currencies for user to select
         // indexContext and sectionContext will differentiate appearance and functionality accordingly
-        this.makeFilterableList(sectionContext, indexContext, scroll);
-
+        this.makeFilterableList(sectionContext, indexContext);
 
         // get the selectBox, filterField, and form for the context (section) required
         let selectBox = App.querySelectorByClass(sectionContext.selectBoxClass);
-        console.log(selectBox);
+
         let filterField = App.querySelectorByClass(sectionContext.filterField);
         let form = App.querySelectorByClass(sectionContext.form);
         let scrollButton = App.querySelectorByClass(sectionContext.scrollClass);
 
+        // scroll button on click will scroll to top of the currently filtered selectbox list, if top not already in view
         scrollButton.addEventListener('click', (e) => selectBox.scroll({ top: 0, behavior: 'smooth' }));
 
         // make enter key and down/up arrow listeners for the select box, pass whichever function necessary as changeFunction to call when hit enter key on select option
@@ -112,31 +112,31 @@ const Configuration = {
         Configuration.makeSelectArrowKeyListener(sectionContext, indexContext);
 
     },
-    makeFilterableList(sectionContext, indexContext, scroll) {
+    makeFilterableList(sectionContext, indexContext) {
         let filterField = App.querySelectorByClass(sectionContext.filterField);
         let filteredResult;
         filterField.value = '';
 
-        // without user filter input, on initialization the list will include all currency rates, 
+        // without filter input from user, on initialization the list will include all currency rates, 
         // though both base select list and comparison select list will omit the currently selected base currency, and will dynamically update this based upon any changes in base currency selection
         filteredResult = Object.keys(currencyData.rates);
         let selectBox = App.querySelectorByClass(sectionContext.selectBoxClass)
-        let selectListContext = { selectBoxClass: sectionContext.selectBoxClass, indexContext: indexContext, scroll: scroll };
+        let selectListContext = { selectBoxClass: sectionContext.selectBoxClass, indexContext: indexContext };
         // make baselist outside of keyup listener so there is a list without keyup
         Configuration.makeSelectList(filteredResult, selectListContext);
         // on each keyup event inside the baseFilterField, we filter the list (filteredResult) to only include currency codes which begin with the string 
         // which is the value of baseFilterField
         Configuration.makeSelectFilter(filterField, Configuration.BASE_FORM_CLASS_NAME, filteredResult, selectListContext);
-
     },
+
     makeSelectFilter(filterField, formClass, filteredResult, selectListContext) {
         // on keyup in the filterfield (text input), continuously recreate the options list based upon the text value in the input field
         let form = App.querySelectorByClass(formClass);
         let newlyFilteredResult;
         filterField.addEventListener('keyup', function(e) {
-            // there are  have listeners on the form itself for 38 and 40 where a possible outcome is 
-            // navigating back up into filterfield using up arrows to scroll up through selectbox options
-            // avoid unnecessary filtering and the additional call to makeBaseList in the event that it is up/down arrow keys detected
+            // 38 = arrowup, 40 = arrowdown; there are have listeners on the form itself for 38 and 40 where a possible outcome is 
+            // navigating back up into filterfield using up arrows to scroll up through selectbox options.
+            // Avoid unnecessary filtering and an additional call to makeBaseList in the event that it is up/down arrow keys detected
             if (e.keyCode != 38 && e.keyCode != 40) {
                 // if the filterField value becomes an empty string, such as if user deletes characters by backspace, the filteredResult is reset to all currency codes
                 if (filterField.value == '') {
@@ -147,7 +147,6 @@ const Configuration = {
                         return elem.toLowerCase().startsWith(filterField.value.toLowerCase());
 
                     });
-
                 }
                 // make baselist with filtered base options, based upon above filtered list.
                 Configuration.makeSelectList(newlyFilteredResult, selectListContext);
@@ -163,17 +162,15 @@ const Configuration = {
     },
     makeSelectList(filteredResult, context) {
         // deconstruct class values from context
-        const { selectBoxClass, indexContext, scroll } = context;
+        const { selectBoxClass, indexContext } = context;
         Configuration.removeBaseCurrencyFromList(filteredResult);
         let selectBox = App.querySelectorByClass(selectBoxClass);
         // reset selectbox innerHTML to empty before rebuilding
         selectBox.innerHTML = ''
         // construct all options and append to selectBox
         Configuration.constructSelectOptions(filteredResult, selectBoxClass, indexContext);
-        if (scroll) {
-            //selectBox.scroll({ top: 0, behavior: 'smooth' });
-        }
     },
+    // construct all options based upon filtering and append to appropriate selectbox list
     constructSelectOptions(filteredResult, selectBoxClass, indexContext) {
         let selectBox = App.querySelectorByClass(selectBoxClass);
         // each time we construct select lists, indices are reset to -1 (no options selected)
@@ -195,7 +192,6 @@ const Configuration = {
             // make all listeners for individual option, pass setChangeFunction which is called on click or enter on option
             Configuration.makeOptionListeners({ option: option, selectBox: selectBox }, indexContext, setChangeFunction);
         }
-
     },
     // depending on the type of select list created, appropriate class is assigned to option
     setOptionClassByContext(option, indexContext) {
@@ -234,46 +230,28 @@ const Configuration = {
         let selectBox = elemContainer.selectBox;
 
         option.addEventListener('mouseenter', function(e) {
-            // a finepoint (!document.hasFocus()), small enhancement for improved appearance on edge case.  on some OS such as linux, if user has multiple programs open in diferent window, 
-            // and is using a tiler which splits the screen (as this author does), the select options will lose their styling on hover (if another program is in the foreground, and browser is background),
-            // as a result of that the browser will not recognize focus.  !document.hasFocus() improves appearance in this strange edge case
-            if (!document.hasFocus()) {
-                // on mouseenter, the option is selected 
-                option.selected = 'selected';
-                option.setAttribute('checked', true);
-            } else {
-                selectBox.focus();
-                option.setAttribute('active', true);
-                option.selected = 'selected';
-                option.setAttribute('checked', true);
-            }
-
+            selectBox.focus();
+            option.selected = 'selected';
             // keep the index up to date with the selectBox selectedIndex
             Configuration[indexContext]['index'] = selectBox.selectedIndex;
         });
-
-
-
     },
+
     makeMouseOutOptionListener(elemContainer, indexContext) {
         let option = elemContainer.option;
         let selectBox = elemContainer.selectBox;
 
         option.addEventListener('mouseleave', function(e) {
-            option.setAttribute('active', 'false');
             option.selected = false;
-            option.setAttribute('selected', 'false');
-            option.setAttribute('checked', false);
             Configuration[indexContext]['index'] = selectBox.selectedIndex;
-
         });
-
     },
+    // call render after any method passed
     callRenderAfterMethod(method) {
         method();
         App.render();
     },
-
+    // control enter key behavior on select box options
     makeEnterOnSelectBoxListener(elemContainer, indexContext, changer) {
         let selectBox = App.querySelectorByClass(elemContainer.selectBoxClass);
 
@@ -288,31 +266,34 @@ const Configuration = {
         });
     },
 
+    // control select box scroll behavior via arrowdown and arrowup
     makeSelectArrowKeyListener(elemContainer, indexContext) {
 
         let form = App.querySelectorByClass(elemContainer.form);
         let selectBox = App.querySelectorByClass(elemContainer.selectBoxClass);
         let filterField = App.querySelectorByClass(elemContainer.filterField);
+
         form.addEventListener('keydown', function(e) {
             e.target.focus();
-            // 38 is arrowup, 40 is arrowdown
 
+            // 38 is arrowup, 40 is arrowdown
             if (e.keyCode == 38 || e.keyCode == 40) {
                 if (selectBox.selectedIndex > -1) {
                     Configuration[indexContext].index = selectBox.selectedIndex;
-
                 }
-                // use preventDefault to override default integration of up/down arrows with select box
+                // use preventDefault and stopimmediatepropagation to override default integration of up/down arrows with select box
                 // which causes skipping or bumping of the scroll that does not
-                // integrate well with the other customizations / features coded here // for example, without this override
+                // integrate well with the other customizations & features coded in the app
                 e.stopImmediatePropagation();
-                e.preventDefault(); // ensure focus within select box // on arrowup, decrement index potentially until 0 th index
+                e.preventDefault();
+
+                // when scrolling up, decrement the index conditionally
                 if (e.keyCode == 38) {
 
                     if (Configuration[indexContext].index > 0) {
                         Configuration[indexContext].index -= 1;
 
-                    } else if (Configuration[indexContext].index <= 0) { // if index is already0, then user is scrolling up out of the  // select box into the filter field// filterField.tabIndex = '-1';
+                    } else if (Configuration[indexContext].index <= 0) { // if index is already 0, then user is scrolling up out of the  select box into the filter field
                         selectBox.blur();
                         filterField.focus()
                         // for consistency with selectBox.selectedIndex == -1 when no option selected
@@ -320,38 +301,25 @@ const Configuration = {
                         // arrow up multiple times at this point, so set index as an assignment and not a decrement here
                         Configuration[indexContext].index = -1;
                     }
-
                 }
-                // on arrowdown, increment the index and ensure select box focus as long as 
+                // when scrolling down with arrowdown, increment the index and ensure select box focus as long as 
                 // we ensure we are not incrementing beyond the last index
-
                 if (e.keyCode == 40 && Configuration[indexContext].index < Configuration[indexContext].lastIndex) {
-
                     selectBox.focus();
-
                     Configuration[indexContext].index += 1;
 
-
                 } else if (e.keyCode == 40) {
-                    //e.preventDefault();
-
                     Configuration[indexContext].index = Configuration[indexContext].lastIndex
                     selectBox.focus();
                 }
                 // update selectedIndex on select box, since we have overridden much default selectbox behavior
                 // and are manually tracking an index.  
-
                 selectBox.selectedIndex = Configuration[indexContext].index;
-                // console.log('in arrow listner, selectedIndex ', selectBox.selectedIndex);
-                // console.log(Configuration[indexContext].index, Configuration[indexContext].lastIndex)
             }
-
         });
-
-
-
-
     },
+
+    // create the display of currently configured selections
     showSelectedOptions() {
         let showcaseBase = App.querySelectorByClass(Configuration.CURRENT_BASE_CONFIG_SHOW_CLASS);
         let baseDisplayExists = showcaseBase.querySelector('p');
@@ -375,8 +343,7 @@ const Configuration = {
             comparison.dataset.tooltipTitle = currencyData.fullNames[currency];
             showcaseComparisons.appendChild(comparison);
         }
-    },
-
+    }
 }
 
 export { Configuration };
