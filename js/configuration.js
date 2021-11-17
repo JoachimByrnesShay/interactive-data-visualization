@@ -249,11 +249,13 @@ const Configuration = {
         let selectBox = App.querySelectorByClass(elemContainer.selectBoxClass);
 
         selectBox.addEventListener('keydown', function(e) {
+
             // test for enter key and presence of an index value
             // we update base currency value on enter key press on option just as for mouseclick on option
             if (e.keyCode == 13 && selectBox.selectedIndex > -1) {
+
                 Configuration[indexContext].index = selectBox.selectedIndex;
-                let option = selectBox.options[Configuration[indexContext].index];
+                let option = selectBox.options[selectBox.selectedIndex];
                 changer(option);
             }
         });
