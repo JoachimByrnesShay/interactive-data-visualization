@@ -194,6 +194,6 @@
 }
 
 .Configure-clearChartsButton--pressed {
-  animation: pressIn 200ms ease-out 0ms;
+  animation: pressInClearButton 200ms ease-out 0ms;
   animation-iteration-count: 1;
 }
