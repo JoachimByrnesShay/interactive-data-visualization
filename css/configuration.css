@@ -117,6 +117,13 @@
   padding: 2px;
 }
 
+.Configure-baseListScrollTopIntoView,
+.Configure-comparisonsListScrollTopIntoView {
+  background: lightsalmon;
+  font-size: .8em;
+  text-transform: uppercase;
+}
+
 .Configure-baseHeadingValue {
   position: absolute;
   display: inline-block;
