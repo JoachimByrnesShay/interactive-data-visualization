@@ -1,23 +1,23 @@
 
-#### Interactive Data Visualization
+### Interactive Data Visualization
 
 #### Joachim Byrnes-Shay
  
 #### 11/16/21
 
-#### github repository ---
+### github repository ---
 
 https://github.com/JoachimByrnesShay/interactive-data-visualization
 
-#### Deployed at github pages, per link below---  
+### Deployed at github pages, per link below---  
 
 https://joachimbyrnesshay.github.io/interactive-data-visualization/
 
-#### Screen shot of page working
+### Screen shot of page working
 
 [![screenshot-app.png](https://i.postimg.cc/Pq8s3dhN/screenshot-app.png)](https://postimg.cc/R39Dq5Wz)
 
-#### Project
+### Project
 
 An interactive comparison of world currency values using pure javascript, generating barcharts with data taken from 'https://openexchangerates.org/'
 Charts display proportional values from perspective of how much one of a comparison unit one gets in return for 1 unit of base currency, i.e., if user exchanges 1 dollar for comparison currency, how many units of comparison currency does user get
@@ -60,7 +60,7 @@ Javascript is also utilized to control the positioning and restyling of the barc
 The configuration portion of the page is decently responsive on resize via grid auto-fill usage in css.  The chart area is responsive via combination of javascript and css media queries.  Javascript controls the sizing and resizing of the charts, and height vs width for re-orienting the charts from vertical on larger screens to horizontal on smaller screens.
 
 
-##### Limitations 
+### Limitations 
 
 Below a certain percentage size proportional to the largest currency, there will be little visual difference peer charts at that small of size.
 
