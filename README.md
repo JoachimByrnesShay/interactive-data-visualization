@@ -1,36 +1,36 @@
 
-##### Interactive Data Visualization
+#### Interactive Data Visualization
 
-##### Joachim Byrnes-Shay
+#### Joachim Byrnes-Shay
  
-##### 11/16/21
+#### 11/16/21
 
-##### github repository ---
+#### github repository ---
 
 https://github.com/JoachimByrnesShay/interactive-data-visualization
 
-##### Deployed at github pages, per link below---  
+#### Deployed at github pages, per link below---  
 
 https://joachimbyrnesshay.github.io/interactive-data-visualization/
 
-##### Screen shot of page working
+#### Screen shot of page working
 
 [![screenshot-app.png](https://i.postimg.cc/Pq8s3dhN/screenshot-app.png)](https://postimg.cc/R39Dq5Wz)
 
-##### Project
+#### Project
 
 An interactive comparison of world currency values using pure javascript, generating barcharts with data taken from 'https://openexchangerates.org/'
 Charts display proportional values from perspective of how much one of a comparison unit one gets in return for 1 unit of base currency, i.e., if user exchanges 1 dollar for comparison currency, how many units of comparison currency does user get
 
-##### Credit 
+#### Credit 
 all data taken from to 'https://openexchangerates.org/'
 data consists of standardized currency codes and conversion rates.
 
-##### API Docs
+#### API Docs
 are found here: https://docs.openexchangerates.org/
 
 
-##### Notes on project and app usage
+### Notes on project and app usage
 Pure javacript is utilized for all code, including to create filters and filterable options to choose base currency as well as to select a group of currencies to compare with the chosen base currency.
 
 In addition to being filterable upon input in form text input field (causing re-evaluation and re-render of lists), both select lists exhibit scrollable behavior with arrowup and arrowdown on the lists, and internally there is indexing behavior upon scroll as well as mouse-in and mouse-out.  
