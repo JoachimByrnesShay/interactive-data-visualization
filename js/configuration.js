@@ -90,8 +90,10 @@ const Configuration = {
         // indexContext and sectionContext will differentiate appearance and functionality accordingly
         this.makeFilterableList(sectionContext, indexContext, scroll);
 
+
         // get the selectBox, filterField, and form for the context (section) required
         let selectBox = App.querySelectorByClass(sectionContext.selectBoxClass);
+
         let filterField = App.querySelectorByClass(sectionContext.filterField);
         let form = App.querySelectorByClass(sectionContext.form);
 

@@ -89,7 +89,8 @@
   text-shadow: 1px 1px 1px grey;
 }
 
-.Configure-baseSelectBox:focus .Configure-baseOption:checked {
+.Configure-baseSelectBox:focus .Configure-baseOption:checked,
+.Configure-baseSelectBox:hover .Configure-baseOption:checked {
   color: white !important;
   position: relative;
   box-shadow: 0px 0px 10px 10px #e1358f inset, 9px 7px 5px 2px grey;
