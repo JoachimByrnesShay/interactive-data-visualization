@@ -22,7 +22,7 @@ https://joachimbyrnesshay.github.io/interactive-data-visualization/
 An interactive comparison of world currency values using pure javascript, generating barcharts with data taken from 'https://openexchangerates.org/'
 Charts display proportional values from perspective of how much one of a comparison unit one gets in return for 1 unit of base currency, i.e., if user exchanges 1 dollar for comparison currency, how many units of comparison currency does user get
 
-## #Credit 
+## Credit 
 all data taken from to 'https://openexchangerates.org/'
 data consists of standardized currency codes and conversion rates.
 
