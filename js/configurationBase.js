@@ -11,21 +11,7 @@ const ConfigurationBaseSection = {
         baseHeaderSpan.dataset.tooltipTitle = currencyData.fullNames[currencyData.convertFrom];
     },
 
-    // called on both base header span and the display of both convertTo and convertFrom selections in showcomparisonscontainer on any update to selections
-    alertToSelections() {
-        let configurationsDisplay = App.querySelectorByClass(Configuration.CURRENT_ALL_CONFIG_SHOW_CLASS);
-        let baseHeaderSpan = App.querySelectorByClass(Configuration.BASE_HEADER_SPAN_CONFIG_VAL);
-        //animation classes are added to briefly call users attention to the currently configured settings, i.e. current base currency and current comparison currencies
-        baseHeaderSpan.classList.add(Configuration.BASE_HEADER_SPAN_CONFIG_VAL_ANIMATE);
-        configurationsDisplay.classList.add(Configuration.CURRENT_ALL_CONFIG_SHOW_ANIMATE_CLASS);
-        baseHeaderSpan.addEventListener('animationend', () => {
-            baseHeaderSpan.classList.remove(Configuration.BASE_HEADER_SPAN_CONFIG_VAL_ANIMATE);
-        });
 
-        configurationsDisplay.addEventListener('animationend', () => {
-            configurationsDisplay.classList.remove(Configuration.CURRENT_ALL_CONFIG_SHOW_ANIMATE_CLASS);
-        });
-    },
 
     changeBase(option) {
         // retrieve the currency code from the dataset code value of the currently selected option in the base currency select list

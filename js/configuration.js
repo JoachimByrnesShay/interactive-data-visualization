@@ -54,13 +54,13 @@ const Configuration = {
 
         let button = App.querySelectorByClass(this.CURRENT_CHARTS_CLEAR_CLASS);
         // set onclick function on clear charts/comparison-currencies button in configuration section
-        button.onclick = () => {
+        button.addEventListener('click', () => {
             button.classList.add(this.CURRENT_CHARTS_CLEAR_PRESSED_CLASS);
             BarChart.Utility.clearCharts();
             button.addEventListener('animationend', () => {
                 button.classList.remove(Configuration.CURRENT_CHARTS_CLEAR_PRESSED_CLASS);
             });
-        }
+        });
         // make separate contexts for base section and comparisons section, which will be passed as arguments on separate calls to makeSection to create the respective sections
         let baseContext = {
             form: this.BASE_FORM_CLASS,
@@ -336,7 +336,22 @@ const Configuration = {
             comparison.dataset.tooltipTitle = currencyData.fullNames[currency];
             showcaseComparisons.appendChild(comparison);
         }
-    }
+    },
+    // called on both base header span and the display of both convertTo and convertFrom selections in showcomparisonscontainer on any update to selections
+    alertToSelections() {
+        let configurationsDisplay = App.querySelectorByClass(Configuration.CURRENT_ALL_CONFIG_SHOW_CLASS);
+        let baseHeaderSpan = App.querySelectorByClass(Configuration.BASE_HEADER_SPAN_CONFIG_VAL);
+        //animation classes are added to briefly call users attention to the currently configured settings, i.e. current base currency and current comparison currencies
+        baseHeaderSpan.classList.add(Configuration.BASE_HEADER_SPAN_CONFIG_VAL_ANIMATE);
+        configurationsDisplay.classList.add(Configuration.CURRENT_ALL_CONFIG_SHOW_ANIMATE_CLASS);
+        baseHeaderSpan.addEventListener('animationend', () => {
+            baseHeaderSpan.classList.remove(Configuration.BASE_HEADER_SPAN_CONFIG_VAL_ANIMATE);
+        });
+
+        configurationsDisplay.addEventListener('animationend', () => {
+            configurationsDisplay.classList.remove(Configuration.CURRENT_ALL_CONFIG_SHOW_ANIMATE_CLASS);
+        });
+    },
 }
 
 export { Configuration };
