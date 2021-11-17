@@ -67,7 +67,7 @@
 /* call users attention to initial or result of changes in user configuration status- i.e. selected base and selected comparison currencies
 due to issues transitioning gradients using keyframes, there is a shift to solid backgrounds between gradient settings for a more pleasing transition experience */
 
-@keyframes flashConfiguration {
+@keyframes alertToCurrentConfiguration {
   0% {
     background: linear-gradient(-40deg, grey 0%, black 70%);
   }

@@ -1,16 +1,12 @@
-/******/
-
-/* MAIN PAGE/CONTAINER STyLES */
-
-/* set margins and padding to default 0 and set box-sizing to border-box */
-
 .Configure * {
   font-size: 1em;
 }
 
+/* configuration section */
+
 .Configure {
   font-size: 1em;
-  background-image: linear-gradient(to left, #ebf1f6 0%,#abd3ee 20%,#2ec3eb 71%,#d5ebfb 100%);
+  background-image: var(--Configure-linearGradientBackground);
   color: black;
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(20em,1fr));
@@ -23,7 +19,7 @@
   display: grid;
 }
 
-/* h2 for base and comparison section */
+/* baseHeading and comparisonHeading are h2 for base and comparison section */
 
 .Configure-baseHeading, .Configure-comparisonHeading {
   margin-left: 5%;
@@ -54,11 +50,13 @@
   width: 90%;
   justify-self: center;
   list-style-type: none;
-  background-color: #f1dfd1;
-  background-image: linear-gradient(315deg, #f1dfd1 0%, #f6f0ea 74%);
+  background-color: var(--Configure-selectBoxes-backgroundColor);
+  background-image: var(--Configure-selectBoxes-linearGradientBackground);
   color: black;
   text-shadow: 1px 1px 1px grey;
 }
+
+/* select box options */
 
 .Configure-comparisonOption, .Configure-baseOption {
   padding: 3px 0 3px 0;
@@ -69,15 +67,18 @@
   margin-bottom: 3px;
 }
 
+/* for all select box options unless it is a comparison option with the .is-selectedComparison class, i.e. if in the convertTo array*/
+
 .Configure-baseOption:checked,
 .Configure-comparisonOption:not(.is-selectedComparison):checked {
   color: white !important;
   position: relative;
   box-shadow: 0px 0px 10px 10px #e1358f inset;
-  background-color: red;
   font-style: italic;
   background: lightblue;
 }
+
+/* special styling if comparison option is among the convertTo selections */
 
 .Configure-comparisonOption.is-selectedComparison {
   background: lightblue;
@@ -93,14 +94,13 @@
   box-shadow: 10px 5px 4px 10px grey;
 }
 
-.Configure-sbowComparisons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
+/* show the help cursor on the display of current selections in base section heading and in separate current base/comparisons selections element, which are also elsewhere designed to display custom tooltip at same time */
 
-.Configure-showConfiguration p:hover, .Configure-baseHeadingValue {
+.Configure-showCurrentConfiguration p:hover, .Configure-baseHeadingValue {
   cursor: help;
 }
+
+/* the display of currently selected base and comparison currencies in the show configuration areas */
 
 .Configure-comparisonValue, .Configure-baseValue, .Configure-baseHeadingValue {
   background: linear-gradient(-40deg, grey 0%, black 70%);
@@ -117,6 +117,8 @@
   padding: 2px;
 }
 
+/* buttons for scrolling to top of selectbox lists */
+
 .Configure-baseListScrollTopIntoView,
 .Configure-comparisonsListScrollTopIntoView {
   background: lightsalmon;
@@ -124,14 +126,15 @@
   text-transform: uppercase;
 }
 
+/* display of currently selected base currency in base configuration section heading */
+
 .Configure-baseHeadingValue {
   position: absolute;
   display: inline-block;
 }
 
-.Configure-baseValue {
-  padding: .1em .3em .1em .3em;
-}
+/* custom tooltip shown on display of base currency in base configuration header, and 
+on display of base currency and display of comparison currency selections in separate current base/comparisons settings window */
 
 .Configure-comparisonValue[data-tooltip-title]:hover::after,
 .Configure-baseValue[data-tooltip-title]:hover::after,
@@ -154,6 +157,8 @@
   text-shadow: initial;
 }
 
+/* display and sizing controls for container of clear charts button and for display area of current base/comparisons selections */
+
 .Configure-showCurrentConfigurationContainer, .Configure-clearChartsContainer {
   background: beige;
   border-radius: 5px;
@@ -167,8 +172,10 @@
   justify-content: space-between;
 }
 
+/* apply this animation to draw users attention to current configurations when these classes added */
+
 .Configure-baseHeadingValueAnimate, .Configure-showCurrentConfigurationAnimate p {
-  animation: flashConfiguration 4200ms ease-out forwards;
+  animation: alertToCurrentConfiguration 4200ms ease-out forwards;
   animation-iteration-count: 1;
 }
 
@@ -192,6 +199,8 @@
   border: 3px solid black;
   box-shadow: 10px 15px 20px gray;
 }
+
+/* add a "press in" visual animation to clear charts button */
 
 .Configure-clearChartsButton--pressed {
   animation: pressInClearButton 200ms ease-out 0ms;

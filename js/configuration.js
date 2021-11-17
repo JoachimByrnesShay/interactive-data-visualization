@@ -1,8 +1,7 @@
 // Configuration object provides organization of methods for presenting configuration options and controlling their behavior and associted behavior of display in configuration section
 const Configuration = {
-    // Configuration object provides organization of methods for presenting configuration options and controlling their behavior and associted behavior of display in configuration section
-    // due to much work with design/appearance of option elements and integrating mouseclicks and enter key press, up/down arrow usage in select options list,
-    //
+    // Configuration object provides organization of methods for presenting configuration options and controlling their behavior and associated behavior of display in configuration section
+    //  design/appearance of option elements, integrating mouseclicks and enter key press with select options, integration up/down arrow usage in select options list,
 
     makeVariables() {
         // variables to set on Configuration object, further visually organized by associated function
