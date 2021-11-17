@@ -3,7 +3,7 @@
 .ChartContent {
   background: #ebf5f9;
   /* intended background for .CharContent */
-  background-image: var(--ChartContent--linearGradientBackground);
+  background-image: var(--ChartContent-linearGradientBackground);
   display: flex;
   position: relative;
   justify-content: space-around;
