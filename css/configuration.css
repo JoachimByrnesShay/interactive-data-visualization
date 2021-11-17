@@ -175,7 +175,7 @@ on display of base currency and display of comparison currency selections in sep
 /* apply this animation to draw users attention to current configurations when these classes added */
 
 .Configure-baseHeadingValueAnimate, .Configure-showCurrentConfigurationAnimate p {
-  animation: alertToCurrentConfiguration 4200ms ease-out forwards;
+  animation: alertToCurrentConfiguration 3500ms ease-out forwards;
   animation-iteration-count: 1;
 }
 

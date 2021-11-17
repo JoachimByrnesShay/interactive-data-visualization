@@ -15,7 +15,7 @@ https://joachimbyrnesshay.github.io/interactive-data-visualization/
 
 ### Screen shot of page working
 
-[![screenshot-app.png](https://i.postimg.cc/Pq8s3dhN/screenshot-app.png)](https://postimg.cc/R39Dq5Wz)
+[![Screenshot-app.png](https://i.postimg.cc/qMG6MQ4w/Screenshot-app.png)](https://postimg.cc/7ffZK3CJ)
 
 ### Project
 

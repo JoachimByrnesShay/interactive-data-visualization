@@ -101,14 +101,12 @@ const Configuration = {
 
         let filterField = App.querySelectorByClass(sectionContext.filterField);
         let form = App.querySelectorByClass(sectionContext.form);
-        let scrollButton = App.querySelectorByClass(sectionContext.scrollClass);
-
-        // scroll button on click will scroll to top of the currently filtered selectbox list, if top not already in view
-        scrollButton.addEventListener('click', (e) => selectBox.scroll({ top: 0, behavior: 'smooth' }));
 
         // make enter key and down/up arrow listeners for the select box, pass whichever function necessary as changeFunction to call when hit enter key on select option
         Configuration.makeEnterOnSelectBoxListener(sectionContext, indexContext, changeFunction);
         Configuration.makeSelectArrowKeyListener(sectionContext, indexContext);
+        // scroll to the top on make section (which applies on re-renders)
+        selectBox.scroll({ top: 0, behavior: 'smooth' })
 
     },
     makeFilterableList(sectionContext, indexContext) {
@@ -245,11 +243,7 @@ const Configuration = {
             Configuration[indexContext]['index'] = selectBox.selectedIndex;
         });
     },
-    // call render after any method passed
-    callRenderAfterMethod(method) {
-        method();
-        App.render();
-    },
+
     // control enter key behavior on select box options
     makeEnterOnSelectBoxListener(elemContainer, indexContext, changer) {
         let selectBox = App.querySelectorByClass(elemContainer.selectBoxClass);
@@ -260,7 +254,7 @@ const Configuration = {
             if (e.keyCode == 13 && selectBox.selectedIndex > -1) {
                 Configuration[indexContext].index = selectBox.selectedIndex;
                 let option = selectBox.options[Configuration[indexContext].index];
-                Configuration.callRenderAfterMethod(changer.bind(this, option));
+                changer(option);
             }
         });
     },
